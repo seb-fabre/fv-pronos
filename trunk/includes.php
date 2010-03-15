@@ -1,0 +1,9 @@
+<?php
+	require_once('classes/Day.php');
+	require_once('classes/League.php');
+	require_once('classes/Match.php');
+	require_once('classes/Prono.php');
+	require_once('classes/Season.php');
+	require_once('classes/Team.php');
+	require_once('classes/User.php');
+?>

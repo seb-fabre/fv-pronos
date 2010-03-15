@@ -1,0 +1,19 @@
+- sur chaque écran où on peut ajouter, donner la possibilité de supprimer
+ * matches d'une journée
+ * utilisateur
+ * journée
+ * ligue
+ * saison
+- si des pronos ont été saisis pour une journée, interdire de modifier les matches de cette journée
+- faire un mode connecté / non connecté (admin / visiteur)
+ * cacher tous les liens d'action / édition
+- ajouter des liens sur les bonnes pages pour accéder directement aux graphes et aux classements (target blank)
+- sur chaque page qui liste des trucs, afficher en haut une liste déroulante pour filtrer l'affichage.
+	et si possible, conserver le paramètre de filtre lorsqu'on clique sur un lien qui amène vers une autre page qui liste des trucs
+- idées de graphe:
+ * équipe qui rapporte le plus/moins de points
+- ajouter des vérifications, notamment lorsqu'on parse des pronos
+ * vérifier qu'aucune liste déroulante d'équipe n'est vide
+ * si on affiche plusieurs listes déroulantes de suite (sans pouvoir parser le nom) et qu'il n'y a pas de ligne de pronos dedans, on n'affiche qu'une liste déroulante
+- corriger les chemins (soit mettre tout en relatif, soit mettre l'url dans le fichier de conf)
+- mettre une date butoir pour la saisie des pronos de chaque journée, surchargeable au niveau de chaque match
