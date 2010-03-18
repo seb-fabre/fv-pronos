@@ -1,8 +1,5 @@
 <?php
-	session_start();
-
-	require_once('mysql_connexion.php');
-	require_once('includes.php');
+	require_once('includes/init.php');
 
 	$leagues = League::getAll();
 
@@ -12,22 +9,12 @@
 		$tmp[$season->pr_league_id] []= $season;
 	$seasons = $tmp;
 	unset($tmp);
+
+	echoHTMLHead('Liste des championnats');
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-<head>
-	<title>Liste des championnats</title>
-	<link rel="stylesheet" href="/pronos/css/screen.css" type="text/css" media="screen" />
-	<link rel="stylesheet" href="/pronos/css/pronos.css" type="text/css" media="screen" />
-	<script type="text/javascript" src="/pronos/js/jquery-1.3.2.min.js"></script>
-	<script type="text/javascript" src="/pronos/js/jquery.simplemodal-1.2.3.js"></script>
-	<script type="text/javascript" src="/pronos/js/jquery.form-2.24.js"></script>
-	<script type="text/javascript" src="/pronos/js/jquery.qtip-1.0.0-rc3.min.js"></script>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF8" />
-</head>
 
 <body>
-	<?php include('header.php'); ?>
+	<?php echoMenu(); ?>
 	<div id="content">
 		<h1>Liste des championnats</h1>
 		<div class="add"><a href="javascript:;" onclick="openPopup(-1)">Ajouter un championnat</a></div>
@@ -50,9 +37,9 @@
 									<td rowspan="<?php echo count($seasons[$league->id]) ?>"><?php echo $league->name ?></td>
 								<?php endif; ?>
 								<td><?php echo $season->label ?></td>
-								<td class="center"><a href="javascript:;" onclick="openPopup(<?php echo $season->id ?>)"><img src="/pronos/images/edit.png" alt="[edit]" /></a></td>
-								<td><a href="javascript:;" onclick="showTeams(<?php echo $season->id ?>);"><img src="/pronos/images/fleche.png" alt="[add]" /> afficher les équipes</a></td>
-								<td><a href="javascript:;" onclick="showRankings(<?php echo $season->id ?>, -1);"><img src="/pronos/images/fleche.png" alt="[add]" /> afficher le classement</a></td>
+								<td class="center"><a href="javascript:;" onclick="openPopup(<?php echo $season->id ?>)"><img src="<?=APPLICATION_URL?>images/edit.png" alt="[edit]" /></a></td>
+								<td><a href="javascript:;" onclick="showTeams(<?php echo $season->id ?>);"><img src="<?=APPLICATION_URL?>images/fleche.png" alt="[add]" /> afficher les équipes</a></td>
+								<td><a href="javascript:;" onclick="showRankings(<?php echo $season->id ?>, -1);"><img src="<?=APPLICATION_URL?>images/fleche.png" alt="[add]" /> afficher le classement</a></td>
 							</tr>
 						<?php endforeach; ?>
 					<?php endforeach; ?>
@@ -70,7 +57,7 @@
 		{
 			$('#loading').modal({close: false});
 			$.ajax({
-				url: '/pronos/ajax/add_league.php',
+				url: '<?=APPLICATION_URL?>ajax/add_league.php',
 				data: {id: id},
 				success: function (response) {
 					$.modal.close();
@@ -78,7 +65,7 @@
 					$('#popup').modal({close: false});
 					$('#popup input[type=text]').focus();
 					$('#popup form').ajaxForm({
-						url: '/pronos/ajax/save_league.php',
+						url: '<?=APPLICATION_URL?>ajax/save_league.php',
 						dataType: 'json',
 						success: function (response) {
 							if (response.success == 1)
@@ -95,7 +82,7 @@
 		{
 			$('#loading').modal({close: false});
 			$.ajax({
-				url: '/pronos/ajax/show_rankings.php',
+				url: '<?=APPLICATION_URL?>ajax/show_rankings.php',
 				data: {id: league, max: max},
 				success: function (response) {
 					$.modal.close();
@@ -110,14 +97,14 @@
 		{
 			$('#loading').modal({close: false});
 			$.ajax({
-				url: '/pronos/ajax/show_teams.php',
+				url: '<?=APPLICATION_URL?>ajax/show_teams.php',
 				data: {id: league},
 				success: function (response) {
 					$.modal.close();
 					$('#popup_content').html(response);
 					$('#popup').modal({close: false});
 					$('#popup form').ajaxForm({
-						url: '/pronos/ajax/save_season_teams.php',
+						url: '<?=APPLICATION_URL?>ajax/save_season_teams.php',
 						dataType: 'json',
 						type: 'post',
 						success: function (response) {

@@ -1,26 +1,13 @@
 <?php
-	session_start();
-
-	require_once('mysql_connexion.php');
-	require_once('includes.php');
+	require_once('includes/init.php');
 
 	$teams = Team::getAll();
+
+	echoHTMLHead('Liste des équipes');
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-<head>
-	<title>Liste des équipes</title>
-	<link rel="stylesheet" href="/pronos/css/screen.css" type="text/css" media="screen" />
-	<link rel="stylesheet" href="/pronos/css/pronos.css" type="text/css" media="screen" />
-	<script type="text/javascript" src="/pronos/js/jquery-1.3.2.min.js"></script>
-	<script type="text/javascript" src="/pronos/js/jquery.simplemodal-1.2.3.js"></script>
-	<script type="text/javascript" src="/pronos/js/jquery.form-2.24.js"></script>
-	<script type="text/javascript" src="/pronos/js/jquery.qtip-1.0.0-rc3.min.js"></script>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF8" />
-</head>
 
 <body>
-	<?php include('header.php'); ?>
+	<?php echoMenu(); ?>
 	<div id="content">
 		<h1>Liste des équipes</h1>
 		<div class="add"><a href="javascript:;" onclick="openPopup(-1)">Ajouter une équipe</a></div>
@@ -28,6 +15,7 @@
 			<thead>
 				<tr>
 					<th>Nom</th>
+					<th>Logo</th>
 					<th>Actions</th>
 				</tr>
 			</thead>
@@ -37,11 +25,19 @@
 					<?php foreach ($teams as $team): ?>
 						<tr>
 							<td><?php echo $team->name ?></td>
-							<td class="center"><a href="javascript:;" onclick="openPopup(<?php echo $team->id ?>)"><img src="/pronos/images/edit.png" alt="[edit]" /></a></td>
+							<td>
+								<?php
+									if ($team->has_logo)
+										echo '<img src="' . APPLICATION_URL . 'logos/' . $team->id . '.gif" />';
+									else
+										echo '&nbsp;';
+								?>
+							</td>
+							<td class="center"><a href="javascript:;" onclick="openPopup(<?php echo $team->id ?>)"><img src="<?=APPLICATION_URL?>images/edit.png" alt="[edit]" /></a></td>
 						</tr>
 					<?php endforeach; ?>
 				<?php else: ?>
-					<tr><td colspan="3">Aucun résultat trouvé</td></tr>
+					<tr><td colspan="3">Aucune équipe trouvée</td></tr>
 				<?php endif; ?>
 			</tbody>
 		</table>
@@ -54,7 +50,7 @@
 		{
 			$('#loading').modal({close: false});
 			$.ajax({
-				url: '/pronos/ajax/add_team.php',
+				url: '<?=APPLICATION_URL?>ajax/add_team.php',
 				data: {id: id},
 				success: function (response) {
 					$.modal.close();
@@ -62,7 +58,7 @@
 					$('#popup').modal({close: false});
 					$('#popup input[type=text]').focus();
 					$('#popup form').ajaxForm({
-						url: '/pronos/ajax/save_team.php',
+						url: '<?=APPLICATION_URL?>ajax/save_team.php',
 						dataType: 'json',
 						success: function (response) {
 							if (response.success == 1)
