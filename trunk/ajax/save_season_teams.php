@@ -1,7 +1,5 @@
 <?php
-	session_start();
-	require_once('../mysql_connexion.php');
-	require_once('../includes.php');
+	require_once('../includes/init.php');
 
 	$season = Season::find($_POST['id']);
 

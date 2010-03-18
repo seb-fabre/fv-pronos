@@ -1,8 +1,5 @@
 <?php
-	session_start();
-
-	require_once('mysql_connexion.php');
-	require_once('includes.php');
+	require_once('includes/init.php');
 
 	$leagues = League::getAll();
 
@@ -22,22 +19,12 @@
 			$daysBySeason[$day->pr_season_id] = array();
 		$daysBySeason[$day->pr_season_id] []= $day;
 	}
+
+	echoHTMLHead('Liste des journées');
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-<head>
-	<title>Liste des journées</title>
-	<link rel="stylesheet" href="/pronos/css/screen.css" type="text/css" media="screen" />
-	<link rel="stylesheet" href="/pronos/css/pronos.css" type="text/css" media="screen" />
-	<script type="text/javascript" src="/pronos/js/jquery-1.3.2.min.js"></script>
-	<script type="text/javascript" src="/pronos/js/jquery.simplemodal-1.2.3.js"></script>
-	<script type="text/javascript" src="/pronos/js/jquery.form-2.24.js"></script>
-	<script type="text/javascript" src="/pronos/js/jquery.qtip-1.0.0-rc3.min.js"></script>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF8" />
-</head>
 
 <body>
-	<?php include('header.php'); ?>
+	<?php echoMenu(); ?>
 	<div id="content">
 		<h1>Liste des journées</h1>
 		<div class="add"><a href="javascript:;" onclick="openPopup(-1)">Ajouter une journée</a></div>
@@ -66,7 +53,7 @@
 							<tr>
 								<?php if (++$i == 1) echo '<td rowspan="' . count($days) . '">' . $league->name . '<br/>' . $seasons[$day->pr_season_id]->label . '</td>'; ?>
 								<td><?php echo $day->number ?></td>
-								<td class="center"><a href="javascript:;" onclick="openPopup(<?php echo $day->id ?>)"><img src="/pronos/images/edit.png" alt="[edit]" /></a></td>
+								<td class="center"><a href="javascript:;" onclick="openPopup(<?php echo $day->id ?>)"><img src="<?=APPLICATION_URL?>images/edit.png" alt="[edit]" /></a></td>
 								<td class="tooltipped">
 									<i>voir les matches</i>
 									<div class="hidden center" style="width:100%">
@@ -91,16 +78,16 @@
 									</div>
 								</td>
 								<td class="center">
-									<p><a href="javascript:;" onclick="addMatches(<?php echo $day->id ?>, -1)"><img src="/pronos/images/fleche.png" alt="[add]" /> ajouter </a></p>
-									<p><a href="javascript:;" onclick="parseMatches(<?php echo $day->id ?>, <?php echo $day->pr_season_id ?>)"><img src="/pronos/images/fleche.png" alt="[add]" /> parser</a></p>
+									<p><a href="javascript:;" onclick="addMatches(<?php echo $day->id ?>, -1)"><img src="<?=APPLICATION_URL?>images/fleche.png" alt="[add]" /> ajouter </a></p>
+									<p><a href="javascript:;" onclick="parseMatches(<?php echo $day->id ?>, <?php echo $day->pr_season_id ?>)"><img src="<?=APPLICATION_URL?>images/fleche.png" alt="[add]" /> parser</a></p>
 								</td>
 								<td class="center">
-									<p><a href="javascript:;" onclick="addScores(<?php echo $day->id ?>)"><img src="/pronos/images/fleche.png" alt="[add]" /> ajouter</a></p>
-									<p><a href="javascript:;" onclick="parseScores(<?php echo $day->id ?>)"><img src="/pronos/images/fleche.png" alt="[add]" /> parser</a></p>
+									<p><a href="javascript:;" onclick="addScores(<?php echo $day->id ?>)"><img src="<?=APPLICATION_URL?>images/fleche.png" alt="[add]" /> ajouter</a></p>
+									<p><a href="javascript:;" onclick="parseScores(<?php echo $day->id ?>)"><img src="<?=APPLICATION_URL?>images/fleche.png" alt="[add]" /> parser</a></p>
 								</td>
 								<td class="center">
-									<p><a href="/pronos/pronos.php?id=<?php echo $day->id ?>"><img src="/pronos/images/fleche.png" alt="[add]" /> voir</a></p>
-									<p><a href="javascript:;" onclick="printScores(<?php echo $day->id ?>)"><img src="/pronos/images/fleche.png" alt="[add]" /> imprimer</a></p>
+									<p><a href="<?=APPLICATION_URL?>pronos.php?id=<?php echo $day->id ?>"><img src="<?=APPLICATION_URL?>images/fleche.png" alt="[add]" /> voir</a></p>
+									<p><a href="javascript:;" onclick="printScores(<?php echo $day->id ?>)"><img src="<?=APPLICATION_URL?>images/fleche.png" alt="[add]" /> imprimer</a></p>
 								</td>
 							</tr>
 						<?php endforeach; ?>
@@ -119,7 +106,7 @@
 		{
 			$('#loading').modal({close: false});
 			$.ajax({
-				url: '/pronos/ajax/add_day.php',
+				url: '<?=APPLICATION_URL?>ajax/add_day.php',
 				data: {id: id},
 				success: function (response) {
 					$.modal.close();
@@ -127,7 +114,7 @@
 					$('#popup').modal({close: false});
 					$('#popup input[type=text]').focus();
 					$('#popup form').ajaxForm({
-						url: '/pronos/ajax/save_day.php',
+						url: '<?=APPLICATION_URL?>ajax/save_day.php',
 						dataType: 'json',
 						success: function (response) {
 							if (response.success == 1)
@@ -150,7 +137,7 @@
 		{
 			$('#loading').modal({close: false});
 			$.ajax({
-				url: '/pronos/ajax/add_match.php',
+				url: '<?=APPLICATION_URL?>ajax/add_match.php',
 				data: {id: id, pr_day_id: day},
 				success: function (response) {
 					$.modal.close();
@@ -158,7 +145,7 @@
 					$('#popup').modal({close: false});
 					$('#popup input[type=text]').focus();
 					$('#popup form').ajaxForm({
-						url: '/pronos/ajax/save_match.php',
+						url: '<?=APPLICATION_URL?>ajax/save_match.php',
 						dataType: 'json',
 						success: function (response) {
 							if (response.success == 1)
@@ -175,7 +162,7 @@
 		{
 			$('#loading').modal({close: false});
 			$.ajax({
-				url: '/pronos/ajax/parse_matches.php',
+				url: '<?=APPLICATION_URL?>ajax/parse_matches.php',
 				data: {id: id, pr_day_id: day},
 				success: function (response) {
 					$.modal.close();
@@ -183,12 +170,12 @@
 					$('#popup').modal({close: false});
 					$('#popup input[type=text]').focus();
 					$('#popup form').ajaxForm({
-						url: '/pronos/ajax/save_matches.php',
+						url: '<?=APPLICATION_URL?>ajax/save_matches.php',
 						success: function (response) {
 							$('#matches').parent().html(response);
 							$('#parser').val('enregistrer');
 							$('#popup form').ajaxForm({
-								url: '/pronos/ajax/save_match.php',
+								url: '<?=APPLICATION_URL?>ajax/save_match.php',
 								dataType: 'json',
 								success: function (response) {
 									if (response.success == 1)
@@ -207,7 +194,7 @@
 		{
 			$('#loading').modal({close: false});
 			$.ajax({
-				url: '/pronos/ajax/add_scores.php',
+				url: '<?=APPLICATION_URL?>ajax/add_scores.php',
 				data: {id: day},
 				success: function (response) {
 					$.modal.close();
@@ -215,7 +202,7 @@
 					$('#popup').modal({close: false});
 					$('#popup input[type=text]').focus();
 					$('#popup form').ajaxForm({
-						url: '/pronos/ajax/save_scores.php',
+						url: '<?=APPLICATION_URL?>ajax/save_scores.php',
 						dataType: 'json',
 						success: function (response) {
 							if (response.success == 1)
@@ -232,7 +219,7 @@
 		{
 			$('#loading').modal({close: false});
 			$.ajax({
-				url: '/pronos/ajax/parse_scores.php',
+				url: '<?=APPLICATION_URL?>ajax/parse_scores.php',
 				data: {id: day},
 				success: function (response) {
 					$.modal.close();
@@ -240,12 +227,12 @@
 					$('#popup').modal({close: false});
 					$('#popup input[type=text]').focus();
 					$('#popup form').ajaxForm({
-						url: '/pronos/ajax/save_score.php',
+						url: '<?=APPLICATION_URL?>ajax/save_score.php',
 						success: function (response) {
 							$('#matches').parent().html(response);
 							$('#parser').val('enregistrer');
 							$('#popup form').ajaxForm({
-								url: '/pronos/ajax/save_scores.php',
+								url: '<?=APPLICATION_URL?>ajax/save_scores.php',
 								dataType: 'json',
 								success: function (response) {
 									if (response.success == 1)
@@ -264,7 +251,7 @@
 		{
 			$('#loading').modal({close: false});
 			$.ajax({
-				url: '/pronos/ajax/print_pronos.php',
+				url: '<?=APPLICATION_URL?>ajax/print_pronos.php',
 				data: {pr_day_id: day},
 				success: function (response) {
 					$.modal.close();

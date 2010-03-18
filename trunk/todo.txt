@@ -17,3 +17,9 @@
  * si on affiche plusieurs listes déroulantes de suite (sans pouvoir parser le nom) et qu'il n'y a pas de ligne de pronos dedans, on n'affiche qu'une liste déroulante
 - corriger les chemins (soit mettre tout en relatif, soit mettre l'url dans le fichier de conf)
 - mettre une date butoir pour la saisie des pronos de chaque journée, surchargeable au niveau de chaque match
+- fonction d'upload du logo des équipes (et nommer les images par ID, pas par nom)
+- sur le graphe évolution, ajouter le nom de chaque utilisateur avec la couleur associée (en dessous du graphe)
+- faire un système de migration de la base de données
+* migration_version, avec directement des requêtes sql à executer (upgrade uniquement, pas de downgrade)
+* rendre l'application offline pendant la mise à jour
+* updater les champs des classes .... comment ? relancer le generate_classes ?
