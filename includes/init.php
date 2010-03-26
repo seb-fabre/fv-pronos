@@ -6,4 +6,6 @@
 	require_once($GLOBALS['ROOTPATH'] . 'includes/includes.php');
 	require_once($GLOBALS['ROOTPATH'] . 'includes/conf.php');
 	require_once($GLOBALS['ROOTPATH'] . 'includes/mysql_connexion.php');
+
+	checkMigrationVersion();
 ?>
