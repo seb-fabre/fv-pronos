@@ -20,6 +20,10 @@
 - fonction d'upload du logo des équipes (et nommer les images par ID, pas par nom)
 - sur le graphe évolution, ajouter le nom de chaque utilisateur avec la couleur associée (en dessous du graphe)
 - faire un système de migration de la base de données
-* migration_version, avec directement des requêtes sql à executer (upgrade uniquement, pas de downgrade)
-* rendre l'application offline pendant la mise à jour
-* updater les champs des classes .... comment ? relancer le generate_classes ?
+ * migration_version, avec directement des requêtes sql à executer (upgrade uniquement, pas de downgrade)
+ * rendre l'application offline pendant la mise à jour
+ * updater les champs des classes .... comment ? relancer le generate_classes ?
+- améliorer le principe des clés primaires dans le generate_classes (gérer les clés primaires sur plusieurs champs dans le find, save, delete)
+ * comment gérer le search ? (résultats indexés par clé primaire) tableau à index multiple ?
+ * revoir système des criteria pour le search
+- reprendre le générateur de classe pour que toutes les classes héritent en fait d'une classe Artobject

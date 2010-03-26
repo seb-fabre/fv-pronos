@@ -1,131 +1,190 @@
 <?php
-	mysql_connect('localhost', 'root', '');
-	mysql_select_db('pronos');
-	
-	$req = mysql_query('SHOW TABLES;');
+
+	require_once('init.php');
+
+	$conn = mysql_connect($mysqlHost, $mysqlLogin, $mysqlPassword);
+	$DB = $mysqlDatabase;
+
+	set_time_limit(0);
+
+	$prefixLength = 3;
+
+	mysql_select_db('information_schema', $conn) or die (mysql_error());
+
+	$queryFK = mysql_query("SELECT COLUMN_NAME, REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME, TABLE_CONSTRAINTS.TABLE_NAME
+  	                      FROM TABLE_CONSTRAINTS, KEY_COLUMN_USAGE
+  	                      WHERE TABLE_CONSTRAINTS.CONSTRAINT_NAME=KEY_COLUMN_USAGE.CONSTRAINT_NAME
+  	                      AND constraint_type='FOREIGN KEY'
+  	                      AND TABLE_CONSTRAINTS.TABLE_SCHEMA='" . $DB . "'") or die (mysql_error());
+
+	$foreignKeys = array();
+	$invertForeignKeys = array();
+	while ($res = mysql_fetch_array($queryFK))
+	{
+		$foreignKeys[$res['TABLE_NAME']][$res['COLUMN_NAME']] = array('table' => $res['REFERENCED_TABLE_NAME'], 'column' => $res['REFERENCED_COLUMN_NAME']);
+		$invertForeignKeys[$res['REFERENCED_TABLE_NAME']] []= array($res['REFERENCED_COLUMN_NAME'] => array('table' => $res['TABLE_NAME'], 'column' => $res['COLUMN_NAME']));
+	}
+
+	mysql_select_db($DB, $conn);
+
+	$_includes = fopen('__classes.php', 'w+');
+	fwrite($_includes, '<?php
+if (!empty($GLOBALS["ROOTPATH"]))
+	$relativePath = $GLOBALS["ROOTPATH"];
+else
+	$relativePath = "./";
+');
+	fwrite($_includes, 'require_once($relativePath . "ArtObject.php");' . "\n");
+
+	$req = mysql_query('SHOW TABLES;', $conn);
+
 	while ($res = mysql_fetch_array($req))
 	{
-		$file = fopen(ucwords(substr($res[0], 3)) . '.php', 'w+');
-		
-		fwrite($file, '<?php 
-class ' . ucwords(substr($res[0], 3)) . '
+		$capitalized = str_replace(' ', '', ucwords(str_replace('_', ' ', substr($res[0], $prefixLength))));
+
+		$file = fopen('_' . $capitalized . '.php', 'w+');
+
+		fwrite($file, '<?php
+$GLOBALS["classes"]["' . $capitalized . '"] = array("classname" => "_' . $capitalized . '", "tablename" => "' . $res[0] . '");
+
+class _' . $capitalized . ' extends ArtObject
 {
 ');
 		$fields = array();
-		
-		$q = mysql_query('SHOW COLUMNS FROM ' . $res[0] . ';');
+
+		$q = mysql_query('SHOW COLUMNS FROM ' . $res[0] . ';', $conn);
 		while ($r = mysql_fetch_array($q))
 		{
 			$fields []= $r[0];
-			if (substr($r[0], 0, 3) != 'pr_')
+			if (substr($r[0], 0, $prefixLength) != 'pr_')
 				$n = str_replace(' ', '', ucwords(str_replace('_', ' ', $r[0])));
 			else
-				$n = str_replace(' ', '', ucwords(str_replace('_', ' ', substr($r[0], 3))));
+				$n = str_replace(' ', '', ucwords(str_replace('_', ' ', substr($r[0], $prefixLength))));
 		}
-		fwrite($file, '	private $_data = array(\'' . implode("' => null, '", $fields) . '\' => null);
-	
-	private $_editedFields = array();
-	
+
+		fwrite($file, '	protected $_data = array(\'' . implode("' => null, '", $fields) . '\' => null);
+
+	protected $_editedFields = array();
+
 	public function __construct($values = array())
 	{
-		if ($values)
+		if (!empty($values))
 		foreach ($values as $key => $value)
 		{
 			if (array_key_exists($key, $this->_data))
 				$this->_data[$key] = $value;
 		}
 	}
-	
+
+	/**
+	 * @return ' . $capitalized . '
+	 */
 	public static function find($id)
 	{
-		if (!$id)
-			return false;
-		
-		$req = mysql_query(\'SELECT * FROM ' . $res[0] . ' WHERE id=\' . $id) or die(mysql_error());
-		if (mysql_num_rows($req) != 0)
-			return new ' . ucwords(substr($res[0], 3)) . '(mysql_fetch_array($req));
-		return false;
+		return parent::find("' . $capitalized . '", $id);
 	}
-	
-	public static function getAll($order=\'name ASC\')
+
+	/**
+	 * @return array
+	 */
+	public static function getAll($order=\'\')
 	{
-		$results = array();
-		
-		$req = mysql_query(\'SELECT * FROM ' . $res[0] . ' ORDER BY \' . $order);
-		while ($res = mysql_fetch_array($req))
-			$results [$res[\'id\']] = new ' . ucwords(substr($res[0], 3)) . '($res);
-		
-		return $results;
+		return parent::search("' . $capitalized . '", array(), $order);
 	}
-	
+
+	/**
+	 * @return ' . $capitalized . '
+	 */
 	public static function findBy($field, $value)
 	{
-		$req = mysql_query(\'SELECT * FROM ' . $res[0] . ' WHERE \' . $field . \' LIKE "\' . $value . \'"\') or die(mysql_error());
-		if (mysql_num_rows($req) != 0)
-			return new ' . ucwords(substr($res[0], 3)) . '(mysql_fetch_array($req));
-		return false;
+		return parent::findBy("' . $capitalized . '", $field, $value);
 	}
-	
-	public function __get($key)
+
+	/**
+	 * @return array
+	 */
+	public static function search($criteria = array(), $order="", $limit=false, $onlyCount=false)
 	{
-		if (array_key_exists($key, $this->_data))
-			return $this->_data[$key];
-		return false;
+		return parent::search("' . $capitalized . '", $criteria, $order, $limit, $onlyCount);
 	}
-	
-	public function __set($key, $value)
-	{
-		if (array_key_exists($key, $this->_data))
-			if ($this->_data[$key] != $value)
-			{
-				$this->_editedFields []= $key;
-				$this->_data[$key] = $value;
-			}
-	}
-	
+
 	public function save()
 	{
-		unset($this->_editedFields[\'id\']);
-		
-		if (count($this->_editedFields) == 0)
-			return;
-		
-		if ($this->_data[\'id\'])
-		{
-			$query = \'UPDATE ' . $res[0] . ' SET \';
-			
-			$glu = \'\';
-			foreach ($this->_editedFields as $field)
-			{
-				$query .= $glu . $field . \'="\' . addslashes($this->_data[$field]) . \'"\';
-				$glu = \', \';
-			}
-			$query .= \' WHERE id=\' . $this->id;
-		}
-		else
-		{
-			$query = \'INSERT INTO ' . $res[0] . '(\';
-			$glu = \'\';
-			foreach ($this->_editedFields as $field)
-			{
-				$query .= $glu . $field;
-				$glu = \', \';
-			}
-			$query .= \') VALUES("\';
-			$glu = \'\';
-			foreach ($this->_editedFields as $field)
-			{
-				$query .= $glu . addslashes($this->_data[$field]);
-				$glu = \'", "\';
-			}
-			$query .= \'")\';
-		}
-		mysql_query($query) or die (mysql_error());
+		return parent::save("' . $capitalized . '");
+	}
+
+	/**
+	 * @return int
+	 */
+	public static function count()
+	{
+		return parent::count("' . $capitalized . '", array(), "", 1, true);
+	}
+
+	public function delete()
+	{
+		return parent::delete("' . $capitalized . '");
 	}
 ');
-		fwrite($file, '}
-?>');
-		fclose($file);
-		echo '<code><pre>' . htmlentities(file_get_contents(ucwords(substr($res[0], 3)) . '.php')) . '</pre></code>';
+		if (isset($foreignKeys[$res[0]]))
+		foreach ($foreignKeys[$res[0]] as $foreignKey => $infos)
+		{
+			$cap = str_replace(' ', '', ucwords(str_replace('_', ' ', substr($infos['table'], $prefixLength))));
+			$capName = str_replace(' ', '', ucwords(str_replace('_', ' ', substr($foreignKey, $prefixLength, -3))));
+			fwrite($file, '
+	/**
+	 * @return ' . $cap . '
+	 */
+	public function get' . $capName . '()
+	{
+		return ' . $cap . '::find($this->' . $foreignKey . ');
 	}
-?>
+');
+		}
+		if (isset($invertForeignKeys[$res[0]]))
+		foreach ($invertForeignKeys[$res[0]] as $foreignKeys)
+		foreach ($foreignKeys as $foreignKey => $infos)
+		{
+			$cap = str_replace(' ', '', ucwords(str_replace('_', ' ', substr($infos['table'], $prefixLength))));
+			$capName = str_replace(' ', '', ucwords(str_replace('_', ' ', substr($foreignKey, $prefixLength, -3))));
+			fwrite($file, '
+	/**
+	 * @return array
+	 */
+	public function get' . $cap . 's()
+	{
+		return ' . $cap . '::search(array(array("' . $infos['column'] . '", $this->' . $foreignKey . ')));
+	}
+');
+		}
+
+		fwrite($file, '}
+');
+		fclose($file);
+
+//		echo '<code><pre>' . htmlentities(file_get_contents($capitalized . '.php')) . '</pre></code>';
+
+		fwrite($_includes, 'require_once($relativePath . "_' . $capitalized . '.php");' . "\n");
+
+		if (!file_exists($capitalized . '.php'))
+		{
+			$file = fopen($capitalized . '.php', 'w+');
+
+			fwrite($file, '<?php
+$GLOBALS["classes"]["' . $capitalized . '"] = array("classname" => "' . $capitalized . '", "tablename" => "' . $res[0] . '");
+	
+	class ' . $capitalized . ' extends _' . $capitalized . '
+	{
+	');
+
+			fwrite($file, '}
+	');
+
+			fclose($file);
+
+//			echo '<code><pre>' . htmlentities(file_get_contents($capitalized . '.php')) . '</pre></code>';
+		}
+
+		fwrite($_includes, 'require_once($relativePath . "' . $capitalized . '.php");' . "\n");
+	}
+	fclose($_includes);

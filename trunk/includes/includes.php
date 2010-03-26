@@ -1,11 +1,7 @@
 <?php
-	require_once($GLOBALS['ROOTPATH'] . 'includes/Day.php');
-	require_once($GLOBALS['ROOTPATH'] . 'includes/League.php');
-	require_once($GLOBALS['ROOTPATH'] . 'includes/Match.php');
-	require_once($GLOBALS['ROOTPATH'] . 'includes/Prono.php');
-	require_once($GLOBALS['ROOTPATH'] . 'includes/Season.php');
-	require_once($GLOBALS['ROOTPATH'] . 'includes/Team.php');
-	require_once($GLOBALS['ROOTPATH'] . 'includes/User.php');
+	require_once($GLOBALS['ROOTPATH'] . 'includes/__classes.php');
+
+	require_once($GLOBALS['ROOTPATH'] . 'includes/Migration.php');
 
 /**
  * Define function json_decode if the json module is disabled
@@ -58,4 +54,112 @@ function echoMenu()
 {
 	require_once($GLOBALS['ROOTPATH'] . 'includes/header.php');
 }
-?>
+
+/**
+ * Checks the database migration version, creates the table if doesn't exist,
+ * migrates if necessary, and if migrates puts the application in maintenance
+ */
+function checkMigrationVersion()
+{
+	// check database version
+	$req = mysql_query('SELECT * FROM pr_migration_version');
+
+	// create table if not present
+	if (!$req)
+	{
+		mysql_query("CREATE TABLE `pr_migration_version` (`version` INT UNSIGNED NOT NULL DEFAULT  '1');");
+		mysql_query('INSERT INTO version VALUES(0);');
+		$currentVersion = 0;
+	}
+	else if (mysql_num_rows($req) == 0)
+	{
+		mysql_query('INSERT INTO pr_migration_version VALUES(0);');
+		$currentVersion = 0;
+	}
+	else
+	{
+		$res = mysql_fetch_assoc($req);
+		$currentVersion = $res['version'];
+	}
+
+	if (file_exists($GLOBALS['ROOTPATH'] . 'maintenance.txt'))
+	{
+		// FIXME : redirect to a real maintenance page
+		header("HTTP/1.x 503 Temporary undisponible");
+		header("Status:503 Temporary undisponible");
+		die('maintenance');
+	}
+
+	Migration::migrate($currentVersion);
+}
+
+/********************************
+ * Retro-support of get_called_class()
+ * Tested and works in PHP 5.2.4
+ * http://www.sol1.com.au/
+ ********************************/
+if(!function_exists('get_called_class'))
+{
+	function get_called_class($bt = false,$l = 1)
+	{
+    if (!$bt) 
+			$bt = debug_backtrace();
+
+    if (!isset($bt[$l])) 
+			throw new Exception("Cannot find called class -> stack level too deep.");
+
+    if (!isset($bt[$l]['type']))
+		{
+        throw new Exception ('type not set');
+    }
+    else
+		{
+			switch ($bt[$l]['type'])
+			{
+        case '::':
+					$lines = file($bt[$l]['file']);
+					$i = 0;
+					$callerLine = '';
+					do
+					{
+							$i++;
+							$callerLine = $lines[$bt[$l]['line']-$i] . $callerLine;
+					}
+					while (stripos($callerLine,$bt[$l]['function']) === false);
+
+					preg_match('/([a-zA-Z0-9\_]+)::'.$bt[$l]['function'].'/',
+											$callerLine,
+											$matches);
+					if (!isset($matches[1]))
+					{
+							// must be an edge case.
+							throw new Exception ("Could not find caller class: originating method call is obscured.");
+					}
+
+					switch ($matches[1])
+					{
+						case 'self':
+						case 'parent':
+							return get_called_class($bt,$l+1);
+						default:
+							return $matches[1];
+					}
+				// won't get here.
+        case '->': switch ($bt[$l]['function'])
+				{
+					case '__get':
+							// edge case -> get class of calling object
+							if (!is_object($bt[$l]['object']))
+								throw new Exception ("Edge case fail. __get called on non object.");
+
+							return get_class($bt[$l]['object']);
+					default:
+						return $bt[$l]['class'];
+				}
+
+        default:
+					throw new Exception ("Unknown backtrace method type");
+			}
+		}
+	}
+}

@@ -34,7 +34,11 @@
 										echo '&nbsp;';
 								?>
 							</td>
-							<td class="center"><a href="javascript:;" onclick="openPopup(<?php echo $user->id ?>)"><img src="<?=APPLICATION_URL?>images/edit.png" alt="[edit]" /></a></td>
+							<td class="center">
+								<?php if (!empty($_SESSION['user'])) { ?>
+									<a href="javascript:;" onclick="openPopup(<?php echo $user->id ?>)"><img src="<?=APPLICATION_URL?>images/edit.png" alt="[edit]" /></a>
+								<?php } ?>
+							</td>
 						</tr>
 					<?php endforeach; ?>
 				<?php else: ?>
