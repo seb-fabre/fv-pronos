@@ -104,9 +104,9 @@ class ArtObject {
 		{
 			$j = @json_decode($this->_data[$key], true);
 			if ($j !== false && is_array($j) && isset($j[$_SESSION["l"]]))
-				return utf8_encode($j[$_SESSION["l"]]);
+				return $j[$_SESSION["l"]];
 			else
-				return utf8_encode($this->_data[$key]);
+				return $this->_data[$key];
 		}
 		return false;
 	}
@@ -139,6 +139,8 @@ class ArtObject {
 				$glu = ', ';
 			}
 			$query .= ' WHERE id=' . $this->id;
+
+			$id = $this->id;
 		}
 		else
 		{
@@ -157,12 +159,13 @@ class ArtObject {
 				$glu = '", "';
 			}
 			$query .= '")';
+
+			$id = mysql_insert_id();
 		}
 		mysql_query($query) or die (mysql_error());
 
-		$id = mysql_insert_id();
 		$this->_editedFields = array();
-		$new = self::find($GLOBALS['classes'][$class]['tablename'], $id);
+		$new = self::find($class, $id);
 		$data = $new->toArray();
 		$this->_data = $data;
 		foreach ($data as $key => $value)
@@ -188,5 +191,18 @@ class ArtObject {
 	public function delete($class)
 	{
 		mysql_query("DELETE FROM " . $GLOBALS['classes'][$class]['tablename'] . " WHERE id=" . $this->id);
+	}
+
+	public static function isUnique($class, $field, $value, $id=false)
+	{
+		$object = self::findBy($class, $field, $value);
+
+		if (empty($object))
+			return true;
+
+		if (!empty($id) && $object->id == $id)
+			return true;
+
+		return false;
 	}
 }

@@ -27,3 +27,4 @@
  * comment gérer le search ? (résultats indexés par clé primaire) tableau à index multiple ?
  * revoir système des criteria pour le search
 - reprendre le générateur de classe pour que toutes les classes héritent en fait d'une classe Artobject
+- ne pas faire de $_GET et $_POST, passer par des fonctions get et post pour éviter des warning pour les valeurs vides

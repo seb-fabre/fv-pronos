@@ -66,4 +66,9 @@ class _User extends ArtObject
 	{
 		return parent::delete("User");
 	}
+
+	public static function isUnique($field, $value, $id=false)
+	{
+		return parent::isUnique("User", $field, $value, $id);
+	}
 }

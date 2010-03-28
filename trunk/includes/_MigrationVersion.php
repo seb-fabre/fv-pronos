@@ -66,4 +66,9 @@ class _MigrationVersion extends ArtObject
 	{
 		return parent::delete("MigrationVersion");
 	}
+
+	public static function isUnique($field, $value, $id=false)
+	{
+		return parent::isUnique("MigrationVersion", $field, $value, $id);
+	}
 }
