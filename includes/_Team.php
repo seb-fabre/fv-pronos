@@ -3,7 +3,7 @@ $GLOBALS["classes"]["Team"] = array("classname" => "_Team", "tablename" => "pr_t
 
 class _Team extends ArtObject
 {
-	protected $_data = array('id' => null, 'name' => null);
+	protected $_data = array('id' => null, 'name' => null, 'has_logo' => null);
 
 	protected $_editedFields = array();
 
@@ -65,5 +65,10 @@ class _Team extends ArtObject
 	public function delete()
 	{
 		return parent::delete("Team");
+	}
+
+	public static function isUnique($field, $value, $id=false)
+	{
+		return parent::isUnique("Team", $field, $value, $id);
 	}
 }

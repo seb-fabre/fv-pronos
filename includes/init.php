@@ -1,11 +1,26 @@
 <?php
 	$GLOBALS['ROOTPATH'] = str_replace('includes/' . basename(__FILE__), '', str_replace('\\', '/', __FILE__));
 
+	require_once($GLOBALS['ROOTPATH'] . 'includes/__classes.php');
+
+	require_once($GLOBALS['ROOTPATH'] . 'includes/class.migration.php');
+	require_once($GLOBALS['ROOTPATH'] . 'includes/class.notification.php');
+
 	session_start();
 
-	require_once($GLOBALS['ROOTPATH'] . 'includes/includes.php');
+	header('Content-type: text/html; charset=UTF-8');
+
+	require_once($GLOBALS['ROOTPATH'] . 'includes/functions.php');
 	require_once($GLOBALS['ROOTPATH'] . 'includes/conf.php');
 	require_once($GLOBALS['ROOTPATH'] . 'includes/mysql_connexion.php');
 
 	checkMigrationVersion();
-?>
+
+	if (!empty($_SESSION['user']))
+	{
+		if (get_class($_SESSION['user']) != 'User')
+			unset($_SESSION['user']);
+	}
+
+	$GLOBALS['FooterJS'] = '';
+	

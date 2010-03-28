@@ -1,1 +1,3 @@
+Options -Indexes +MultiViews
+
 ErrorDocument 404 /pronos/classement.php

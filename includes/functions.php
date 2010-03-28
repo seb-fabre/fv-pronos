@@ -1,8 +1,4 @@
 <?php
-	require_once($GLOBALS['ROOTPATH'] . 'includes/__classes.php');
-
-	require_once($GLOBALS['ROOTPATH'] . 'includes/Migration.php');
-
 /**
  * Define function json_decode if the json module is disabled
  */
@@ -41,9 +37,10 @@ function echoHTMLHead($title='')
 	<title>$title</title>
 	<link rel="stylesheet" href="$url/css/screen.css" type="text/css" media="screen" />
 	<link rel="stylesheet" href="$url/css/pronos.css" type="text/css" media="screen" />
-	<script type="text/javascript" src="$url/js/jquery-1.3.2.min.js"></script>
+	<script type="text/javascript" src="$url/js/jquery-1.4.2.min.js"></script>
+	<script type="text/javascript" src="$url/js/jquery-ui-1.8.custom.min.js"></script>
 	<script type="text/javascript" src="$url/js/jquery.simplemodal-1.2.3.js"></script>
-	<script type="text/javascript" src="$url/js/jquery.form-2.24.js"></script>
+	<script type="text/javascript" src="$url/js/jquery.form.js"></script>
 	<script type="text/javascript" src="$url/js/jquery.qtip-1.0.0-rc3.min.js"></script>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF8" />
 </head>
@@ -53,6 +50,21 @@ HTML;
 function echoMenu()
 {
 	require_once($GLOBALS['ROOTPATH'] . 'includes/header.php');
+}
+
+function echoHTMLFooter()
+{
+	echo <<<HTML
+	<div id="loading">
+		<div id="subloading">Chargement</div>
+	</div>
+HTML;
+
+	Notification::clearAll();
+
+	echo '<script type="text/javascript">';
+	echo $GLOBALS['FooterJS'];
+	echo '</script>';
 }
 
 /**
@@ -91,6 +103,11 @@ function checkMigrationVersion()
 	}
 
 	Migration::migrate($currentVersion);
+}
+
+function echoNotifications()
+{
+	Notification::display();
 }
 
 /********************************
@@ -162,4 +179,15 @@ if(!function_exists('get_called_class'))
 			}
 		}
 	}
+}
+
+function GETorPOST($name)
+{
+	if (!empty($_POST[$name]))
+		return $_POST[$name];
+
+	if (!empty($_GET[$name]))
+		return $_GET[$name];
+
+	return null;
 }

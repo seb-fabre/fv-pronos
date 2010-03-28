@@ -66,4 +66,9 @@ class _Prono extends ArtObject
 	{
 		return parent::delete("Prono");
 	}
+
+	public static function isUnique($field, $value, $id=false)
+	{
+		return parent::isUnique("Prono", $field, $value, $id);
+	}
 }

@@ -1,7 +1,7 @@
 <?php
 	require_once('includes/init.php');
 
-	$teams = Team::getAll();
+	$teams = Team::getAll('name');
 
 	echoHTMLHead('Liste des équipes');
 ?>
@@ -10,7 +10,10 @@
 	<?php echoMenu(); ?>
 	<div id="content">
 		<h1>Liste des équipes</h1>
-		<div class="add"><a href="javascript:;" onclick="openPopup(-1)">Ajouter une équipe</a></div>
+
+		<?php if (!empty($_SESSION['user'])) { ?>
+			<div class="add"><a href="javascript:;" onclick="openPopup(-1)">Ajouter une équipe</a></div>
+		<?php } ?>
 		<table>
 			<thead>
 				<tr>
@@ -28,7 +31,7 @@
 							<td>
 								<?php
 									if ($team->has_logo)
-										echo '<img src="' . APPLICATION_URL . 'logos/' . $team->id . '.gif" />';
+										echo $team->getLogo();
 									else
 										echo '&nbsp;';
 								?>
@@ -49,39 +52,38 @@
 
 	<div id="popup"><div id="popup_message"></div><div id="popup_content"></div></div>
 
-	<script type="text/javascript">
-		function openPopup(id)
-		{
-			$('#loading').modal({close: false});
-			$.ajax({
-				url: '<?=APPLICATION_URL?>ajax/add_team.php',
-				data: {id: id},
-				success: function (response) {
-					$.modal.close();
-					$('#popup_content').html(response);
-					$('#popup').modal({close: false});
-					$('#popup input[type=text]').focus();
-					$('#popup form').ajaxForm({
-						url: '<?=APPLICATION_URL?>ajax/save_team.php',
-						dataType: 'json',
-						success: function (response) {
-							if (response.success == 1)
-								window.location.reload();
-							else
-								$('#popup_message').html(response.message);
-						}
-					});
-				}
-			});
-		}
+	<?php if (!empty($_SESSION['user'])) { ?>
 
-		$(document).ready(function(){
+		<script type="text/javascript">
+			function openPopup(id)
+			{
+				$('#loading').modal({close: false});
+				$.ajax({
+					url: '<?=APPLICATION_URL?>ajax/add_team.php',
+					data: {id: id},
+					success: function (response) {
+						$.modal.close();
+						$('#popup_content').html(response);
+						$('#popup').modal({close: false});
+						$('#popup input[type=text]').focus();
 
-		});
-	</script>
+						$('#popup form').ajaxForm({
+							url: '<?=APPLICATION_URL?>ajax/save_team.php',
+							dataType: 'json',
+							method: 'post',
+							success: function (response) {
+								if (response.success == 1)
+									window.location.reload();
+								else
+									$('#popup_message').html(response.message);
+							}
+						});
+					}
+				});
+			}
+		</script>
+	<?php } ?>
 
-	<div id="loading">
-		<div id="subloading">Chargement</div>
-	</div>
+	<?php echoHTMLFooter(); ?>
 </body>
 </html>

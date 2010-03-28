@@ -66,4 +66,9 @@ class _Match extends ArtObject
 	{
 		return parent::delete("Match");
 	}
+
+	public static function isUnique($field, $value, $id=false)
+	{
+		return parent::isUnique("Match", $field, $value, $id);
+	}
 }

@@ -279,8 +279,6 @@
 		});
 	</script>
 
-	<div id="loading">
-		<div id="subloading">Chargement</div>
-	</div>
+	<?php echoHTMLFooter(); ?>
 </body>
 </html>

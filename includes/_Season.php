@@ -66,4 +66,9 @@ class _Season extends ArtObject
 	{
 		return parent::delete("Season");
 	}
+
+	public static function isUnique($field, $value, $id=false)
+	{
+		return parent::isUnique("Season", $field, $value, $id);
+	}
 }

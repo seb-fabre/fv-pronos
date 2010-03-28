@@ -23,7 +23,9 @@
 				<tr>
 					<th>Nom</th>
 					<th>Saison</th>
-					<th>Modifier</th>
+					<?php if (!empty($_SESSION['user'])) { ?>
+						<th>Modifier</th>
+					<?php } ?>
 					<th>Equipes</th>
 					<th>Classement</th>
 				</tr>
@@ -37,9 +39,17 @@
 									<td rowspan="<?php echo count($seasons[$league->id]) ?>"><?php echo $league->name ?></td>
 								<?php endif; ?>
 								<td><?php echo $season->label ?></td>
-								<td class="center"><a href="javascript:;" onclick="openPopup(<?php echo $season->id ?>)"><img src="<?=APPLICATION_URL?>images/edit.png" alt="[edit]" /></a></td>
-								<td><a href="javascript:;" onclick="showTeams(<?php echo $season->id ?>);"><img src="<?=APPLICATION_URL?>images/fleche.png" alt="[add]" /> afficher les équipes</a></td>
-								<td><a href="javascript:;" onclick="showRankings(<?php echo $season->id ?>, -1);"><img src="<?=APPLICATION_URL?>images/fleche.png" alt="[add]" /> afficher le classement</a></td>
+								<?php if (!empty($_SESSION['user'])) { ?>
+									<td class="center">
+										<a href="javascript:;" onclick="openPopup(<?php echo $season->id ?>)"><img src="<?=APPLICATION_URL?>images/edit.png" alt="[edit]" /></a>
+									</td>
+								<?php } ?>
+								<td>
+									<a href="javascript:;" onclick="showTeams(<?php echo $season->id ?>);"><img src="<?=APPLICATION_URL?>images/fleche.png" alt="[add]" /> afficher les équipes</a>
+								</td>
+								<td>
+									<a href="javascript:;" onclick="showRankings(<?php echo $season->id ?>, -1);"><img src="<?=APPLICATION_URL?>images/fleche.png" alt="[add]" /> afficher le classement</a>
+								</td>
 							</tr>
 						<?php endforeach; ?>
 					<?php endforeach; ?>

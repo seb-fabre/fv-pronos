@@ -66,4 +66,9 @@ class _Day extends ArtObject
 	{
 		return parent::delete("Day");
 	}
+
+	public static function isUnique($field, $value, $id=false)
+	{
+		return parent::isUnique("Day", $field, $value, $id);
+	}
 }

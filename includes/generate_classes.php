@@ -1,9 +1,10 @@
 <?php
+	$GLOBALS['ROOTPATH'] = str_replace('includes/' . basename(__FILE__), '', str_replace('\\', '/', __FILE__));
 
 	require_once('init.php');
 
-	$conn = mysql_connect($mysqlHost, $mysqlLogin, $mysqlPassword);
-	$DB = $mysqlDatabase;
+	$conn = mysql_connect($GLOBALS['conf']['mysql_host'], $GLOBALS['conf']['mysql_login'], $GLOBALS['conf']['mysql_password']);
+	$DB = $GLOBALS['conf']['mysql_database'];
 
 	set_time_limit(0);
 
@@ -27,10 +28,10 @@
 
 	mysql_select_db($DB, $conn);
 
-	$_includes = fopen('__classes.php', 'w+');
+	$_includes = fopen($GLOBALS['ROOTPATH'] . 'includes/__classes.php', 'w+');
 	fwrite($_includes, '<?php
 if (!empty($GLOBALS["ROOTPATH"]))
-	$relativePath = $GLOBALS["ROOTPATH"];
+	$relativePath = $GLOBALS["ROOTPATH"] . "includes/";
 else
 	$relativePath = "./";
 ');
@@ -42,7 +43,7 @@ else
 	{
 		$capitalized = str_replace(' ', '', ucwords(str_replace('_', ' ', substr($res[0], $prefixLength))));
 
-		$file = fopen('_' . $capitalized . '.php', 'w+');
+		$file = fopen($GLOBALS['ROOTPATH'] . 'includes/_' . $capitalized . '.php', 'w+');
 
 		fwrite($file, '<?php
 $GLOBALS["classes"]["' . $capitalized . '"] = array("classname" => "_' . $capitalized . '", "tablename" => "' . $res[0] . '");
@@ -125,6 +126,11 @@ class _' . $capitalized . ' extends ArtObject
 	{
 		return parent::delete("' . $capitalized . '");
 	}
+
+	public static function isUnique($field, $value, $id=false)
+	{
+		return parent::isUnique("' . $capitalized . '", $field, $value, $id);
+	}
 ');
 		if (isset($foreignKeys[$res[0]]))
 		foreach ($foreignKeys[$res[0]] as $foreignKey => $infos)
@@ -168,7 +174,7 @@ class _' . $capitalized . ' extends ArtObject
 
 		if (!file_exists($capitalized . '.php'))
 		{
-			$file = fopen($capitalized . '.php', 'w+');
+			$file = fopen($GLOBALS['ROOTPATH'] . 'includes/' . $capitalized . '.php', 'w+');
 
 			fwrite($file, '<?php
 $GLOBALS["classes"]["' . $capitalized . '"] = array("classname" => "' . $capitalized . '", "tablename" => "' . $res[0] . '");

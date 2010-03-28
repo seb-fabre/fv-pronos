@@ -66,4 +66,9 @@ class _League extends ArtObject
 	{
 		return parent::delete("League");
 	}
+
+	public static function isUnique($field, $value, $id=false)
+	{
+		return parent::isUnique("League", $field, $value, $id);
+	}
 }

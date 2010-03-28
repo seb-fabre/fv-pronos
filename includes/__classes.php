@@ -1,6 +1,6 @@
 <?php
 if (!empty($GLOBALS["ROOTPATH"]))
-	$relativePath = $GLOBALS["ROOTPATH"];
+	$relativePath = $GLOBALS["ROOTPATH"] . "includes/";
 else
 	$relativePath = "./";
 require_once($relativePath . "ArtObject.php");
@@ -22,4 +22,3 @@ require_once($relativePath . "_Team.php");
 require_once($relativePath . "Team.php");
 require_once($relativePath . "_User.php");
 require_once($relativePath . "User.php");
-?>
