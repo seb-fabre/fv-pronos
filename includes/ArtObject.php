@@ -127,7 +127,7 @@ class ArtObject {
 		if (!empty($limit))
 			$query .= " LIMIT " . $limit;
 
-		$req = mysql_query($query);
+		$req = mysql_query($query) or die (mysql_error());
 		while ($res = mysql_fetch_array($req))
 			$results[$res['id']] = new $GLOBALS['classes'][$class]['classname']($res);
 
@@ -320,7 +320,7 @@ class ArtObject {
 
 			$backtrace = debug_backtrace();
 
-			if (isset($backtrace[1]['class']) && isset($GLOBALS['classes'][$backtrace[1]['class']]))
+			if (isset($backtrace[1]['class']) && isset($GLOBALS['classes'][$backtrace[1]['class']]) && isset($GLOBALS['classes'][$method]))
 			{
 				$classname = $backtrace[1]['class'];
 				$field = 'pr_' . camelCaseToUnderscores($classname) . '_id';
