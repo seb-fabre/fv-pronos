@@ -1,4 +1,10 @@
 <?php
+/**
+ * Description of _Season
+ *
+ * @author arteau
+ */
+
 $GLOBALS["classes"]["Season"] = array("classname" => "_Season", "tablename" => "pr_season");
 
 class _Season extends ArtObject
@@ -64,9 +70,12 @@ class _Season extends ArtObject
 
 	public function delete()
 	{
-		return parent::delete("Season");
+		parent::delete("Season");
 	}
 
+	/**
+	 * @return boolean
+	 */
 	public static function isUnique($field, $value, $id=false)
 	{
 		return parent::isUnique("Season", $field, $value, $id);

@@ -1,16 +1,16 @@
 <?php
 	require_once('includes/init.php');
 
-	if (!isset($_GET['league']) || !isset($_GET['users']))
+	if (!isset(GETorPOST('league')) || !isset(GETorPOST('users')))
   {
     echo 'paramètres invalides ... ';
     die;
   }
 
-  $season = Season::find($_GET['league']);
+  $season = Season::find(GETorPOST('league'));
 	$league = $season->getLeague();
 	
-	$userz = $_GET['users'];
+	$userz = GETorPOST('users');
 	$users = explode('-', $userz);
 	$userz = array();
 	foreach ($users as $u)
@@ -22,15 +22,15 @@
     die;
   }
 
-	if (isset($_GET['sort']))
-		$sort = $_GET['sort'];
+	if (isset(GETorPOST('sort')))
+		$sort = GETorPOST('sort');
 	else
 		$sort = 'total';
 
 	$days = $season->getDays();
 
-	if (isset($_GET['day']))
-		$max = $_GET['day'];
+	if (isset(GETorPOST('day')))
+		$max = GETorPOST('day');
 	else
 	{
     $teams = $season->getTeams();

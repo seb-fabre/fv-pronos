@@ -1,9 +1,9 @@
 <?php
 	require_once('../includes/init.php');
 
-	$season = Season::find($_POST['id']);
+	$season = Season::find(GETorPOST('id'));
 
-	$teams = $_POST['team'];
+	$teams = GETorPOST('team');
 
 	$seasonTeams = $season->getTeams();
 

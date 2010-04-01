@@ -12,7 +12,7 @@
 		return -1;
 	}
 	
-	$day = Day::find($_GET['pr_day_id']);
+	$day = Day::find(GETorPOST('pr_day_id'));
 	
 	$season = $day->getSeason();
 	

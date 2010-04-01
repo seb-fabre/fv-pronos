@@ -1,9 +1,9 @@
 <?php
 	require_once('../includes/init.php');
 
-	$id = $_GET['id'];
-	$season = $_GET['pr_season_id'];
-	$number = $_GET['number'];
+	$id = GETorPOST('id');
+	$season = GETorPOST('pr_season_id');
+	$number = GETorPOST('number');
 
 	if (!$season)
 	{

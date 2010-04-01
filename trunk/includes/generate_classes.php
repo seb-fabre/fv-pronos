@@ -46,6 +46,12 @@ else
 		$file = fopen($GLOBALS['ROOTPATH'] . 'includes/_' . $capitalized . '.php', 'w+');
 
 		fwrite($file, '<?php
+/**
+ * Description of _' . $capitalized . '
+ *
+ * @author arteau
+ */
+
 $GLOBALS["classes"]["' . $capitalized . '"] = array("classname" => "_' . $capitalized . '", "tablename" => "' . $res[0] . '");
 
 class _' . $capitalized . ' extends ArtObject
@@ -124,9 +130,12 @@ class _' . $capitalized . ' extends ArtObject
 
 	public function delete()
 	{
-		return parent::delete("' . $capitalized . '");
+		parent::delete("' . $capitalized . '");
 	}
 
+	/**
+	 * @return boolean
+	 */
 	public static function isUnique($field, $value, $id=false)
 	{
 		return parent::isUnique("' . $capitalized . '", $field, $value, $id);
@@ -177,6 +186,12 @@ class _' . $capitalized . ' extends ArtObject
 			$file = fopen($GLOBALS['ROOTPATH'] . 'includes/' . $capitalized . '.php', 'w+');
 
 			fwrite($file, '<?php
+/**
+ * Description of ' . $capitalized . '
+ *
+ * @author arteau
+ */
+
 $GLOBALS["classes"]["' . $capitalized . '"] = array("classname" => "' . $capitalized . '", "tablename" => "' . $res[0] . '");
 	
 	class ' . $capitalized . ' extends _' . $capitalized . '

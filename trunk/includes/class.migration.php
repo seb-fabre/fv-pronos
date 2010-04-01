@@ -3,6 +3,7 @@
  * Description of Migration
  *
  * @author arteau
+ * @final
  */
 class Migration {
 

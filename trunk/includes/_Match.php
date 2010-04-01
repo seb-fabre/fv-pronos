@@ -1,4 +1,10 @@
 <?php
+/**
+ * Description of _Match
+ *
+ * @author arteau
+ */
+
 $GLOBALS["classes"]["Match"] = array("classname" => "_Match", "tablename" => "pr_match");
 
 class _Match extends ArtObject
@@ -64,9 +70,12 @@ class _Match extends ArtObject
 
 	public function delete()
 	{
-		return parent::delete("Match");
+		parent::delete("Match");
 	}
 
+	/**
+	 * @return boolean
+	 */
 	public static function isUnique($field, $value, $id=false)
 	{
 		return parent::isUnique("Match", $field, $value, $id);

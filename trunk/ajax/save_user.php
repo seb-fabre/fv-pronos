@@ -1,9 +1,9 @@
 <?php 
 	require_once('../includes/init.php');
 	
-	$id = $_GET['id'];
-	$name = $_GET['name'];
-	$team = $_GET['pr_team_id'];
+	$id = GETorPOST('id');
+	$name = GETorPOST('name');
+	$team = GETorPOST('pr_team_id');
 	
 	if ($id == -1)
 		$user = new User();

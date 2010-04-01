@@ -1,11 +1,11 @@
 <?php 
 	require_once('../includes/init.php');
 	
-	$id = $_GET['id'];
-	$day = $_GET['pr_day_id'];
+	$id = GETorPOST('id');
+	$day = GETorPOST('pr_day_id');
 	$Day = Day::find($day);
-	$homes = $_GET['pr_home_team_id'];
-	$aways = $_GET['pr_away_team_id'];
+	$homes = GETorPOST('pr_home_team_id');
+	$aways = GETorPOST('pr_away_team_id');
 	
 	
 	// check if one of the teams is already booked for this day

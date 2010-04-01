@@ -1,9 +1,9 @@
 <?php
 	require_once('../includes/init.php');
 
-	$id = $_GET['id'];
-	$day = $_GET['pr_day_id'];
-	$matches = $_GET['matches'];
+	$id = GETorPOST('id');
+	$day = GETorPOST('pr_day_id');
+	$matches = GETorPOST('matches');
 
 	$season = Season::find($id);
 

@@ -1,12 +1,12 @@
 <?php
 	require_once('../includes/init.php');
 
-	$day = Day::find($_POST['id']);
+	$day = Day::find(GETorPOST('id'));
 	
-	$pr_users = $_POST['pr_user_id'];
+	$pr_users = GETorPOST('pr_user_id');
 	
-	$homes = $_POST['home_goals'];
-	$aways = $_POST['away_goals'];
+	$homes = GETorPOST('home_goals');
+	$aways = GETorPOST('away_goals');
 	
 	$matches = $day->getMatches();
 	

@@ -1,4 +1,10 @@
 <?php
+/**
+ * Description of _Day
+ *
+ * @author arteau
+ */
+
 $GLOBALS["classes"]["Day"] = array("classname" => "_Day", "tablename" => "pr_day");
 
 class _Day extends ArtObject
@@ -64,9 +70,12 @@ class _Day extends ArtObject
 
 	public function delete()
 	{
-		return parent::delete("Day");
+		parent::delete("Day");
 	}
 
+	/**
+	 * @return boolean
+	 */
 	public static function isUnique($field, $value, $id=false)
 	{
 		return parent::isUnique("Day", $field, $value, $id);

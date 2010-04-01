@@ -26,12 +26,12 @@
 		return $users[$x['id']]->name < $users[$y['id']]->name;
 	}
 	
-	$league = League::find($_GET['league']);
+	$league = League::find(GETorPOST('league'));
 	
 	$days = $league->getDays();
 	
-	if (isset($_GET['user']))
-		$users = array($_GET['user'] => User::find($_GET['user']));
+	if (isset(GETorPOST('user')))
+		$users = array(GETorPOST('user') => User::find(GETorPOST('user')));
 	else
 		$users = User::getAll();
 	

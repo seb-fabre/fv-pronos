@@ -1,12 +1,12 @@
 <?php 
 	require_once('../includes/init.php');
 	
-	$day = Day::find($_GET['id']);
+	$day = Day::find(GETorPOST('id'));
 	
-	$user = User::find($_GET['user']);
+	$user = User::find(GETorPOST('user'));
 	
-	$home_goals = $_GET['home_goals'];
-	$away_goals = $_GET['away_goals'];
+	$home_goals = GETorPOST('home_goals');
+	$away_goals = GETorPOST('away_goals');
 	
 	$digits = array(0,1,2,3,4,5,6,7,8,9);
 	
