@@ -1,32 +1,25 @@
 <?php
 	require_once('includes/init.php');
-	
-	if (!isset(GETorPOST('league')))
-	{
-		$adresse = preg_match('/classement-([0-9]+)(-([0-9]+))?/', $_SERVER['REQUEST_URI'], $matches);
-		GETorPOST('league') = $matches[1];
-	
-		if (count($matches) == 0)
-			die;
-	}
 
-	$season = Season::find(GETorPOST('league'));
+	$pathinfo = $_SERVER['PATH_INFO'];
+
+  $matches = false;
+  $match = preg_match('@^/season-([0-9]+)\.png?$@', $pathinfo, $matches);
+
+	if (!isset($matches[1]))
+		header('location: ' . APPLICATION_URL);
+
+	$season = $matches[1];
+
+	$season = Season::find($season);
 	$league = $season->getLeague();
 
-	if (isset(GETorPOST('sort')))
+	if (GETorPOST('sort'))
 		$sort = GETorPOST('sort');
 	else
 		$sort = 'total';
 
 	$days = $season->getDays();
-
-	if (isset(GETorPOST('day')))
-		$max = GETorPOST('day');
-	else
-	{
-		$teams = $season->getTeams();
-		$max = (count($teams) - 1) * 2;
-	}
 	
 	$teams = Team::getAll();
 
@@ -34,7 +27,7 @@
 
 	$pronos = $season->getPronos();
 
-	$matches = $season->getMatches();
+	$matches = $season->getMatchs();
 
 	if (preg_match('/^[0-9]+$/', $sort))
 	{
@@ -148,9 +141,6 @@
 		$match = $matches[$prono->pr_match_id];
 
 		if (!isset($days[$match->pr_day_id]))
-			continue;
-
-		if ($days[$match->pr_day_id]->number > $max)
 			continue;
 
 		$scores[$prono->pr_user_id][$match->pr_day_id]['played'] = 1;
@@ -307,7 +297,7 @@
 		$u = $users[$user];
 		if ($u->pr_team_id)
 		{
-			$logo = imagecreatefromgif("./logos/" . strtolower($teams[$u->pr_team_id]->name) . ".gif");
+			$logo = imagecreatefromgif("./logos/" . strtolower($teams[$u->pr_team_id]->id) . ".gif");
 			imagecopyresized($image, $logo, $left + 4, $top + 1 - 5, 0, 0, 30, 30, 60, 60) ? 'Y' : 'N';
 		}
 		
@@ -350,6 +340,7 @@
 		imageline($image, $left + 1, $top + 30 - 5, $left + 409, $top + 30 - 5, $grey);
 		$i++;
 	}
+//die;
 	header ("Content-type: image/png");
 	
 	imagepng($image);

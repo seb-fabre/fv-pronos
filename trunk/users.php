@@ -27,9 +27,9 @@
 						<tr>
 							<td><?php echo $user->name ?></td>
 							<td>
-								<?php 
-									if ($user->pr_team_id)
-										echo '<img src="' . APPLICATION_URL . 'logos/' . strtolower($teams[$user->pr_team_id]->name) . '.gif" />';
+								<?php
+									if ($user->pr_team_id && isset($teams[$user->pr_team_id]) && $teams[$user->pr_team_id]->has_logo)
+										echo $teams[$user->pr_team_id]->getLogo();
 									else
 										echo '&nbsp;';
 								?>
