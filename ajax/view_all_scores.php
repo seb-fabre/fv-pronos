@@ -26,7 +26,7 @@
 		return $users[$x['total']['id']]->name < $users[$y['total']['id']]->name;
 	}
 	
-	$league = League::find($_GET['league']);
+	$league = League::find(GETorPOST('league'));
 	
 	$days = $league->getDays();
 	

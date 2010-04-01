@@ -1,27 +1,27 @@
 <?php
 	require_once('includes/init.php');
 	
-	if (!isset($_GET['league']))
+	if (!isset(GETorPOST('league')))
 	{
 		$adresse = preg_match('/classement-([0-9]+)(-([0-9]+))?/', $_SERVER['REQUEST_URI'], $matches);
-		$_GET['league'] = $matches[1];
+		GETorPOST('league') = $matches[1];
 	
 		if (count($matches) == 0)
 			die;
 	}
 
-	$season = Season::find($_GET['league']);
+	$season = Season::find(GETorPOST('league'));
 	$league = $season->getLeague();
 
-	if (isset($_GET['sort']))
-		$sort = $_GET['sort'];
+	if (isset(GETorPOST('sort')))
+		$sort = GETorPOST('sort');
 	else
 		$sort = 'total';
 
 	$days = $season->getDays();
 
-	if (isset($_GET['day']))
-		$max = $_GET['day'];
+	if (isset(GETorPOST('day')))
+		$max = GETorPOST('day');
 	else
 	{
 		$teams = $season->getTeams();

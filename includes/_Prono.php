@@ -1,4 +1,10 @@
 <?php
+/**
+ * Description of _Prono
+ *
+ * @author arteau
+ */
+
 $GLOBALS["classes"]["Prono"] = array("classname" => "_Prono", "tablename" => "pr_prono");
 
 class _Prono extends ArtObject
@@ -64,9 +70,12 @@ class _Prono extends ArtObject
 
 	public function delete()
 	{
-		return parent::delete("Prono");
+		parent::delete("Prono");
 	}
 
+	/**
+	 * @return boolean
+	 */
 	public static function isUnique($field, $value, $id=false)
 	{
 		return parent::isUnique("Prono", $field, $value, $id);

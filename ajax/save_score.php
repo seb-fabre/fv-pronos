@@ -1,8 +1,8 @@
 <?php
 	require_once('../includes/init.php');
 
-	$id = $_GET['id'];
-	$scores = $_GET['matches'];
+	$id = GETorPOST('id');
+	$scores = GETorPOST('matches');
 
 	$day = Day::find($id);
 

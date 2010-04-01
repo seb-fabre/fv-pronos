@@ -1,7 +1,7 @@
 <?php
 	require_once('../includes/init.php');
 
-	$day = Day::find($_GET['id']);
+	$day = Day::find(GETorPOST('id'));
 
 	$season = $day->getSeason();
 
@@ -22,7 +22,7 @@
 				<span class="scoreRight"><input name="away_goals[<?php echo $match->id ?>]" size="2" maxlength="1" value="<?php echo $match->away_goals ?>" /> <?php echo $teams[$match->pr_away_team_id]->name ?></span>
 		<?php endforeach; ?>
 		<p class="submit">
-			<input type="hidden" name="id" value="<?php echo $_GET['id'] ?>" />
+			<input type="hidden" name="id" value="<?php echo GETorPOST('id') ?>" />
 			<input type="submit" value="enregistrer" />
 			<input type="button" value="annuler" onclick="$.modal.close()" />
 		</p>

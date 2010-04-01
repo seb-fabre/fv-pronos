@@ -1,4 +1,10 @@
 <?php
+/**
+ * Description of Notification
+ *
+ * @author arteau
+ * @final
+ */
 class Notification
 {
 	/**

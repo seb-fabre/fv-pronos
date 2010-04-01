@@ -17,7 +17,7 @@
 		return $teams[$x['id']]->name < $teams[$y['id']]->name;
 	}
 
-	$season = Season::find($_GET['id']);
+	$season = Season::find(GETorPOST('id'));
 
 	$league = $season->getLeague();
 
@@ -27,7 +27,7 @@
 
 	$teams = $season->getTeams();
 
-	$max = $_GET['max'];
+	$max = GETorPOST('max');
 
 	if ($max == -1)
 	{

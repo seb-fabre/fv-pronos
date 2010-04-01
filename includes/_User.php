@@ -1,4 +1,10 @@
 <?php
+/**
+ * Description of _User
+ *
+ * @author arteau
+ */
+
 $GLOBALS["classes"]["User"] = array("classname" => "_User", "tablename" => "pr_user");
 
 class _User extends ArtObject
@@ -64,9 +70,12 @@ class _User extends ArtObject
 
 	public function delete()
 	{
-		return parent::delete("User");
+		parent::delete("User");
 	}
 
+	/**
+	 * @return boolean
+	 */
 	public static function isUnique($field, $value, $id=false)
 	{
 		return parent::isUnique("User", $field, $value, $id);

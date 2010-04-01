@@ -1,4 +1,10 @@
 <?php
+/**
+ * Description of _MigrationVersion
+ *
+ * @author arteau
+ */
+
 $GLOBALS["classes"]["MigrationVersion"] = array("classname" => "_MigrationVersion", "tablename" => "pr_migration_version");
 
 class _MigrationVersion extends ArtObject
@@ -64,9 +70,12 @@ class _MigrationVersion extends ArtObject
 
 	public function delete()
 	{
-		return parent::delete("MigrationVersion");
+		parent::delete("MigrationVersion");
 	}
 
+	/**
+	 * @return boolean
+	 */
 	public static function isUnique($field, $value, $id=false)
 	{
 		return parent::isUnique("MigrationVersion", $field, $value, $id);

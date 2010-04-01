@@ -1,13 +1,13 @@
 <?php
 	require_once('../includes/init.php');
 
-	$team = Team::find($_GET['id']);
+	$team = Team::find(GETorPOST('id'));
 	if (!$team)
 		$team = new Team();
 ?>
 <form action="<?=APPLICATION_URL?>ajax/save_team.php" method="post" enctype="multipart/form-data">
 	<fieldset>
-		<?php if ($_GET['id'] != -1): ?>
+		<?php if (GETorPOST('id') != -1): ?>
 			<legend>Edition d'une équipe</legend>
 		<?php else: ?>
 			<legend>Création d'une équipe</legend>
@@ -26,7 +26,7 @@
 			<?php } ?>
 		</p>
 		<p class="submit">
-			<input type="hidden" name="id" value="<?php echo $_GET['id'] ?>" />
+			<input type="hidden" name="id" value="<?php echo GETorPOST('id') ?>" />
 			<input type="hidden" name="remove_logo" id="remove_logo" value="0" />
 			<input type="submit" value="enregistrer" />
 			<input type="button" value="annuler" onclick="$.modal.close()" />

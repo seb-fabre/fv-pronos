@@ -5,13 +5,13 @@
 
 	$seasons = Season::getAll();
 
-	$day = Day::find($_GET['id']);
+	$day = Day::find(GETorPOST('id'));
 	if (!$day)
 		$day = new Day();
 ?>
 <form action="/ajax/save_team.php" method="get">
 	<fieldset>
-		<?php if ($_GET['id'] != -1): ?>
+		<?php if (GETorPOST('id') != -1): ?>
 			<legend>Edition d'une journée</legend>
 		<?php else: ?>
 			<legend>Création d'une journée</legend>
@@ -23,7 +23,7 @@
 		</p>
 		<p><label>Number</label><input type="text" name="number" value="<?php echo $day->number ?>" /></p>
 		<p class="submit">
-			<input type="hidden" name="id" value="<?php echo $_GET['id'] ?>" />
+			<input type="hidden" name="id" value="<?php echo GETorPOST('id') ?>" />
 			<input type="submit" value="enregistrer" />
 			<input type="button" value="annuler" onclick="$.modal.close()" />
 		</p>

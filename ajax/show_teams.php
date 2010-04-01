@@ -1,7 +1,7 @@
 <?php
 	require_once('../includes/init.php');
 
-	$season = Season::find($_GET['id']);
+	$season = Season::find(GETorPOST('id'));
 
 	$league = $season->getLeague();
 
@@ -46,7 +46,7 @@
 		?>
 		</table>
 		<p class="submit">
-			<input type="hidden" name="id" value="<?php echo $_GET['id'] ?>" />
+			<input type="hidden" name="id" value="<?php echo GETorPOST('id') ?>" />
 			<input type="submit" value="enregistrer" />
 			<input type="button" value="fermer" onclick="$.modal.close()" />
 		</p>

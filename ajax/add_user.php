@@ -1,7 +1,7 @@
 <?php 
 	require_once('../includes/init.php');
 	
-	$user = User::find($_GET['id']);
+	$user = User::find(GETorPOST('id'));
 	if (!$user)
 		$user = new User();
 		
@@ -9,7 +9,7 @@
 ?>
 <form action="/ajax/save_user.php" method="get">
 	<fieldset>
-		<?php if ($_GET['id'] != -1): ?>
+		<?php if (GETorPOST('id') != -1): ?>
 			<legend>Edition d'un utilisateur</legend>
 		<?php else: ?>
 			<legend>Ajout d'un utilisateur</legend>
@@ -32,7 +32,7 @@
 		?>
 		</select></p>
 		<p class="submit">
-			<input type="hidden" name="id" value="<?php echo $_GET['id'] ?>" />
+			<input type="hidden" name="id" value="<?php echo GETorPOST('id') ?>" />
 			<input type="submit" value="enregistrer" />
 			<input type="button" value="annuler" onclick="$.modal.close()" />
 		</p>

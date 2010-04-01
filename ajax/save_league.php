@@ -1,9 +1,9 @@
 <?php
 	require_once('../includes/init.php');
 
-	$id = $_GET['id'];
-	$name = $_GET['name'];
-	$label = $_GET['season'];
+	$id = GETorPOST('id');
+	$name = GETorPOST('name');
+	$label = GETorPOST('season');
 
 	if ($id == -1)
 		$season = new Season();

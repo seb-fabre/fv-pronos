@@ -1,4 +1,10 @@
 <?php
+/**
+ * Description of _League
+ *
+ * @author arteau
+ */
+
 $GLOBALS["classes"]["League"] = array("classname" => "_League", "tablename" => "pr_league");
 
 class _League extends ArtObject
@@ -64,9 +70,12 @@ class _League extends ArtObject
 
 	public function delete()
 	{
-		return parent::delete("League");
+		parent::delete("League");
 	}
 
+	/**
+	 * @return boolean
+	 */
 	public static function isUnique($field, $value, $id=false)
 	{
 		return parent::isUnique("League", $field, $value, $id);

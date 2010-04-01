@@ -5,7 +5,7 @@ require_once('mysql_connexion.php');
 require_once('includes.php');
 
 $date = date('Y-m-d');
-$leagueId = $_GET['league'];
+$leagueId = GETorPOST('league');
 $league = League::find($leagueId);
 
 $users = User::getAll();
@@ -51,15 +51,15 @@ $users = User::getAll();
           if (strpos($cur, 'rono')) {
             $pron = array();
             
-            // encore pour sauter les lignes vides éventuelles
+            // encore pour sauter les lignes vides ï¿½ventuelles
             next($lignes);
             while(strlen(current($lignes))<10)
                next($lignes);
             
             $i=0; // indice de deplacement dans le tableau
             $scores = array();  // sauvegarde des resultats avant affichage
-            $trois = 0; // nombre de scores à trois points
-            $un = 0;  // nombre de scores à un point
+            $trois = 0; // nombre de scores ï¿½ trois points
+            $un = 0;  // nombre de scores ï¿½ un point
             // parcours des lignes de scores
             while(strlen(current($lignes))>10) {
               if (ereg("([0-9])-([0-9])", current($lignes), $reg)) {
@@ -125,7 +125,7 @@ $users = User::getAll();
       <form method="post" action="parse.php">
         <legend>Pronos</legend>
         <p>
-          <label>Bons résultats</label>
+          <label>Bons rï¿½sultats</label>
           <textarea name="resultats" cols="40" rows="10"></textarea>
         </p>
         <p>

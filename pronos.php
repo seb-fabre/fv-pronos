@@ -1,7 +1,7 @@
 <?php
 	require_once('includes/init.php');
 
-	$id = $_GET['id'];
+	$id = GETorPOST('id');
 
 	if (!$id)
 		header('location: /days.php');

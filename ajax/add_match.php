@@ -1,7 +1,7 @@
 <?php
 	require_once('../includes/init.php');
 
-	$day = Day::find($_GET['pr_day_id']);
+	$day = Day::find(GETorPOST('pr_day_id'));
 
 	$season = Season::find($day->pr_season_id);;
 
@@ -9,7 +9,7 @@
 
 	$teams = $season->getTeams();
 
-	$match = Match::find($_GET['id']);
+	$match = Match::find(GETorPOST('id'));
 	if (!$match)
 		$match = new Match();
 
@@ -29,8 +29,8 @@
 		<div id="matches"><?php echo $select ?></div>
 		<p class="center"><input type="button" onclick="addMatch()" value="ajouter un match" /></p>
 		<p class="submit">
-			<input type="hidden" name="id" value="<?php echo $_GET['id'] ?>" />
-			<input type="hidden" name="pr_day_id" value="<?php echo $_GET['pr_day_id'] ?>" />
+			<input type="hidden" name="id" value="<?php echo GETorPOST('id') ?>" />
+			<input type="hidden" name="pr_day_id" value="<?php echo GETorPOST('pr_day_id') ?>" />
 			<input type="submit" value="enregistrer" />
 			<input type="button" value="annuler" onclick="$.modal.close()" />
 		</p>
