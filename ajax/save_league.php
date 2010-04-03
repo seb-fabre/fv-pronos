@@ -4,6 +4,7 @@
 	$id = GETorPOST('id');
 	$name = GETorPOST('name');
 	$label = GETorPOST('season');
+	$teams = GETorPOST('teams');
 
 	if ($id == -1)
 		$season = new Season();
@@ -19,6 +20,7 @@
 
 	$season->label = $label;
 	$season->pr_league_id = $league->id;
+	$season->teams = $teams;
 	$season->save();
 
 	if ($id == -1)

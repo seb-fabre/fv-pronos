@@ -21,6 +21,9 @@
 		exit;
 	}
 
+	$team->name = $name;
+	$team->save();
+
 	if (!empty($_FILES['logo']))
 	{
 		$target_path = $GLOBALS['ROOTPATH'] . "logos/" . $team->id . '.gif';
@@ -42,7 +45,6 @@
 		$team->has_logo = 0;
 	}
 
-	$team->name = $name;
 	$team->save();
 
 	if ($id == -1)

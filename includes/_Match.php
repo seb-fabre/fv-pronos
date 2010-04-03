@@ -9,7 +9,7 @@ $GLOBALS["classes"]["Match"] = array("classname" => "_Match", "tablename" => "pr
 
 class _Match extends ArtObject
 {
-	protected $_data = array('id' => null, 'pr_day_id' => null, 'pr_away_team_id' => null, 'pr_home_team_id' => null, 'home_goals' => null, 'away_goals' => null);
+	protected $_data = array('id' => null, 'pr_day_id' => null, 'pr_away_team_id' => null, 'pr_home_team_id' => null, 'home_goals' => null, 'away_goals' => null, 'limit_date' => null);
 
 	protected $_editedFields = array();
 

@@ -8,18 +8,20 @@
 	$seasonTeams = array_values($season->getTeams());
 	
 	$teams = Team::getAll();
+
+	$isEditable = !$season->hasMatches();
 ?>
 <form action="/ajax/save_season_teams.php" method="get">
 	<fieldset>
 		<legend><?php echo $league->name . ', ' . $season->label ?> : Equipes</legend>
 		<table>
 		<?php
-			for ($i=0; $i<$league->teams; $i++)
+			for ($i=0; $i<$season->teams; $i++)
 			{
 				if ($i%2 == 0)
 					$j = $i / 2;
 				else
-					$j = floor($league->teams / 2) + floor($i / 2);
+					$j = floor($season->teams / 2) + floor($i / 2);
 
 				if (isset($seasonTeams[$j]))
 					$team = $seasonTeams[$j];
@@ -28,7 +30,12 @@
 				if ($i%2 == 0)
 					echo '<tr class="noborder">';
 				echo '<td class="center">';
-				echo '<select name="team[]">';
+
+				if ($isEditable)
+					echo '<select name="team[]">';
+				else
+					echo '<select name="team[]" disabled="disabled">';
+
 				foreach ($teams as $t)
 				{
 					if ($t->id == $team->id)
@@ -46,8 +53,10 @@
 		?>
 		</table>
 		<p class="submit">
-			<input type="hidden" name="id" value="<?php echo GETorPOST('id') ?>" />
-			<input type="submit" value="enregistrer" />
+			<?php if ($isEditable && isset($_SESSION['user'])) { ?>
+				<input type="hidden" name="id" value="<?php echo GETorPOST('id') ?>" />
+				<input type="submit" value="enregistrer" />
+			<?php } ?>
 			<input type="button" value="fermer" onclick="$.modal.close()" />
 		</p>
 

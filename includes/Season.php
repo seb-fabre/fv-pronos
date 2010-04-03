@@ -9,6 +9,7 @@ $GLOBALS["classes"]["Season"] = array("classname" => "Season", "tablename" => "p
 	
 class Season extends _Season
 {
+	// FIXME : redo with the refactoring of the search criteria (joins)
 	public function getPronos()
 	{
 		$results = array();
@@ -20,6 +21,7 @@ class Season extends _Season
 		return $results;
 	}
 
+	// FIXME : redo with the refactoring of the search criteria (joins)
 	public function getMatchs()
 	{
 		$results = array();
@@ -31,6 +33,18 @@ class Season extends _Season
 		return $results;
 	}
 
+	public function getMatches()
+	{
+		return $this->getMatchs();
+	}
+
+	// FIXME : redo with the refactoring of the search criteria (joins)
+	public function hasMatches()
+	{
+		return count($this->getMatchs()) > 0;
+	}
+
+	// FIXME : redo with the refactoring of the search criteria (joins)
 	public function getTeams($order='name asc')
 	{
 		$results = array();
@@ -40,5 +54,13 @@ class Season extends _Season
 			$results [$res['id']] = new Team($res);
 
 		return $results;
+	}
+
+	public function addTeam($teamId)
+	{
+		$seasonTeam = new SeasonTeams();
+		$seasonTeam->pr_team_id = $teamId;
+		$seasonTeam->pr_season_id = $this->id;
+		$seasonTeam->save();
 	}
 }
