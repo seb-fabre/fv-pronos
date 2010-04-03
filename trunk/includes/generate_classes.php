@@ -181,7 +181,7 @@ class _' . $capitalized . ' extends ArtObject
 
 		fwrite($_includes, 'require_once($relativePath . "_' . $capitalized . '.php");' . "\n");
 
-		if (!file_exists($capitalized . '.php'))
+		if (!file_exists($GLOBALS['ROOTPATH'] . 'includes/' . $capitalized . '.php'))
 		{
 			$file = fopen($GLOBALS['ROOTPATH'] . 'includes/' . $capitalized . '.php', 'w+');
 

@@ -18,9 +18,7 @@ class Migration {
 	public static function initMigrations()
 	{
 		self::$migrations = array(
-			0 => '',	// not meant to be used, so leave empty
-			1 => array('sql' => 'ALTER TABLE  `pr_user` ADD  `role` VARCHAR(10) NOT NULL DEFAULT "user";'),
-			2 => array('sql' => 'ALTER TABLE `pr_team` ADD `has_logo` TINYINT NOT NULL DEFAULT "0";', 'generate_classes' => true),
+			1 => array('sql' => 'ALTER TABLE `pr_team` ADD `has_logo` TINYINT NOT NULL DEFAULT "0";', 'generate_classes' => true),
 		);
 	}
 
@@ -35,7 +33,7 @@ class Migration {
 
 		$regenerateClasses = false;
 
-		for ($i=$fromVersion; $i<count(self::$migrations); $i++)
+		for ($i=$fromVersion + 1; $i<=count(self::$migrations); $i++)
 		{
 			$migration = self::$migrations[$i];
 
