@@ -84,7 +84,7 @@
 						<?php endforeach; ?>
 					<?php endforeach; ?>
 				<?php else: ?>
-					<tr><td colspan="5">Aucun résultat trouvé</td></tr>
+					<tr><td colspan="6">Aucun résultat trouvé</td></tr>
 				<?php endif; ?>
 			</tbody>
 		</table>
@@ -104,7 +104,6 @@
 					$.modal.close();
 					$('#popup_content').html(response);
 					$('#popup').modal({close: false});
-					$('#popup input[type=text]').focus();
 					$('#popup form').ajaxForm({
 						url: '<?=APPLICATION_URL?>ajax/save_day.php',
 						dataType: 'json',
@@ -135,7 +134,6 @@
 					$.modal.close();
 					$('#popup_content').html(response);
 					$('#popup').modal({close: false});
-					$('#popup input[type=text]').focus();
 					$('#popup form').ajaxForm({
 						url: '<?=APPLICATION_URL?>ajax/save_match.php',
 						dataType: 'json',
@@ -160,7 +158,6 @@
 					$.modal.close();
 					$('#popup_content').html(response);
 					$('#popup').modal({close: false});
-					$('#popup input[type=text]').focus();
 					$('#popup form').ajaxForm({
 						url: '<?=APPLICATION_URL?>ajax/save_matches.php',
 						success: function (response) {
@@ -192,7 +189,6 @@
 					$.modal.close();
 					$('#popup_content').html(response);
 					$('#popup').modal({close: false});
-					$('#popup input[type=text]').focus();
 					$('#popup form').ajaxForm({
 						url: '<?=APPLICATION_URL?>ajax/save_score.php',
 						success: function (response) {
@@ -226,7 +222,6 @@
 					$.modal.close();
 					$('#popup_content').html(response);
 					$('#popup').modal({close: false});
-					$('#popup input[type=text]').focus();
 					$('#popup form').ajaxForm({
 						url: '<?=APPLICATION_URL?>ajax/save_scores.php',
 						dataType: 'json',

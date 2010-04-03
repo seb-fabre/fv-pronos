@@ -63,7 +63,7 @@ a:hover {
 }
 
 form label {
-	width: 100px;
+	width: 120px;
 	float: left;
 	text-align: right;
 	margin-right: 10px;
@@ -194,6 +194,7 @@ td p {
 #popup_message {
 	color: red;
 	margin-top: 10px;
+	margin-left: 10px;
 }
 
 .scoreLeft {

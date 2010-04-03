@@ -9,7 +9,7 @@ $GLOBALS["classes"]["Day"] = array("classname" => "_Day", "tablename" => "pr_day
 
 class _Day extends ArtObject
 {
-	protected $_data = array('id' => null, 'pr_season_id' => null, 'number' => null);
+	protected $_data = array('id' => null, 'pr_season_id' => null, 'number' => null, 'limit_date' => null);
 
 	protected $_editedFields = array();
 

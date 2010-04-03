@@ -17,7 +17,9 @@
 	<?php echoMenu(); ?>
 	<div id="content">
 		<h1>Liste des championnats</h1>
-		<div class="add"><a href="javascript:;" onclick="openPopup(-1)">Ajouter un championnat</a></div>
+		<?php if (!empty($_SESSION['user'])) { ?>
+			<div class="add"><a href="javascript:;" onclick="openPopup(-1)">Ajouter un championnat</a></div>
+		<?php } ?>
 		<table>
 			<thead>
 				<tr>
@@ -45,7 +47,7 @@
 									</td>
 								<?php } ?>
 								<td>
-									<a href="javascript:;" onclick="showTeams(<?php echo $season->id ?>);"><img src="<?=APPLICATION_URL?>images/fleche.png" alt="[add]" /> afficher les équipes</a>
+									<a href="javascript:;" onclick="showTeams(<?php echo $season->id ?>);"><img src="<?=APPLICATION_URL?>images/fleche.png" alt="[add]" /> voir/modifier les équipes</a>
 								</td>
 								<td>
 									<a href="javascript:;" onclick="showRankings(<?php echo $season->id ?>, -1);"><img src="<?=APPLICATION_URL?>images/fleche.png" alt="[add]" /> afficher le classement</a>
@@ -54,7 +56,7 @@
 						<?php endforeach; ?>
 					<?php endforeach; ?>
 				<?php else: ?>
-					<tr><td colspan="2">Aucun résultat trouvé</td></tr>
+					<tr><td colspan="5">Aucun résultat trouvé</td></tr>
 				<?php endif; ?>
 			</tbody>
 		</table>

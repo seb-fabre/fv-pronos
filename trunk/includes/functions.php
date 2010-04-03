@@ -37,8 +37,10 @@ function echoHTMLHead($title='')
 	<title>$title</title>
 	<link rel="stylesheet" href="$url/css/screen.css" type="text/css" media="screen" />
 	<link rel="stylesheet" href="$url/css/pronos.css" type="text/css" media="screen" />
+	<link rel="stylesheet" href="$url/css/redmond/jquery-ui-1.8.custom.css" type="text/css" media="screen" />
 	<script type="text/javascript" src="$url/js/jquery-1.4.2.min.js"></script>
 	<script type="text/javascript" src="$url/js/jquery-ui-1.8.custom.min.js"></script>
+	<script type="text/javascript" src="$url/js/jquery.ui.datepicker-fr.js"></script>
 	<script type="text/javascript" src="$url/js/jquery.simplemodal-1.2.3.js"></script>
 	<script type="text/javascript" src="$url/js/jquery.form.js"></script>
 	<script type="text/javascript" src="$url/js/jquery.qtip-1.0.0-rc3.min.js"></script>

@@ -196,6 +196,10 @@ class ArtObject {
 				$glu = ', ';
 			}
 			$query .= ' WHERE id=' . $this->id;
+
+			mysql_query($query) or die (mysql_error());
+
+			$id = $this->id;
 		}
 		else
 		{
@@ -214,10 +218,11 @@ class ArtObject {
 				$glu = '", "';
 			}
 			$query .= '")';
-		}
-		mysql_query($query) or die (mysql_error());
 
-		$id = mysql_insert_id();
+			mysql_query($query) or die (mysql_error());
+
+			$id = mysql_insert_id();
+		}
 
 		$this->_editedFields = array();
 		$new = self::find($class, $id);
@@ -301,7 +306,7 @@ class ArtObject {
 		$field = 'pr_' . camelCaseToUnderscores($method) . '_id';
 
 		// if function name can be related to a classname, search the related class
-		if (isset($this->_data[$field]) && isset($GLOBALS['classes'][$method]))
+		if (array_key_exists($field, $this->_data) && isset($GLOBALS['classes'][$method]))
 		{
 			return ArtObject::find($method, $this->_data[$field]);
 		}
