@@ -43,7 +43,7 @@ class ArtObject {
 		if (!$id)
 			return false;
 
-		$req = mysql_query('SELECT * FROM ' . $GLOBALS['classes'][$class]['tablename'] . ' WHERE id=' . $id) or die(mysql_error());
+		$req = mysql_query('SELECT * FROM ' . $GLOBALS['classes'][$class]['tablename'] . ' WHERE id=' . mysql_escape_string($id)) or die(mysql_error());
 		if (mysql_num_rows($req) != 0)
 			return new $GLOBALS['classes'][$class]['classname'](mysql_fetch_array($req));
 		return false;
@@ -73,7 +73,7 @@ class ArtObject {
 	 */
 	public static function findBy($class, $field, $value)
 	{
-		$req = mysql_query('SELECT * FROM ' . $GLOBALS['classes'][$class]['tablename'] . ' WHERE ' . $field . ' LIKE "' . $value . '"') or die(mysql_error());
+		$req = mysql_query('SELECT * FROM ' . $GLOBALS['classes'][$class]['tablename'] . ' WHERE ' . $field . ' LIKE "' . mysql_escape_string($value) . '"') or die(mysql_error());
 		if (mysql_num_rows($req) != 0)
 			return new $GLOBALS['classes'][$class]['classname'](mysql_fetch_array($req));
 		return false;
@@ -196,8 +196,6 @@ class ArtObject {
 				$glu = ', ';
 			}
 			$query .= ' WHERE id=' . $this->id;
-
-			$id = $this->id;
 		}
 		else
 		{
@@ -212,14 +210,14 @@ class ArtObject {
 			$glu = '';
 			foreach ($this->_editedFields as $field)
 			{
-				$query .= $glu . addslashes($this->_data[$field]);
+				$query .= $glu . mysql_escape_string($this->_data[$field]);
 				$glu = '", "';
 			}
 			$query .= '")';
-
-			$id = mysql_insert_id();
 		}
 		mysql_query($query) or die (mysql_error());
+
+		$id = mysql_insert_id();
 
 		$this->_editedFields = array();
 		$new = self::find($class, $id);

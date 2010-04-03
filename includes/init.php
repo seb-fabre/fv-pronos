@@ -5,10 +5,16 @@
 
 	require_once($GLOBALS['ROOTPATH'] . 'includes/class.migration.php');
 	require_once($GLOBALS['ROOTPATH'] . 'includes/class.notification.php');
+	require_once($GLOBALS['ROOTPATH'] . 'includes/JSON.php');
 
 	session_start();
 
 	header('Content-type: text/html; charset=UTF-8');
+
+	if (!file_exists($GLOBALS['ROOTPATH'] . 'includes/conf.php'))
+	{
+		die("Vous devez lancer l'installation du site avant de pouvoir y accéder.");
+	}
 
 	require_once($GLOBALS['ROOTPATH'] . 'includes/functions.php');
 	require_once($GLOBALS['ROOTPATH'] . 'includes/conf.php');
