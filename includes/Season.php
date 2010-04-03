@@ -9,7 +9,6 @@ $GLOBALS["classes"]["Season"] = array("classname" => "Season", "tablename" => "p
 	
 class Season extends _Season
 {
-
 	public function getPronos()
 	{
 		$results = array();

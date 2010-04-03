@@ -69,6 +69,7 @@ CREATE TABLE IF NOT EXISTS `pr_user` (
   `passwd` varchar(40) character set utf8 default NULL,
   `email` varchar(100) character set utf8 default NULL,
   `pr_team_id` int(11) default NULL,
+  `role` VARCHAR(10) NOT NULL DEFAULT "user",
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=45;
 

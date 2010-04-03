@@ -9,7 +9,6 @@ $GLOBALS["classes"]["Day"] = array("classname" => "Day", "tablename" => "pr_day"
 	
 class Day extends _Day
 {
-
 	public function hasCompletedMatches()
 	{
 		$req = mysql_query('SELECT COUNT(1) c FROM pr_match WHERE home_goals IS NOT NULL AND away_goals IS NOT NULL AND pr_day_id=' . $this->id);

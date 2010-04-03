@@ -159,7 +159,7 @@ define("APPLICATION_URL", "' . $url . '");
 
 						<p><label>Nom de la base</label><input type="text" name="db_name" value="<?=$db_name?>" /></p>
 
-						<p><label>Adresse de la base</label><input type="text" name="db_host" value="<?=$db_host?>" /></p>
+						<p><label>Hôte de la base</label><input type="text" name="db_host" value="<?=$db_host?>" /></p>
 						<p class="infos">La base de données doit avoir été créée sur le serveur avant de faire cette installation.</p>
 
 						<p><input type="checkbox" value="1" name="reset_db" <?=($reset_db ? ' checked="checked"' : '')?> /> Réinitialiser les données existantes (attention, cela effacera toutes les données présentes dans la base).</p>
