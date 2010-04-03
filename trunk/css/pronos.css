@@ -33,6 +33,10 @@ fieldset {
 	background: url(../images/gradient.png) repeat-x bottom;
 }
 
+fieldset.largeFieldset {
+	width: 600px;
+}
+
 fieldset p {
 	margin-bottom: 10px;
 }
@@ -65,8 +69,16 @@ form label {
 	margin-right: 10px;
 }
 
+form .largeFieldset label {
+	width: 150px;
+}
+
 form input[type=text], form input[type=password] {
 	width: 250px;
+}
+
+form .largeFieldset input[type=text], form .largeFieldset input[type=password] {
+	width: 400px;
 }
 
 form .center input[type=text], form .center input[type=password] {
@@ -89,6 +101,26 @@ p {
 
 .submitNarrow {
 	text-align: right;
+}
+
+.infos {
+  font-style: italic;
+}
+
+p.errorForm {
+	color: #F00;
+	padding: 5px;
+	border-width: 1px;
+	font-style: italic;
+	margin-left: 150px;
+}
+
+.inputError {
+	border: 1px solid #F00;
+}
+
+div.error p {
+	margin: 0;
 }
 
 #popup {

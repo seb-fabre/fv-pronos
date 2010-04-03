@@ -76,17 +76,17 @@ function checkMigrationVersion()
 	// check database version
 	$req = mysql_query('SELECT * FROM pr_migration_version');
 
+	$currentVersion = 0;
+
 	// create table if not present
 	if (!$req)
 	{
 		mysql_query("CREATE TABLE `pr_migration_version` (`version` INT UNSIGNED NOT NULL DEFAULT  '1');");
 		mysql_query('INSERT INTO version VALUES(0);');
-		$currentVersion = 0;
 	}
 	else if (mysql_num_rows($req) == 0)
 	{
 		mysql_query('INSERT INTO pr_migration_version VALUES(0);');
-		$currentVersion = 0;
 	}
 	else
 	{
