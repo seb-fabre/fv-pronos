@@ -43,7 +43,7 @@ function echoHTMLHead($title='')
 	<script type="text/javascript" src="$url/js/jquery.ui.datepicker-fr.js"></script>
 	<script type="text/javascript" src="$url/js/jquery.simplemodal-1.2.3.js"></script>
 	<script type="text/javascript" src="$url/js/jquery.form.js"></script>
-	<script type="text/javascript" src="$url/js/jquery.qtip-1.0.0-rc3.min.js"></script>
+	<script type="text/javascript" src="$url/js/jquery.qtip-1.0.min.js"></script>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF8" />
 </head>
 HTML;

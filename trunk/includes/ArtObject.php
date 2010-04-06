@@ -26,7 +26,12 @@ class ArtObject {
 		foreach ($values as $key => $value)
 		{
 			if (array_key_exists($key, $this->_data))
+			{
+				if (empty($this->_data[$key]) || $this->_data[$key] != $value)
+					$this->_editedFields []= $key;
+
 				$this->_data[$key] = $value;
+			}
 		}
 	}
 
@@ -43,7 +48,7 @@ class ArtObject {
 		if (!$id)
 			return false;
 
-		$req = mysql_query('SELECT * FROM ' . $GLOBALS['classes'][$class]['tablename'] . ' WHERE id=' . mysql_escape_string($id)) or die(mysql_error());
+		$req = Tools::mysqlQuery('SELECT * FROM ' . $GLOBALS['classes'][$class]['tablename'] . ' WHERE id="' . mysql_real_escape_string($id) . '"') or die(Tools::mysqlError());
 		if (mysql_num_rows($req) != 0)
 			return new $GLOBALS['classes'][$class]['classname'](mysql_fetch_array($req));
 		return false;
@@ -73,7 +78,7 @@ class ArtObject {
 	 */
 	public static function findBy($class, $field, $value)
 	{
-		$req = mysql_query('SELECT * FROM ' . $GLOBALS['classes'][$class]['tablename'] . ' WHERE ' . $field . ' LIKE "' . mysql_escape_string($value) . '"') or die(mysql_error());
+		$req = Tools::mysqlQuery('SELECT * FROM ' . $GLOBALS['classes'][$class]['tablename'] . ' WHERE ' . $field . ' LIKE "' . mysql_real_escape_string($value) . '"') or die(Tools::mysqlError());
 		if (mysql_num_rows($req) != 0)
 			return new $GLOBALS['classes'][$class]['classname'](mysql_fetch_array($req));
 		return false;
@@ -108,7 +113,7 @@ class ArtObject {
 				if (!isset($criterion[2]))
 					$criterion[2] = "=";
 				if ($criterion[1] !== NULL)
-					$query .= $glu . $criterion[0]	. $criterion[2] . '"' . mysql_escape_string($criterion[1]) . "\" ";
+					$query .= $glu . $criterion[0]	. $criterion[2] . '"' . mysql_real_escape_string($criterion[1]) . "\" ";
 				else
 					$query .= $glu . $criterion[0]	. " IS NULL ";
 				$glu = "AND ";
@@ -117,7 +122,7 @@ class ArtObject {
 
 		if ($onlyCount)
 		{
-			$query = mysql_query($query);
+			$query = Tools::mysqlQuery($query) or die (Tools::mysqlError());
 			$res = mysql_fetch_array($query);
 			return $res["count"];
 		}
@@ -127,7 +132,7 @@ class ArtObject {
 		if (!empty($limit))
 			$query .= " LIMIT " . $limit;
 
-		$req = mysql_query($query) or die (mysql_error());
+		$req = Tools::mysqlQuery($query) or die (Tools::mysqlError());
 		while ($res = mysql_fetch_array($req))
 			$results[$res['id']] = new $GLOBALS['classes'][$class]['classname']($res);
 
@@ -195,9 +200,9 @@ class ArtObject {
 				$query .= $glu . $field . '="' . addslashes($this->_data[$field]) . '"';
 				$glu = ', ';
 			}
-			$query .= ' WHERE id=' . $this->id;
+			$query .= ' WHERE id=' . mysql_real_escape_string($this->id);
 
-			mysql_query($query) or die (mysql_error());
+			Tools::mysqlQuery($query) or die (Tools::mysqlError());
 
 			$id = $this->id;
 		}
@@ -214,12 +219,12 @@ class ArtObject {
 			$glu = '';
 			foreach ($this->_editedFields as $field)
 			{
-				$query .= $glu . mysql_escape_string($this->_data[$field]);
+				$query .= $glu . mysql_real_escape_string($this->_data[$field]);
 				$glu = '", "';
 			}
 			$query .= '")';
 
-			mysql_query($query) or die (mysql_error());
+			Tools::mysqlQuery($query) or die (Tools::mysqlError());
 
 			$id = mysql_insert_id();
 		}
@@ -241,9 +246,9 @@ class ArtObject {
 	 * 
 	 * @return integer the number of results
 	 */
-	public static function count($class)
+	public static function count($class, $criteria = array())
 	{
-		return self::search($class, array(), "", 1, true);
+		return self::search($class, $criteria, "", 1, true);
 	}
 
 	/**
@@ -263,7 +268,7 @@ class ArtObject {
 	 */
 	public function delete($class)
 	{
-		mysql_query("DELETE FROM " . $GLOBALS['classes'][$class]['tablename'] . " WHERE id=" . $this->id);
+		Tools::mysqlQuery("DELETE FROM " . $GLOBALS['classes'][$class]['tablename'] . " WHERE id=" . mysql_real_escape_string($this->id));
 	}
 
 	/**

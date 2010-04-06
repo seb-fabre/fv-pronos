@@ -1,15 +1,25 @@
 <?php
 	require_once('includes/init.php');
 
-	$leagues = League::getAll();
+	$leagueId = GETorPOST('league');
 
-	$season = GETorPOST('season');
-
-	if (!empty($season))
+	if (!empty($leagueId))
 	{
-		$season = Season::find(GETorPOST('season'));
+		$league = League::find($leagueId);
+		if ($league)
+			$leagues = array($leagueId => $league);
+	}
+
+	if (empty($leagueId))
+		$leagues = League::getAll();
+
+	$seasonId = GETorPOST('season');
+
+	if (!empty($seasonId))
+	{
+		$season = Season::find($seasonId);
 		if ($season)
-			$seasons = array(GETorPOST('season') => Season::find(GETorPOST('season')));
+			$seasons = array($seasonId => $season);
 	}
 
 	if (empty($season))
@@ -36,6 +46,14 @@
 	<?php echoMenu(); ?>
 	<div id="content">
 		<h1>Liste des journées</h1>
+		<form method="get" action="">
+			<p style="margin-bottom: 10px">
+				Afficher :
+				<?=Tools::objectsToSelect($leagues, 'name', array('value' => $leagueId, 'name' => 'league', 'empty' => 'Tous les championnats')) ?>
+				<?=Tools::objectsToSelect($seasons, 'label', array('value' => $seasonId, 'name' => 'season', 'empty' => 'Toutes les saisons')) ?>
+				<input type="submit" value="OK" />
+			</p>
+		</form>
 		<?php if (!empty($_SESSION['user'])) { ?>
 			<div class="add"><a href="javascript:;" onclick="openPopup(-1)">Ajouter une journée</a></div>
 		<?php } ?>
@@ -46,9 +64,9 @@
 					<th>Numéro</th>
 					<th>Modifier</th>
 					<?php if (!empty($_SESSION['user'])) { ?>
-						<th>Ajouter des matches</th>
+						<th>Matches</th>
 					<?php } ?>
-					<th>Saisir les scores</th>
+					<th>Scores</th>
 					<th>Pronos</th>
 				</tr>
 			</thead>
@@ -58,13 +76,21 @@
 						<?php $i=0; ?>
 						<?php $league = $seasons[$season]->getLeague(); ?>
 						<?php foreach ($days as $day): ?>
+							<?php $isEditable = !$day->hasPronos() && !$day->hasCompletedMatches() && !empty($_SESSION['user']); ?>
 							<tr>
 								<?php if (++$i == 1) echo '<td rowspan="' . count($days) . '">' . $league->name . '<br/>' . $seasons[$day->pr_season_id]->label . '</td>'; ?>
 								<td><?php echo $day->number ?></td>
-								<td class="center"><a href="javascript:;" onclick="openPopup(<?php echo $day->id ?>)"><img src="<?=APPLICATION_URL?>images/edit.png" alt="[edit]" /></a></td>
+								<?php if ($isEditable) { ?>
+									<td class="center"><a href="javascript:;" onclick="openPopup(<?php echo $day->id ?>)"><img src="<?=APPLICATION_URL?>images/edit.png" alt="[edit]" /></a></td>
+								<?php } else { ?>
+									<td class="center tooltipped">
+										<img src="<?=APPLICATION_URL?>images/edit_disabled.png" alt="[edit]" />
+										<div class="hidden">Des scores et/ou des pronostics ont été saisis, cette journée n'est pas modifiable.</div>
+									</td>
+								<?php } ?>
 								<?php if (!empty($_SESSION['user'])) { ?>
 									<td class="center">
-										<p><a href="javascript:;" onclick="addMatches(<?php echo $day->id ?>, -1)"><img src="<?=APPLICATION_URL?>images/fleche.png" alt="[add]" /> modifier </a></p>
+										<p><a href="javascript:;" onclick="addMatches(<?php echo $day->id ?>)"><img src="<?=APPLICATION_URL?>images/fleche.png" alt="[add]" /> voir/modifier </a></p>
 										<p><a href="javascript:;" onclick="parseMatches(<?php echo $day->id ?>, <?php echo $day->pr_season_id ?>)"><img src="<?=APPLICATION_URL?>images/fleche.png" alt="[add]" /> parser</a></p>
 									</td>
 								<?php } ?>
@@ -124,12 +150,12 @@
 			$('#matches').append(select);
 		}
 
-		function addMatches(day, id)
+		function addMatches(day)
 		{
 			$('#loading').modal({close: false});
 			$.ajax({
 				url: '<?=APPLICATION_URL?>ajax/add_match.php',
-				data: {id: id, pr_day_id: day},
+				data: {pr_day_id: day},
 				success: function (response) {
 					$.modal.close();
 					$('#popup_content').html(response);
@@ -192,8 +218,16 @@
 					$('#popup form').ajaxForm({
 						url: '<?=APPLICATION_URL?>ajax/save_score.php',
 						success: function (response) {
-							$('#matches').parent().html(response);
 							$('#parser').val('enregistrer');
+
+							if (response.trim() == '')
+							{
+								$('#parser').hide();
+								response = '<p>Aucun match trouvé.</p>';
+							}
+
+							$('#matches').parent().html(response);
+
 							$('#popup form').ajaxForm({
 								url: '<?=APPLICATION_URL?>ajax/save_scores.php',
 								dataType: 'json',
@@ -249,6 +283,26 @@
 				}
 			});
 		}
+
+		$(document).ready(function(){
+			elems = $('.tooltipped');
+			elems.each(function(i){
+				if ($(elems[i]).find('.hidden').length)
+				{
+					$(elems[i]).css('cursor', 'help');
+					$(elems[i]).qtip({
+						content: $(elems[i]).find('.hidden').html(),
+						show: 'mouseover',
+						hide: { fixed: true },
+						style: { name: 'blue', tip: true, 'text-align': 'center', width: 300 },
+						show: { solo: true },
+						position: {
+							corner: { target: 'rightMiddle', tooltip: 'leftMiddle'}
+						}
+					});
+				}
+			});
+		});
 	</script>
 
 	<?php echoHTMLFooter(); ?>

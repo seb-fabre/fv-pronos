@@ -21,7 +21,7 @@
 
 	$pronos = $day->getPronos();
 
-	$users = User::getAll();
+	$users = User::getAll('name asc');
 
 	$pronosByUser = array();
 	foreach ($pronos as $prono)
@@ -55,28 +55,28 @@
 					<?php foreach ($users as $user): ?>
 						<tr>
 							<td><?php echo $user->name ?></td>
-							<td class="center"><a href="javascript:;" onclick="openPopup(<?php echo $day->id ?>, <?php echo $user->id ?>)"><img src="/pronos/images/fleche.png" alt="[edit]" /> saisir les pronos</a></td>
+							<td class="center"><a href="javascript:;" onclick="openPopup(<?php echo $day->id ?>, <?php echo $user->id ?>)"><img src="<?=APPLICATION_URL?>images/fleche.png" alt="[edit]" /> saisir les pronos</a></td>
 							<td class="tooltipped">
 
 								<?php
 								if (array_key_exists($user->id, $pronosByUser))
 								{
-									echo '<i>' . (count($pronosByUser[$user->id]) != 10 ? '<img src="/pronos/images/warning.png" style="vertical-align:middle" /> ' : '') . count($pronosByUser[$user->id]) . ' pronos</i>';
+									echo '<i>' . (count($pronosByUser[$user->id]) != 10 ? '<img src="' . APPLICATION_URL . 'images/warning.png" style="vertical-align:middle" /> ' : '') . count($pronosByUser[$user->id]) . ' pronos</i>';
 									echo '<div class="hidden">';
-									echo '<table class="noborder" style="width: 100%">';
+									echo '<table class="noborder scoreTable" style="width: 100%">';
 									foreach ($pronosByUser[$user->id] as $match => $prono)
 									{
 										if (!is_null($prono->home_goals) && !is_null($prono->away_goals))
 										{
 											if ($prono->home_goals > $prono->away_goals)
-												echo '<tr><td class="right"><b>' . $teams[$matches[$match]->pr_home_team_id]->name . '</b></td><td><b>' . $prono->home_goals . '</b> - ' . $prono->away_goals . '</td><td>' . $teams[$matches[$match]->pr_away_team_id]->name . '</td></tr>';
+												echo '<tr><td class="right team"><b>' . $teams[$matches[$match]->pr_home_team_id]->name . '</b></td><td class="center"><b>' . $prono->home_goals . '</b> - ' . $prono->away_goals . '</td><td class="team">' . $teams[$matches[$match]->pr_away_team_id]->name . '</td></tr>';
 											else if ($prono->home_goals < $prono->away_goals)
-												echo '<tr><td class="right">' . $teams[$matches[$match]->pr_home_team_id]->name . '</td><td>' . $prono->home_goals . ' - <b>' . $prono->away_goals . '</b></td><td><b>' . $teams[$matches[$match]->pr_away_team_id]->name . '</b></td></tr>';
+												echo '<tr><td class="right team">' . $teams[$matches[$match]->pr_home_team_id]->name . '</td><td class="center">' . $prono->home_goals . ' - <b>' . $prono->away_goals . '</b></td><td class="team"><b>' . $teams[$matches[$match]->pr_away_team_id]->name . '</b></td></tr>';
 											else
-												echo '<tr><td class="right">' . $teams[$matches[$match]->pr_home_team_id]->name . '</td><td>' . $prono->home_goals . ' - ' . $prono->away_goals . '</td><td>' . $teams[$matches[$match]->pr_away_team_id]->name . '</td></tr>';
+												echo '<tr><td class="right team">' . $teams[$matches[$match]->pr_home_team_id]->name . '</td><td class="center">' . $prono->home_goals . ' - ' . $prono->away_goals . '</td><td class="team">' . $teams[$matches[$match]->pr_away_team_id]->name . '</td></tr>';
 										}
 										else
-											echo '<tr><td class="right">' . $teams[$matches[$match]->pr_home_team_id]->name . '</td><td> * - * </td><td>' . $teams[$matches[$match]->pr_away_team_id]->name . '</td></tr>';
+											echo '<tr><td class="right team">' . $teams[$matches[$match]->pr_home_team_id]->name . '</td><td class="center"> * - * </td><td class="team">' . $teams[$matches[$match]->pr_away_team_id]->name . '</td></tr>';
 									}
 									echo '</table>';
 									echo '</div>';
@@ -103,7 +103,7 @@
 		{
 			$('#loading').modal({close: false});
 			$.ajax({
-				url: '/pronos/ajax/add_pronos.php',
+				url: '<?=APPLICATION_URL?>ajax/add_pronos.php',
 				data: {id: id, user: user},
 				success: function (response) {
 					$.modal.close();
@@ -111,7 +111,7 @@
 					$('#popup').modal({close: false});
 					$('#popup input[type=text]').focus();
 					$('#popup form').ajaxForm({
-						url: '/pronos/ajax/save_pronos.php',
+						url: '<?=APPLICATION_URL?>ajax/save_pronos.php',
 						dataType: 'json',
 						success: function (response) {
 							if (response.success == 1)
@@ -128,7 +128,7 @@
 		{
 			$('#loading').modal({close: false});
 			$.ajax({
-				url: '/pronos/ajax/parse_pronos.php',
+				url: '<?=APPLICATION_URL?>ajax/parse_pronos.php',
 				data: {id: id},
 				success: function (response) {
 					$.modal.close();
@@ -136,7 +136,7 @@
 					$('#popup').modal({close: false, persist: true});
 					$('#popup input[type=text]').focus();
 					$('#popup form').ajaxForm({
-						url: '/pronos/ajax/save_prono.php',
+						url: '<?=APPLICATION_URL?>ajax/save_prono.php',
 						success: function (response) {
 							$('#matches').parent().css('height', 400).css('overflow-y', 'scroll');
 							$('#matches').parent().html(response);
@@ -144,7 +144,7 @@
 							//$('#popup').modal({close: false});
 							$('#parser').val('enregistrer');
 							$('#popup form').ajaxForm({
-								url: '/pronos/ajax/save_parsed_pronos.php',
+								url: '<?=APPLICATION_URL?>ajax/save_parsed_pronos.php',
 								dataType: 'json',
 								success: function (response) {
 									if (response.success == 1)
@@ -169,13 +169,13 @@
 						content: $(elems[i]).find('.hidden').html(),
 						show: 'mouseover',
 						hide: { delay: '10000', when: { event: 'mouseout' } },
-						style: { name: 'blue', tip: true, 'text-align': 'center', width: 300 },
+						style: { name: 'blue', tip: true, 'text-align': 'center', width: 350 },
 						show: { solo: true },
 						position: {
 							corner: { target: 'rightMiddle', tooltip: 'leftMiddle'}
 						}
 					});
-				}
+				} 
 			});
 		});
 	</script>

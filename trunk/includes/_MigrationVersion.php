@@ -13,16 +13,6 @@ class _MigrationVersion extends ArtObject
 
 	protected $_editedFields = array();
 
-	public function __construct($values = array())
-	{
-		if (!empty($values))
-		foreach ($values as $key => $value)
-		{
-			if (array_key_exists($key, $this->_data))
-				$this->_data[$key] = $value;
-		}
-	}
-
 	/**
 	 * @return MigrationVersion
 	 */
@@ -63,9 +53,9 @@ class _MigrationVersion extends ArtObject
 	/**
 	 * @return int
 	 */
-	public static function count()
+	public static function count($criteria = array())
 	{
-		return parent::count("MigrationVersion", array(), "", 1, true);
+		return parent::count("MigrationVersion", $criteria, "", 1, true);
 	}
 
 	public function delete()

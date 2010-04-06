@@ -56,8 +56,10 @@
 			<?php if ($isEditable && isset($_SESSION['user'])) { ?>
 				<input type="hidden" name="id" value="<?php echo GETorPOST('id') ?>" />
 				<input type="submit" value="enregistrer" />
+				<input type="button" value="annuler" onclick="$.modal.close()" />
+			<?php } else { ?>
+				<input type="button" value="fermer" onclick="$.modal.close()" />
 			<?php } ?>
-			<input type="button" value="fermer" onclick="$.modal.close()" />
 		</p>
 
 </fieldset>
