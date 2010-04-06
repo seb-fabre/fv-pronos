@@ -73,16 +73,6 @@ class _' . $capitalized . ' extends ArtObject
 
 	protected $_editedFields = array();
 
-	public function __construct($values = array())
-	{
-		if (!empty($values))
-		foreach ($values as $key => $value)
-		{
-			if (array_key_exists($key, $this->_data))
-				$this->_data[$key] = $value;
-		}
-	}
-
 	/**
 	 * @return ' . $capitalized . '
 	 */
@@ -123,9 +113,9 @@ class _' . $capitalized . ' extends ArtObject
 	/**
 	 * @return int
 	 */
-	public static function count()
+	public static function count($criteria = array())
 	{
-		return parent::count("' . $capitalized . '", array(), "", 1, true);
+		return parent::count("' . $capitalized . '", $criteria, "", 1, true);
 	}
 
 	public function delete()

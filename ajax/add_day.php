@@ -7,7 +7,14 @@
 
 	$day = Day::find(GETorPOST('id'));
 	if (!$day)
+	{
 		$day = new Day();
+		$isEditable = true;
+	}
+	else
+	{
+		$isEditable = !$day->hasPronos() && !$day->hasCompletedMatches() && !empty($_SESSION['user']);
+	}
 
 	$limitDate = $day->limit_date;
 	
@@ -43,7 +50,9 @@
 		<p class="infos">Format acceptés pour l'heure : "9:15", ou "9"</p>
 		<p class="submit">
 			<input type="hidden" name="id" value="<?php echo GETorPOST('id') ?>" />
-			<input type="submit" value="enregistrer" <?=(count($seasons)==0 ? ' disabled="disabled"' : '')?>/>
+			<?php if ($isEditable) { ?>
+				<input type="submit" value="enregistrer" <?=(count($seasons)==0 ? ' disabled="disabled"' : '')?>/>
+			<?php } ?>
 			<input type="button" value="annuler" onclick="$.modal.close()" />
 		</p>
 	</fieldset>

@@ -31,7 +31,7 @@
 	foreach ($pronos as $prono)
 		$tmp[$prono->pr_match_id] = $prono;
 	$pronos = $tmp;
-	
+
 	foreach ($matches as $match)
 	{
 		if (!array_key_exists($match->id, $pronos))
@@ -41,6 +41,12 @@
 		
 		if (!array_key_exists($match->id, $home_goals) || !array_key_exists($match->id, $away_goals))
 			continue;
+
+		if (is_null($home_goals[$match->id]) || $home_goals[$match->id] == '')
+			continue;
+		if (is_null($away_goals[$match->id]) || $away_goals[$match->id] == '')
+			continue;
+		
 		$prono->home_goals = $home_goals[$match->id];
 		$prono->away_goals = $away_goals[$match->id];
 		$prono->save();

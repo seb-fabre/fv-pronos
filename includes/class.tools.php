@@ -1,6 +1,8 @@
 <?php
 class Tools
 {
+	public static $lastQuery = '';
+
 	/**
 	 * Returns the disclaimer displayed on the home page
 	 *
@@ -472,6 +474,37 @@ HTML;
 
   	return $str;
   }
+
+	public static function objectsToSelect($objects, $nameField='name', $options = array())
+	{
+		$id = (!empty($options['id']) ? ' id="' . $options['id'] . '"' : '');
+		$name = (!empty($options['name']) ? ' name="' . $options['name'] . '"' : '');
+		$value = (!empty($options['value']) ? $options['value'] : false);
+
+		$html = '<select' . $id . $name . '>';
+		if (!empty($options['empty']))
+			$html .= '<option value="">' . $options['empty'] . '</option>';
+
+		foreach ($objects as $o)
+			$html .= '<option value="' . $o->id . '"' . ($value !== false && $o->id == $value ? ' selected="selected"' : '') . '>' . $o->$nameField . '</option>';
+
+		$html .= '</select>';
+
+		return $html;
+	}
+
+	public static function mysqlError()
+	{
+		echo '<pre>' . print_r(mysql_error(), true) . '</pre>';
+		echo '<pre>' . print_r(self::$lastQuery, true) . '</pre>';
+		echo '<pre>';debug_print_backtrace();echo '</pre>';
+	}
+
+	public static function mysqlQuery($sql)
+	{
+		self::$lastQuery = $sql;
+		return mysql_query($sql);
+	}
 }
 
 /**

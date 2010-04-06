@@ -10,7 +10,7 @@
 
 	$league = $season->getLeague();
 
-	$users = User::getAll();
+	$users = User::getAll('name asc');
 	$tmp = array();
 	foreach ($users as $user)
 		$tmp[strtolower($user->name)] = $user->id;

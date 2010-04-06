@@ -20,7 +20,14 @@
 
 	if (!$day)
 	{
-		echo json_encode(array('sucess' => 0, 'message' => 'Equipe invalide'));
+		echo json_encode(array('sucess' => 0, 'message' => 'Journée invalide'));
+		exit;
+	}
+
+	$isEditable = !$day->hasPronos() && !$day->hasCompletedMatches() && !empty($_SESSION['user']);
+	if (!$isEditable)
+	{
+		echo json_encode(array('sucess' => 0, 'message' => "Cette journée n'est pas éditable"));
 		exit;
 	}
 
@@ -57,7 +64,10 @@
 		$limitTime .= '00::00';
 
 	// FIXME : change format when add localisations
-	$limit_date = $matches[3] . '-' . $matches[2] . '-' . $matches[1] . ' ' . $limitTime;
+	if (!empty($matches))
+		$limit_date = $matches[3] . '-' . $matches[2] . '-' . $matches[1] . ' ' . $limitTime;
+	else
+		$limit_date = NULL;
 
 	$day->pr_season_id = $season;
 	$day->number = $number;

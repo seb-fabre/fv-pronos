@@ -9,19 +9,9 @@ $GLOBALS["classes"]["User"] = array("classname" => "_User", "tablename" => "pr_u
 
 class _User extends ArtObject
 {
-	protected $_data = array('id' => null, 'name' => null, 'passwd' => null, 'email' => null, 'pr_team_id' => null, 'role' => null);
+	protected $_data = array('id' => null, 'name' => null, 'passwd' => null, 'email' => null, 'pr_team_id' => null);
 
 	protected $_editedFields = array();
-
-	public function __construct($values = array())
-	{
-		if (!empty($values))
-		foreach ($values as $key => $value)
-		{
-			if (array_key_exists($key, $this->_data))
-				$this->_data[$key] = $value;
-		}
-	}
 
 	/**
 	 * @return User
@@ -63,9 +53,9 @@ class _User extends ArtObject
 	/**
 	 * @return int
 	 */
-	public static function count()
+	public static function count($criteria = array())
 	{
-		return parent::count("User", array(), "", 1, true);
+		return parent::count("User", $criteria, "", 1, true);
 	}
 
 	public function delete()

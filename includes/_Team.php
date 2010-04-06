@@ -13,16 +13,6 @@ class _Team extends ArtObject
 
 	protected $_editedFields = array();
 
-	public function __construct($values = array())
-	{
-		if (!empty($values))
-		foreach ($values as $key => $value)
-		{
-			if (array_key_exists($key, $this->_data))
-				$this->_data[$key] = $value;
-		}
-	}
-
 	/**
 	 * @return Team
 	 */
@@ -63,9 +53,9 @@ class _Team extends ArtObject
 	/**
 	 * @return int
 	 */
-	public static function count()
+	public static function count($criteria = array())
 	{
-		return parent::count("Team", array(), "", 1, true);
+		return parent::count("Team", $criteria, "", 1, true);
 	}
 
 	public function delete()

@@ -239,6 +239,10 @@ a img {
 	border: none;
 }
 
+.scoreTable td.team {
+	width: 40%;
+}
+
 .right {
 	text-align: right;
 }
