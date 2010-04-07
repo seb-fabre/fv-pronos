@@ -9,8 +9,8 @@
 	if (!isset($matches[1]))
 		header('location: ' . APPLICATION_URL);
 
-	if (isset($matches[3]))
-		$sort = $matches[3];
+	if (isset($matches[5]))
+		$sort = $matches[5];
 	else
 		$sort = 'total';
 
@@ -28,10 +28,10 @@
     die;
   }
 
-	$days = $season->getDays();
+	$days = $season->getDays('number');
 
-	if (!empty($matches[5]))
-		$max = $matches[5];
+	if (!empty($matches[3]))
+		$max = $matches[3];
 	else
 	{
     $teams = $season->getTeams();
@@ -175,18 +175,18 @@
 
 	echoHTMLHead('Classement');
 ?>
-<body>
+<body style="width:auto">
 	<?php echoMenu(); ?>
 	<?php
 		echo '<table id="rankings">';
 		echo '<tr><th>&nbsp;</th><th>Journées</th>';
 		foreach ($days as $day)
-			echo '<th><a href="scores.php?league=' . $season->id . '&day=' . $day->number . '">' . $day->number . '</a></th>';
-		echo '<th title="score total"><a href="scores.php?league=' . $season->id . '&sort=total">Total</a></th>';
+			echo '<th><a href="' . APPLICATION_URL . 'scores/season-' . $season->id . '/day-' . $day->number . '">' . $day->number . '</a></th>';
+		echo '<th title="score total"><a href="' . APPLICATION_URL . 'scores/season-' . $season->id . '/sort-total">Total</a></th>';
 		echo '<th title="nombre de participations">Part.</th>';
-		echo '<th title="moyenne de points par journée"><a href="scores.php?league=' . $season->id . '&sort=avg">AVG</a></th>';
-		echo '<th title="nombre de scores exacts"><a href="scores.php?league=' . $season->id . '&sort=3pts">3pts</a></th>';
-		echo '<th title="nombre de bon résultats"><a href="scores.php?league=' . $season->id . '&sort=1pt">1pt</a></th>';
+		echo '<th title="moyenne de points par journée"><a href="' . APPLICATION_URL . 'scores/season-' . $season->id . '/sort-avg">AVG</a></th>';
+		echo '<th title="nombre de scores exacts"><a href="' . APPLICATION_URL . 'scores/season-' . $season->id . '/sort-3pts">3pts</a></th>';
+		echo '<th title="nombre de bon résultats"><a href="' . APPLICATION_URL . 'scores/season-' . $season->id . '/sort-1pt">1pt</a></th>';
 		echo '</tr>';
 		$i = 1;
 		foreach ($scores as $user => $scores)

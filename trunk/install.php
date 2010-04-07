@@ -103,8 +103,7 @@ if (!empty($_POST['cparti']))
 
 			// write the conf file
 			$f = fopen('includes/conf.php', 'w+');
-			fwrite($f, '
-<?php
+			fwrite($f, '<?php
 $GLOBALS["conf"]["mysql_host"] = "' . addslashes($db_host) . '";
 $GLOBALS["conf"]["mysql_login"] = "' . addslashes($db_login) . '";
 $GLOBALS["conf"]["mysql_password"] = "' . addslashes($db_passwd) . '";

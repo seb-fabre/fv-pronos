@@ -41,7 +41,7 @@ function echoHTMLHead($title='')
 	<script type="text/javascript" src="$url/js/jquery-1.4.2.min.js"></script>
 	<script type="text/javascript" src="$url/js/jquery-ui-1.8.custom.min.js"></script>
 	<script type="text/javascript" src="$url/js/jquery.ui.datepicker-fr.js"></script>
-	<script type="text/javascript" src="$url/js/jquery.simplemodal-1.2.3.js"></script>
+	<script type="text/javascript" src="$url/js/jquery.simplemodal-1.3.4.min.js"></script>
 	<script type="text/javascript" src="$url/js/jquery.form.js"></script>
 	<script type="text/javascript" src="$url/js/jquery.qtip-1.0.min.js"></script>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF8" />

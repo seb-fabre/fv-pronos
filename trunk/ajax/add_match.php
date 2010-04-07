@@ -1,12 +1,25 @@
 <?php
 	require_once('../includes/init.php');
 
-	function getMatchRow(&$teams, $homeId, $awayId, $isEditable = true)
+	function getMatchRow(&$teams, $match = false, $isEditable = true)
 	{
-		$select = '<p class="center"><select name="pr_home_team_id[]"' . (!$isEditable ? ' disabled="disabled"' : '') . '>';
+		if (!empty($match))
+		{
+			$homeId = $match->pr_home_team_id;
+			$awayId = $match->pr_away_team_id;
+			$name = '[exist][' . $match->id . ']';
+		}
+		else
+		{
+			$homeId = -1;
+			$awayId = -1;
+			$name = '[new][]';
+		}
+
+		$select = '<p class="center"><select name="pr_home_team_id' . $name . '"' . (!$isEditable ? ' disabled="disabled"' : '') . '>';
 		foreach ($teams as $team)
 			$select .= '<option value="' . $team->id . '"' . ($team->id == $homeId ? ' selected="selected"' : '') . '>' . $team->name . '</option>';
-		$select .= '</select>&nbsp;-&nbsp;<select name="pr_away_team_id[]"' . (!$isEditable ? ' disabled="disabled"' : '') . '>';
+		$select .= '</select>&nbsp;-&nbsp;<select name="pr_away_team_id' . $name . '"' . (!$isEditable ? ' disabled="disabled"' : '') . '>';
 		foreach ($teams as $team)
 			$select .= '<option value="' . $team->id . '"' . ($team->id == $awayId ? ' selected="selected"' : '') . '>' . $team->name . '</option>';
 		$select .= '</select></p>';
@@ -29,11 +42,11 @@
 	$select = '';
 	foreach ($matches as $m)
 	{
-		$select .= getMatchRow($teams, $m->pr_home_team_id, $m->pr_away_team_id, $isEditable);
+		$select .= getMatchRow($teams, $m, $isEditable);
 	}
 ?>
-<div class="hidden" id="selectTeams"><?php echo getMatchRow($teams, -1, -1) ?></div>
-<form action="/ajax/save_match.php" method="get">
+<div class="hidden" id="selectTeams"><?php echo getMatchRow($teams) ?></div>
+<form action="/ajax/save_match.php" method="post">
 	<fieldset>
 		<legend>Modifier les matches</legend>
 		<p class="center bold"><?php echo $league->name ?>, <?php echo $day->number ?><sup>e</sup> journée</p>
