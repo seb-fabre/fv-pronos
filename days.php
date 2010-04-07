@@ -50,7 +50,7 @@
 			<p style="margin-bottom: 10px">
 				Afficher :
 				<?=Tools::objectsToSelect($leagues, 'name', array('value' => $leagueId, 'name' => 'league', 'empty' => 'Tous les championnats')) ?>
-				<?=Tools::objectsToSelect($seasons, 'label', array('value' => $seasonId, 'name' => 'season', 'empty' => 'Toutes les saisons')) ?>
+				<?=Season::objectsToSelect($seasons, array('value' => $seasonId, 'name' => 'season', 'empty' => 'Toutes les saisons')) ?>
 				<input type="submit" value="OK" />
 			</p>
 		</form>

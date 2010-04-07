@@ -7,39 +7,62 @@
 	$homes = GETorPOST('pr_home_team_id');
 	$aways = GETorPOST('pr_away_team_id');
 	
+	if (empty($homes['exist']))
+		$homes['exist'] = array();
+	if (empty($homes['new']))
+		$homes['new'] = array();
 	
-	// check if one of the teams is already booked for this day
-	$query = mysql_query('SELECT * FROM pr_match WHERE pr_day_id=' . $day . ' AND (pr_home_team_id IN (' . implode(', ', array_merge($homes, $aways)) . ') OR pr_away_team_id IN (' . implode(', ', array_merge($homes, $aways)) . '))');
-	if (mysql_num_rows($query) != 0)
+	if (empty($aways['exist']))
+		$aways['exist'] = array();
+	if (empty($aways['new']))
+		$aways['new'] = array();
+
+	if (!$Day)
 	{
-		echo json_encode(array('success' => 0, 'message' => 'Une des équipes a déjà un match prévu pour cette journée.'));
+		echo json_encode(array('success' => 0, 'message' => "Journée invalide."));
 		exit;
 	}
-	
-	foreach ($homes as $key => $home)
+
+	$allHomes = array_merge($homes['new'], $homes['exist']);
+	$allAways = array_merge($aways['new'], $aways['exist']);
+
+	// check post data if a team is used several times
+	if (count($allHomes) != count(array_unique($allHomes))
+		|| count($allAways) != count(array_unique($allAways))
+		|| count(array_merge($allHomes, $allAways)) != count(array_unique(array_merge($allHomes, $allAways))))
 	{
-		$away = $aways[$key];
-		
-		if ($home == $away)
-		{
-			echo json_encode(array('success' => 0, 'message' => "Une équipe ne peut pas jouer en même temps à domicile et à l'extérieur."));
-			exit;
-		}
+		echo json_encode(array('success' => 0, 'message' => "Chaque équipe ne peut être utilisée qu'une fois par journée."));
+		exit;
 	}
-	
-	foreach ($homes as $key => $home)
+
+	// update existing matches
+	foreach ($homes['exist'] as $matchId => $homeTeamId)
 	{
-		$away = $aways[$key];
-		
+		$awayTeamId = $aways['exist'][$matchId];
+
+		$match = Match::find($matchId);
+		if (!$match)
+			continue;
+		$match->pr_day_id = $day;
+		$match->pr_home_team_id = $homeTeamId;
+		$match->pr_away_team_id = $awayTeamId;
+		$match->save();
+	}
+
+	// create new matches
+	foreach ($homes['new'] as $matchId => $homeTeamId)
+	{
+		$awayTeamId = $aways['new'][$matchId];
+
 		$match = new Match();
 		$match->pr_day_id = $day;
-		$match->pr_home_team_id = $home;
-		$match->pr_away_team_id = $away;
+		$match->pr_home_team_id = $homeTeamId;
+		$match->pr_away_team_id = $awayTeamId;
 		$match->save();
 	}
 	
 	if ($id == -1)
-		echo json_encode(array('success' => 1, 'message' => 'Championnat enregistré', 'create' => 1));
+		echo json_encode(array('success' => 1, 'message' => 'Matches enregistrés', 'create' => 1));
 	else
-		echo json_encode(array('success' => 1, 'message' => 'Championnat enregistré'));
+		echo json_encode(array('success' => 1, 'message' => 'Matches enregistrés'));
 ?>

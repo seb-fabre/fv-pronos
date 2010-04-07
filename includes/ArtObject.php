@@ -20,14 +20,14 @@ class ArtObject {
 	 */
 	protected $_editedFields = array();
 
-	public function __construct($values = array())
+	public function __construct($values = array(), $updateFields = true)
 	{
 		if (!empty($values))
 		foreach ($values as $key => $value)
 		{
 			if (array_key_exists($key, $this->_data))
 			{
-				if (empty($this->_data[$key]) || $this->_data[$key] != $value)
+				if ($updateFields && empty($this->_data[$key]) || $this->_data[$key] != $value)
 					$this->_editedFields []= $key;
 
 				$this->_data[$key] = $value;
@@ -50,7 +50,7 @@ class ArtObject {
 
 		$req = Tools::mysqlQuery('SELECT * FROM ' . $GLOBALS['classes'][$class]['tablename'] . ' WHERE id="' . mysql_real_escape_string($id) . '"') or die(Tools::mysqlError());
 		if (mysql_num_rows($req) != 0)
-			return new $GLOBALS['classes'][$class]['classname'](mysql_fetch_array($req));
+			return new $GLOBALS['classes'][$class]['classname'](mysql_fetch_array($req), false);
 		return false;
 	}
 
@@ -80,7 +80,7 @@ class ArtObject {
 	{
 		$req = Tools::mysqlQuery('SELECT * FROM ' . $GLOBALS['classes'][$class]['tablename'] . ' WHERE ' . $field . ' LIKE "' . mysql_real_escape_string($value) . '"') or die(Tools::mysqlError());
 		if (mysql_num_rows($req) != 0)
-			return new $GLOBALS['classes'][$class]['classname'](mysql_fetch_array($req));
+			return new $GLOBALS['classes'][$class]['classname'](mysql_fetch_array($req), false);
 		return false;
 	}
 
@@ -134,7 +134,7 @@ class ArtObject {
 
 		$req = Tools::mysqlQuery($query) or die (Tools::mysqlError());
 		while ($res = mysql_fetch_array($req))
-			$results[$res['id']] = new $GLOBALS['classes'][$class]['classname']($res);
+			$results[$res['id']] = new $GLOBALS['classes'][$class]['classname']($res, false);
 
 		return $results;
 	}
@@ -233,8 +233,6 @@ class ArtObject {
 		$new = self::find($class, $id);
 		$data = $new->toArray();
 		$this->_data = $data;
-		foreach ($data as $key => $value)
-			$this->$key = $value;
 
 		return $id;
 	}
@@ -315,10 +313,6 @@ class ArtObject {
 		{
 			return ArtObject::find($method, $this->_data[$field]);
 		}
-//		else if (isset($this->_data[$field]) && !empty($args) && isset($GLOBALS['classes'][$args[0]]))
-//		{
-//			return ArtObject::find($args[0], $this->_data[$field]);
-//		}
 
 		// if function name can be related to a classname+s, search the related class and return an array of objects
 		$lastChar = $methodName[strlen($methodName)-1];
@@ -328,11 +322,16 @@ class ArtObject {
 
 			$backtrace = debug_backtrace();
 
+			if (empty($args))
+				$order = "";
+			else
+				$order = $args[0];
+
 			if (isset($backtrace[1]['class']) && isset($GLOBALS['classes'][$backtrace[1]['class']]) && isset($GLOBALS['classes'][$method]))
 			{
 				$classname = $backtrace[1]['class'];
 				$field = 'pr_' . camelCaseToUnderscores($classname) . '_id';
-				return ArtObject::search($method, array(array($field, $this->id)));
+				return ArtObject::search($method, array(array($field, $this->id)), $order);
 			}
 		}
 

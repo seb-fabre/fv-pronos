@@ -63,4 +63,22 @@ class Season extends _Season
 		$seasonTeam->pr_season_id = $this->id;
 		$seasonTeam->save();
 	}
+
+	public static function objectsToSelect($objects, $options = array())
+	{
+		$id = (!empty($options['id']) ? ' id="' . $options['id'] . '"' : '');
+		$name = (!empty($options['name']) ? ' name="' . $options['name'] . '"' : '');
+		$value = (!empty($options['value']) ? $options['value'] : false);
+
+		$html = '<select' . $id . $name . '>';
+		if (!empty($options['empty']))
+			$html .= '<option value="">' . $options['empty'] . '</option>';
+
+		foreach ($objects as $o)
+			$html .= '<option value="' . $o->id . '"' . ($value !== false && $o->id == $value ? ' selected="selected"' : '') . '>' . $o->getLeague()->name . ' - ' . $o->label . '</option>';
+
+		$html .= '</select>';
+
+		return $html;
+	}
 }

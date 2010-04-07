@@ -12,4 +12,3 @@
 	{
 		die ('Impossible de se connecter à la base de données.');
 	}
-?>

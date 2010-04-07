@@ -1,4 +1,4 @@
-- sur chaque écran où on peut ajouter, donner la possibilité de supprimer
+﻿- sur chaque écran où on peut ajouter, donner la possibilité de supprimer
  * matches d'une journée
  * utilisateur
  * journée
@@ -28,3 +28,13 @@
  * revoir système des criteria pour le search
 - reprendre le générateur de classe pour que toutes les classes héritent en fait d'une classe Artobject
 - ne pas faire de $_GET et $_POST, passer par des fonctions get et post pour éviter des warning pour les valeurs vides
+
+
+http://www.iconpot.com/
+
+
+thanks:
+http://tango.freedesktop.org/Tango_Icon_Library
+http://www.everaldo.com/ pour l'icon close
+
+http://www.veryicon.com/icons/system/crystal-clear-actions/

@@ -1,4 +1,6 @@
 <?php
+	header ("Content-type: image/png");
+
 	require_once('includes/init.php');
 
 	$pathinfo = $_SERVER['PATH_INFO'];
@@ -340,8 +342,5 @@
 		imageline($image, $left + 1, $top + 30 - 5, $left + 409, $top + 30 - 5, $grey);
 		$i++;
 	}
-//die;
-	header ("Content-type: image/png");
 	
 	imagepng($image);
-?>
