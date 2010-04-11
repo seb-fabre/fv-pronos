@@ -6,6 +6,7 @@ header('Content-type: text/html; charset=UTF-8');
 require_once($GLOBALS['ROOTPATH'] . 'includes/__classes.php');
 
 require_once($GLOBALS['ROOTPATH'] . 'includes/class.migration.php');
+require_once($GLOBALS['ROOTPATH'] . 'includes/class.tools.php');
 require_once($GLOBALS['ROOTPATH'] . 'includes/class.notification.php');
 require_once($GLOBALS['ROOTPATH'] . 'includes/JSON.php');
 require_once($GLOBALS['ROOTPATH'] . 'includes/functions.php');
