@@ -54,7 +54,7 @@
 									<a href="javascript:;" onclick="showRankings(<?php echo $season->id ?>, -1);"><img src="<?=APPLICATION_URL?>images/fleche.png" alt="[view]" /> classement des équipes</a>
 								</td>
 								<td>
-									<p><a href="<?=APPLICATION_URL?>scores/season-<?php echo $season->id ?>" onclick="showRankings(<?php echo $season->id ?>, -1);"><img src="<?=APPLICATION_URL?>images/fleche.png" alt="[view]" /> classement détaillé</a></p>
+									<p><a href="<?=APPLICATION_URL?>scores/season-<?php echo $season->id ?>"><img src="<?=APPLICATION_URL?>images/fleche.png" alt="[view]" /> classement détaillé</a></p>
 									<p><a href="javascript:;" onclick="previewRankings(<?php echo $season->id ?>, -1);"><img src="<?=APPLICATION_URL?>images/fleche.png" alt="[view]" /> aperçu du classement</a></p>
 								</td>
 							</tr>

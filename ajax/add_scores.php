@@ -11,6 +11,12 @@
 
 	$matches = $day->getMatches();
 
+	$isEditable = $day->isEditable();
+	if ($isEditable)
+		$editableStr = '';
+	else
+		$editableStr = ' disabled="disabled"';
+
 	if (count($matches) == 0)
 	{
 ?>
@@ -31,16 +37,18 @@
 			<?php foreach ($matches as $match): ?>
 				<tr>
 					<td class="right team"><?php echo $teams[$match->pr_home_team_id]->name ?></td>
-					<td class="center"><input name="home_goals[<?php echo $match->id ?>]" size="1" maxlength="1" value="<?php echo $match->home_goals ?>" style="text-align:center" /></td>
+					<td class="center"><input name="home_goals[<?php echo $match->id ?>]" size="1" maxlength="1" value="<?php echo $match->home_goals ?>" style="text-align:center" <?=$editableStr?>/></td>
 					<td class="center"> - </td>
-					<td class="center"><input name="away_goals[<?php echo $match->id ?>]" size="1" maxlength="1" value="<?php echo $match->away_goals ?>" style="text-align:center" /></td>
+					<td class="center"><input name="away_goals[<?php echo $match->id ?>]" size="1" maxlength="1" value="<?php echo $match->away_goals ?>" style="text-align:center" <?=$editableStr?>/></td>
 					<td class="team"><?php echo $teams[$match->pr_away_team_id]->name ?></td>
 				</tr>
 			<?php endforeach; ?>
 		</table>
 		<p class="submit">
-			<input type="hidden" name="id" value="<?php echo GETorPOST('id') ?>" />
-			<input type="submit" value="enregistrer" />
+			<?php if ($isEditable) { ?>
+				<input type="hidden" name="id" value="<?php echo GETorPOST('id') ?>" />
+				<input type="submit" value="enregistrer" />
+			<?php } ?>
 			<input type="button" value="annuler" onclick="$.modal.close()" />
 		</p>
 	</fieldset>

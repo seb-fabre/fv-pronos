@@ -1,7 +1,7 @@
 <?php 
 	require_once('includes/init.php');
 	
-	$users = User::getAll();
+	$users = User::getAll('name asc');
 	
 	$teams = Team::getAll();
 
@@ -12,7 +12,9 @@
 	<?php echoMenu(); ?>
 	<div id="content">
 		<h1>Liste des utilisateurs</h1>
-		<div class="add"><a href="javascript:;" onclick="openPopup(-1)">Ajouter un utilisateur</a></div>
+		<?php if (!empty($_SESSION['user'])) { ?>
+			<div class="add"><a href="javascript:;" onclick="openPopup(-1)">Ajouter un utilisateur</a></div>
+		<?php } ?>
 		<table>
 			<thead>
 				<tr>

@@ -32,6 +32,8 @@
 
 	}
 
+	$isEditable = $day->isEditable();
+
 	echoHTMLHead('Liste des pronos');
 ?>
 
@@ -40,13 +42,17 @@
 	<div id="content">
 		<h1>Liste des pronos</h1>
 		<h2><?php echo $league->name ?> - <?php echo $season->label ?>, Journée n°<?php echo $day->number ?></h2>
-		<div class="add"><a href="javascript:;" onclick="parsePronos(<?php echo $day->id ?>)">Saisir l'ensemble des pronos</a></div>
+		<?php if ($isEditable) { ?>
+			<div class="add"><a href="javascript:;" onclick="parsePronos(<?php echo $day->id ?>)">Saisir l'ensemble des pronos</a></div>
+		<?php } ?>
 		<p><?php echo count($pronosByUser) ?> joueurs ont pronostiqué cette journée</p>
 		<table>
 			<thead>
 				<tr>
 					<th>Nom</th>
-					<th>Modifier</th>
+					<?php if ($isEditable) { ?>
+						<th>Modifier</th>
+					<?php } ?>
 					<th>Afficher</th>
 				</tr>
 			</thead>
@@ -55,7 +61,9 @@
 					<?php foreach ($users as $user): ?>
 						<tr>
 							<td><?php echo $user->name ?></td>
-							<td class="center"><a href="javascript:;" onclick="openPopup(<?php echo $day->id ?>, <?php echo $user->id ?>)"><img src="<?=APPLICATION_URL?>images/fleche.png" alt="[edit]" /> saisir les pronos</a></td>
+							<?php if ($isEditable) { ?>
+								<td class="center"><a href="javascript:;" onclick="openPopup(<?php echo $day->id ?>, <?php echo $user->id ?>)"><img src="<?=APPLICATION_URL?>images/fleche.png" alt="[edit]" /> saisir les pronos</a></td>
+							<?php } ?>
 							<td class="tooltipped">
 
 								<?php
