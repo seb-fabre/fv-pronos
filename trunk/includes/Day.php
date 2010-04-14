@@ -42,5 +42,10 @@ class Day extends _Day
 	{
 		return $this->getMatchs();
 	}
+
+	public function isEditable()
+	{
+		return !$this->hasPronos() && !$this->hasCompletedMatches() && !empty($_SESSION['user']);
+	}
 }
 	

@@ -62,8 +62,8 @@
 				<tr>
 					<th>Championnat</th>
 					<th>Numéro</th>
-					<th>Modifier</th>
 					<?php if (!empty($_SESSION['user'])) { ?>
+						<th>Modifier</th>
 						<th>Matches</th>
 					<?php } ?>
 					<th>Scores</th>
@@ -80,13 +80,15 @@
 							<tr>
 								<?php if (++$i == 1) echo '<td rowspan="' . count($days) . '">' . $league->name . '<br/>' . $seasons[$day->pr_season_id]->label . '</td>'; ?>
 								<td><?php echo $day->number ?></td>
-								<?php if ($isEditable) { ?>
-									<td class="center"><a href="javascript:;" onclick="openPopup(<?php echo $day->id ?>)"><img src="<?=APPLICATION_URL?>images/edit.png" alt="[edit]" /></a></td>
-								<?php } else { ?>
-									<td class="center tooltipped">
-										<img src="<?=APPLICATION_URL?>images/edit_disabled.png" alt="[edit]" />
-										<div class="hidden">Des scores et/ou des pronostics ont été saisis, cette journée n'est pas modifiable.</div>
-									</td>
+								<?php if (!empty($_SESSION['user'])) { ?>
+									<?php if ($isEditable) { ?>
+										<td class="center"><a href="javascript:;" onclick="openPopup(<?php echo $day->id ?>)"><img src="<?=APPLICATION_URL?>images/edit.png" alt="[edit]" /></a></td>
+									<?php } else { ?>
+										<td class="center tooltipped">
+											<img src="<?=APPLICATION_URL?>images/edit_disabled.png" alt="[edit]" />
+											<div class="hidden">Des scores et/ou des pronostics ont été saisis, cette journée n'est pas modifiable.</div>
+										</td>
+									<?php } ?>
 								<?php } ?>
 								<?php if (!empty($_SESSION['user'])) { ?>
 									<td class="center">
