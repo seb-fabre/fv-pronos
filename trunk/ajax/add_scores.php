@@ -11,7 +11,7 @@
 
 	$matches = $day->getMatches();
 
-	$isEditable = $day->isEditable();
+	$isEditable = !empty($_SESSION['user']);
 	if ($isEditable)
 		$editableStr = '';
 	else
