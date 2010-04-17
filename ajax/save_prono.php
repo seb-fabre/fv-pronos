@@ -70,9 +70,11 @@
 		$tmp[$match->pr_home_team_id][$match->pr_away_team_id] = $match->id;
 	$matches = $tmp;
 
+	echo '<table class="noborder" style="width: 100%">';
+	
 	foreach ($parsedData as $user => $scores)
 	{
-		echo '<p class="center">pronos ';
+		echo '<tr><td colspan="3" align="center" style="text-align: center">';
 		echo '<select name="pr_user_id[' . $user . ']">';
 		echo '<option value="-1"> --- </option>';
 		foreach ($users as $u)
@@ -81,19 +83,23 @@
 		if (!array_key_exists($user, $users))
 			echo ' (' . $user . ')';
 		echo '</p>';
+		echo '</td></tr>';
 
-		echo '<table class="noborder" style="width: 100%">';
 		foreach ($scores as $score)
 		{
 			if (!isset($matches[$score['home_team']][$score['away_team']]))
 				continue;
 			$match = $matches[$score['home_team']][$score['away_team']];
-			echo '<tr><td class="right">' . $titims[$score['home_team']]->name . '</td><td class="center" style="width: 100px;">';
+			echo '<tr>';
+			echo '<td class="right">' . $titims[$score['home_team']]->name . '</td>';
+			echo '<td class="center" style="width: 100px;">';
 			echo '<input type="text" name="home_goals[' . $user . '][' . $match . ']" value="' . $score['home_goals'] . '" size="2" maxlength="1" />&nbsp;-&nbsp;';
-			echo '<input type="text" name="away_goals[' . $user . '][' . $match . ']" value="' . $score['away_goals'] . '" size="2" maxlength="1" />&nbsp;';
-			echo '</td><td>' . $titims[$score['away_team']]->name . '</td></tr>';
+			echo '<input type="text" name="away_goals[' . $user . '][' . $match . ']" value="' . $score['away_goals'] . '" size="2" maxlength="1" />&nbsp';
+			echo '</td>';
+			echo '<td>' . $titims[$score['away_team']]->name . '</td>';
+			echo '</tr>';
 		}
-		echo '</table>';
-		echo '<hr/>';
+		echo '<tr><td colspan="3"><hr/></td></tr>';
 	}
+	echo '</table>';
 ?>

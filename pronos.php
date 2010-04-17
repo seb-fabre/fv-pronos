@@ -32,7 +32,7 @@
 
 	}
 
-	$isEditable = $day->isEditable();
+	$isEditable = !empty($_SESSION['user']);
 
 	echoHTMLHead('Liste des pronos');
 ?>
@@ -146,7 +146,8 @@
 					$('#popup form').ajaxForm({
 						url: '<?=APPLICATION_URL?>ajax/save_prono.php',
 						success: function (response) {
-							$('#matches').parent().css('height', 400).css('overflow-y', 'scroll');
+							$('#simplemodal-container').height(520);
+							$('#matches').parent().css('height', 350).css('overflow-y', 'scroll');
 							$('#matches').parent().html(response);
 							//$.modal.close();
 							//$('#popup').modal({close: false});
