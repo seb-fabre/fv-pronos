@@ -47,12 +47,13 @@
 	{
 		$user = $users[$userId];
 		
-		if ($user->pr_team_id && userTeam->has_logo)
+		if ($user->pr_team_id)
 		{
 			$userTeam = $teams[$user->pr_team_id];
+			if ($userTeam->has_logo)
 			echo '[img]' . $userTeam->getLogoUrl() . '[/img] ';
 		}
-		echo '[b]' . $user->name . '[/b] :arrow: ';
+		echo '[b]' . stripslashes($user->name) . '[/b] :arrow: ';
 		$points = 0;
 		$str = '';
 		
