@@ -47,10 +47,10 @@
 	{
 		$user = $users[$userId];
 		
-		if ($user->pr_team_id)
+		if ($user->pr_team_id && userTeam->has_logo)
 		{
 			$userTeam = $teams[$user->pr_team_id];
-			echo '[img]http://arteau.free.fr/pronos/logos/' . strtolower($userTeam->name) . '.gif[/img] ';
+			echo '[img]' . $userTeam->getLogoUrl() . '[/img] ';
 		}
 		echo '[b]' . $user->name . '[/b] :arrow: ';
 		$points = 0;
