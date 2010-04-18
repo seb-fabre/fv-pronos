@@ -330,7 +330,7 @@
 			imagefilledrectangle($image, 331 + $left, $top + 1 - 5, 374 + $left, $top + 30 - 6, $green10);
 		
 		imagestring($image, 3, $left + 4 - 20, $top + 3, $i, $white);
-		imagestring($image, 3, $left + 40, $top + 3, utf8_decode($users[$user]->name), $black);
+		imagestring($image, 3, $left + 40, $top + 3, stripslashes(utf8_decode($users[$user]->name)), $black);
 		imagestring($image, 3, $left + 138, $top + 3, str_pad($scores['total']['total'], 3, ' ', STR_PAD_LEFT), $black);
 		imagestring($image, 3, $left + 195 - 4 * strlen($diff), $top + 3, $diff, $black);
 		imagestring($image, 3, $left + 225, $top + 3, str_pad($scores['total']['3pts'], 2, ' ', STR_PAD_LEFT), $black);
