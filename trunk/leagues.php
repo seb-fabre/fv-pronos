@@ -56,6 +56,7 @@
 								<td>
 									<p><a href="<?=APPLICATION_URL?>scores/season-<?php echo $season->id ?>"><img src="<?=APPLICATION_URL?>images/fleche.png" alt="[view]" /> classement détaillé</a></p>
 									<p><a href="javascript:;" onclick="previewRankings(<?php echo $season->id ?>, -1);"><img src="<?=APPLICATION_URL?>images/fleche.png" alt="[view]" /> aperçu du classement</a></p>
+									<p><a href="javascript:;" onclick="viewEvolution(<?php echo $season->id ?>, -1);"><img src="<?=APPLICATION_URL?>images/fleche.png" alt="[view]" /> évolution du classement</a></p>
 								</td>
 							</tr>
 						<?php } ?>
@@ -69,6 +70,7 @@
 
 	<div id="popup"><div id="popup_message"></div><div id="popup_content"></div></div>
 	<div id="popupImage" style="display:none"></div></div>
+	<div id="popup_large"><div id="popup_content"></div></div>
 
 	<script type="text/javascript">
 		function openPopup(id)
@@ -129,7 +131,30 @@
 					$.modal.close();
 					$('#popup_content').html(response);
 					$('#popup').modal({close: false});
-					$('#popup input[type=text]').focus();
+				}
+			});
+		}
+
+		function addUser()
+		{
+			var li = $('<li class="li_box">' + $('#user_select option:selected').text() + ' <a href="closeBox();" class="closeBox"></a></li>');
+
+			$('#users_holder').append(li);
+			li.corner();
+			$('#simplemodal-container').css('height', 'auto');
+		}
+
+		function viewEvolution(league)
+		{
+			$('#loading').modal({close: false});
+			$.ajax({
+				url: '<?=APPLICATION_URL?>ajax/view_evolution.php',
+				data: {id: league},
+				success: function (response) {
+					$.modal.close();
+					$('#popup_content').html(response);
+					$('#popup').modal({close: true, minWidth: 600});
+					$('.li_box').corner();
 				}
 			});
 		}

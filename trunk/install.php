@@ -17,6 +17,11 @@ if (file_exists($GLOBALS['ROOTPATH'] . 'includes/conf.php'))
 	header('location: ' . APPLICATION_URL);
 }
 
+if (strpos($_SERVER['REQUEST_URI'], 'install/'))
+{
+	header('location: ../install');
+}
+
 $fieldErrors = array();
 $globalErrors = array();
 
@@ -93,8 +98,10 @@ if (!empty($_POST['cparti']))
 				}
 			}
 
-			// create the super-admin
-			$superAdmin = new User();
+			// create the super-admin (or retrieve it)
+			$superAdmin = User::findBy('name', $admin_login);
+			if (!$superAdmin)
+				$superAdmin = new User();
 			$superAdmin->name = $admin_login;
 			$superAdmin->passwd = md5($admin_passwd);
 			$superAdmin->email = $admin_email;
