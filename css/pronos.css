@@ -125,7 +125,6 @@ div.error p {
 
 #popup {
 	display: none;
-	width: 450px;
 }
 
 #popup .close {
@@ -390,4 +389,33 @@ select[disabled] {
 
 #tabsF ul li#currentHeaderTab a span {
 	background-position: 100% -42px;
+}
+
+/* ------------------------------------------------- */
+.input_holder {
+	border: 1px solid #000;
+	padding: 5px;
+	float: left;
+}
+
+.input_holder li.li_box {
+	display: inline;
+	border: 1px solid #CAD8F3;
+	padding: 5px;
+	margin: 5px;
+	background: #DEE7F8;
+	clear: right;
+	float: left;
+}
+
+.closeBox {
+	float: right;
+	width: 7px;
+	height: 7px;
+	font-size: 1px;
+	background: url(../images/close.gif);
+	margin-left: 5px;
+}
+.closeBox:hover { 
+	background-position: 7px;
 }

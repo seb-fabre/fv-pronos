@@ -12,18 +12,21 @@
 
 	mysql_select_db('information_schema', $conn) or die (mysql_error());
 
-	$queryFK = mysql_query("SELECT COLUMN_NAME, REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME, TABLE_CONSTRAINTS.TABLE_NAME
+	$queryFK = @mysql_query("SELECT COLUMN_NAME, REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME, TABLE_CONSTRAINTS.TABLE_NAME
   	                      FROM TABLE_CONSTRAINTS, KEY_COLUMN_USAGE
   	                      WHERE TABLE_CONSTRAINTS.CONSTRAINT_NAME=KEY_COLUMN_USAGE.CONSTRAINT_NAME
   	                      AND constraint_type='FOREIGN KEY'
-  	                      AND TABLE_CONSTRAINTS.TABLE_SCHEMA='" . $DB . "'") or die (mysql_error());
+  	                      AND TABLE_CONSTRAINTS.TABLE_SCHEMA='" . $DB . "'");
 
 	$foreignKeys = array();
 	$invertForeignKeys = array();
-	while ($res = mysql_fetch_array($queryFK))
+	if ($queryFK)
 	{
-		$foreignKeys[$res['TABLE_NAME']][$res['COLUMN_NAME']] = array('table' => $res['REFERENCED_TABLE_NAME'], 'column' => $res['REFERENCED_COLUMN_NAME']);
-		$invertForeignKeys[$res['REFERENCED_TABLE_NAME']] []= array($res['REFERENCED_COLUMN_NAME'] => array('table' => $res['TABLE_NAME'], 'column' => $res['COLUMN_NAME']));
+		while ($res = mysql_fetch_array($queryFK))
+		{
+			$foreignKeys[$res['TABLE_NAME']][$res['COLUMN_NAME']] = array('table' => $res['REFERENCED_TABLE_NAME'], 'column' => $res['REFERENCED_COLUMN_NAME']);
+			$invertForeignKeys[$res['REFERENCED_TABLE_NAME']] []= array($res['REFERENCED_COLUMN_NAME'] => array('table' => $res['TABLE_NAME'], 'column' => $res['COLUMN_NAME']));
+		}
 	}
 
 	mysql_select_db($DB, $conn);
