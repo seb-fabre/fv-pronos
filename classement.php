@@ -1,5 +1,5 @@
 <?php
-	header ("Content-type: image/png");
+	$GLOBALS['HEADER_CONTENT_TYPE'] = "Content-type: image/png";
 
 	require_once('includes/init.php');
 
