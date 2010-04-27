@@ -130,6 +130,9 @@
 		if ($days[$match->pr_day_id]->number > $max)
 			continue;
 
+		if (is_null($match->home_goals) || is_null($match->away_goals))
+			continue;
+
 		$scores[$prono->pr_user_id][$match->pr_day_id]['played'] = 1;
 		$scores[$prono->pr_user_id]['total']['played'] = 1;
 		$scores[$prono->pr_user_id]['played'][$match->pr_day_id] = 1;

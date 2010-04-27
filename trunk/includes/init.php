@@ -10,7 +10,10 @@
 
 	session_start();
 
-	header('Content-type: text/html; charset=UTF-8');
+	if (empty($GLOBALS['HEADER_CONTENT_TYPE']))
+		header('Content-type: text/html; charset=UTF-8');
+	else
+		header($GLOBALS['HEADER_CONTENT_TYPE']);
 
 	if (!file_exists($GLOBALS['ROOTPATH'] . 'includes/conf.php'))
 	{
