@@ -1,15 +1,18 @@
 <?php
 	require_once('includes/init.php');
 
-	$id = GETorPOST('id');
+	$pathinfo = $_SERVER['PATH_INFO'];
 
-	if (!$id)
-		header('location: /days.php');
+  $matches = false;
+  $match = preg_match('@^/day-([0-9]+)$@', $pathinfo, $matches);
 
-	$day = Day::find($id);
+	if (!isset($matches[1]))
+		header('location: /days');
+
+	$day = Day::find($matches[1]);
 
 	if (!$day)
-		header('location: /days.php');
+		header('location: /days');
 
 	$season = $day->getSeason();
 

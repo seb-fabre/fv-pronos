@@ -45,7 +45,7 @@ function echoHTMLHead($title='')
 	<script type="text/javascript" src="$url/js/jquery.form.js"></script>
 	<script type="text/javascript" src="$url/js/jquery.qtip-1.0.min.js"></script>
 	<script type="text/javascript" src="$url/js/jquery.curvycorners.packed.js"></script>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF8" />
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 HTML;
 }

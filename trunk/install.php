@@ -137,7 +137,7 @@ define("APPLICATION_URL", "' . $url . '");
 		<script type="text/javascript" src="./js/jquery.simplemodal-1.2.3.js"></script>
 		<script type="text/javascript" src="./js/jquery.form.js"></script>
 		<script type="text/javascript" src="./js/jquery.qtip-1.0.0-rc3.min.js"></script>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF8" />
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	</head>
 	<body>
 		<div id="content">
