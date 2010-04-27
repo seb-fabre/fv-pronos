@@ -105,7 +105,7 @@
 									<?php } ?>
 								</td>
 								<td class="center">
-									<p><a href="<?=APPLICATION_URL?>pronos.php?id=<?php echo $day->id ?>"><img src="<?=APPLICATION_URL?>images/fleche.png" alt="[add]" /> voir</a></p>
+									<p><a href="<?=APPLICATION_URL?>pronos/day-<?php echo $day->id ?>"><img src="<?=APPLICATION_URL?>images/fleche.png" alt="[add]" /> voir</a></p>
 									<p><a href="javascript:;" onclick="printScores(<?php echo $day->id ?>)"><img src="<?=APPLICATION_URL?>images/fleche.png" alt="[add]" /> imprimer (BBCode)</a></p>
 								</td>
 							</tr>
