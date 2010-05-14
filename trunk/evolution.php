@@ -1,16 +1,23 @@
 <?php
 	require_once('includes/init.php');
 
-	if (!isset(GETorPOST('league')) || !isset(GETorPOST('users')))
+	$pathinfo = $_SERVER['PATH_INFO'];
+
+  $matches = false;
+  $match = preg_match('@^/season-([0-9]+)-users-([0-9|]+)\.png?$@', $pathinfo, $matches);
+
+	$season = $matches[1];
+	$userz = $matches[2];
+
+	if (count($matches) < 3)
   {
-    echo 'paramètres invalides ... ';
+    echo 'paramètres invalides .... ';
     die;
   }
 
-  $season = Season::find(GETorPOST('league'));
+  $season = Season::find($season);
 	$league = $season->getLeague();
 	
-	$userz = GETorPOST('users');
 	$users = explode('-', $userz);
 	$userz = array();
 	foreach ($users as $u)
@@ -22,14 +29,14 @@
     die;
   }
 
-	if (isset(GETorPOST('sort')))
+	if (GETorPOST('sort'))
 		$sort = GETorPOST('sort');
 	else
 		$sort = 'total';
 
 	$days = $season->getDays();
 
-	if (isset(GETorPOST('day')))
+	if (GETorPOST('day'))
 		$max = GETorPOST('day');
 	else
 	{
@@ -37,7 +44,7 @@
     $max = (count($teams) - 1) * 2;
 	}
 
-	$users = User::getAll();
+	$users = $season->getUsers();
 
 	$pronos = $season->getPronos();
 

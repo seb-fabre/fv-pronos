@@ -1,21 +1,24 @@
 <?php
 	require_once('../includes/init.php');
 
-	$day = Day::find(GETorPOST('id'));
+	$id = GETorPOST('id', -1);
+
+	$day = Day::find($id);
 
 	$season = $day->getSeason();
 
 	$league = $season->getLeague();
 ?>
-<form method="post">
+<p id="popup_message" style="margin: 0; padding: 0;"></p>
+<form method="post" id="ajaxForm" class="nyroModal" action="<?=APPLICATION_URL?>ajax/save_prono.php">
 	<fieldset>
 		<legend>Parser les pronos</legend>
 		<p class="center bold"><?php echo $league->name ?> - <?php echo $season->label ?>, <?php echo $day->number ?><sup>e</sup> journée</p>
-		<p class="center"><textarea cols="20" rows="6" id="matches" name="matches"></textarea>
+		<p class="center"><textarea id="matches" name="matches"></textarea>
 		<p class="submit">
-			<input type="hidden" name="id" value="<?php echo GETorPOST('id') ?>" />
-			<input type="submit" value="parser" id="parser" />
-			<input type="button" value="annuler" onclick="$.modal.close()" />
+			<input type="hidden" name="id" value="<?php echo $id ?>" />
+			<input type="submit" value="parser" />
+			<input type="button" value="annuler" class="nyroModalClose" />
 		</p>
 	</fieldset>
 </form>

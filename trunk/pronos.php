@@ -32,7 +32,6 @@
 		if (!array_key_exists($prono->pr_user_id, $pronosByUser))
 			$pronosByUser[$prono->pr_user_id] = array();
 		$pronosByUser[$prono->pr_user_id][$prono->pr_match_id] = $prono;
-
 	}
 
 	$isEditable = !empty($_SESSION['user']);
@@ -46,7 +45,7 @@
 		<h1>Liste des pronos</h1>
 		<h2><?php echo $league->name ?> - <?php echo $season->label ?>, Journée n°<?php echo $day->number ?></h2>
 		<?php if ($isEditable) { ?>
-			<div class="add"><a href="javascript:;" onclick="parsePronos(<?php echo $day->id ?>)">Saisir l'ensemble des pronos</a></div>
+			<div class="add"><a href="<?=APPLICATION_URL?>ajax/parse_pronos.php?id=<?php echo $day->id ?>" class="nyroModal">Saisir l'ensemble des pronos</a></div>
 		<?php } ?>
 		<p><?php echo count($pronosByUser) ?> joueurs ont pronostiqué cette journée</p>
 		<table>
@@ -65,7 +64,7 @@
 						<tr>
 							<td><?php echo $user->name ?></td>
 							<?php if ($isEditable) { ?>
-								<td class="center"><a href="javascript:;" onclick="openPopup(<?php echo $day->id ?>, <?php echo $user->id ?>)"><img src="<?=APPLICATION_URL?>images/fleche.png" alt="[edit]" /> saisir les pronos</a></td>
+								<td class="center"><a href="<?=APPLICATION_URL?>ajax/add_pronos.php?id=<?php echo $day->id ?>&user=<?php echo $user->id ?>" class="nyroModal"><img src="<?=APPLICATION_URL?>images/fleche.png" alt="[edit]" /> saisir les pronos</a></td>
 							<?php } ?>
 							<td class="tooltipped">
 
@@ -107,70 +106,7 @@
 		</table>
 	</div>
 
-	<div id="popup"><div id="popup_message"></div><div id="popup_content"></div></div>
-
 	<script type="text/javascript">
-		function openPopup(id, user)
-		{
-			$('#loading').modal({close: false});
-			$.ajax({
-				url: '<?=APPLICATION_URL?>ajax/add_pronos.php',
-				data: {id: id, user: user},
-				success: function (response) {
-					$.modal.close();
-					$('#popup_content').html(response);
-					$('#popup').modal({close: false});
-					$('#popup input[type=text]').focus();
-					$('#popup form').ajaxForm({
-						url: '<?=APPLICATION_URL?>ajax/save_pronos.php',
-						dataType: 'json',
-						success: function (response) {
-							if (response.success == 1)
-								window.location.reload();
-							else
-								$('#popup_message').html(response.message);
-						}
-					});
-				}
-			});
-		}
-
-		function parsePronos(id)
-		{
-			$('#loading').modal({close: false});
-			$.ajax({
-				url: '<?=APPLICATION_URL?>ajax/parse_pronos.php',
-				data: {id: id},
-				success: function (response) {
-					$.modal.close();
-					$('#popup_content').html(response);
-					$('#popup').modal({close: false, persist: true});
-					$('#popup input[type=text]').focus();
-					$('#popup form').ajaxForm({
-						url: '<?=APPLICATION_URL?>ajax/save_prono.php',
-						success: function (response) {
-							$('#simplemodal-container').height(520);
-							$('#matches').parent().css('height', 350).css('overflow-y', 'scroll');
-							$('#matches').parent().html(response);
-							//$.modal.close();
-							//$('#popup').modal({close: false});
-							$('#parser').val('enregistrer');
-							$('#popup form').ajaxForm({
-								url: '<?=APPLICATION_URL?>ajax/save_parsed_pronos.php',
-								dataType: 'json',
-								success: function (response) {
-									if (response.success == 1)
-										window.location.reload();
-									else
-										$('#popup_message').html(response.message);
-								}
-							});
-						}
-					});
-				}
-			});
-		}
-
 		$(document).ready(function(){
 			elems = $('.tooltipped');
 			elems.each(function(i){
@@ -192,8 +128,6 @@
 		});
 	</script>
 
-	<div id="loading">
-		<div id="subloading">Chargement</div>
-	</div>
+	<?php echoHTMLFooter();?>
 </body>
 </html>

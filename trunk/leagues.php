@@ -18,7 +18,7 @@
 	<div id="content">
 		<h1>Liste des championnats</h1>
 		<?php if (!empty($_SESSION['user'])) { ?>
-			<div class="add"><a href="javascript:;" onclick="openPopup(-1)">Ajouter un championnat</a></div>
+			<div class="add"><a href="<?=APPLICATION_URL?>ajax/add_league.php" class="nyroModal">Ajouter un championnat</a></div>
 		<?php } ?>
 		<table>
 			<thead>
@@ -36,6 +36,7 @@
 			<tbody>
 				<?php if (count($leagues) != 0) { ?>
 					<?php foreach ($leagues as $league) { ?>
+						<?php if (empty($seasons[$league->id])) continue; ?>
 						<?php foreach ($seasons[$league->id] as $i => $season) { ?>
 							<tr>
 								<?php if ($i==0): ?>
@@ -44,19 +45,19 @@
 								<td><?php echo $season->label ?></td>
 								<?php if (!empty($_SESSION['user'])) { ?>
 									<td class="center">
-										<a href="javascript:;" onclick="openPopup(<?php echo $season->id ?>)"><img src="<?=APPLICATION_URL?>images/edit.png" alt="[edit]" /></a>
+										<a href="<?=APPLICATION_URL?>ajax/add_league.php?id=<?php echo $season->id ?>" class="nyroModal"><img src="<?=APPLICATION_URL?>images/edit.png" alt="[edit]" /></a>
 									</td>
 								<?php } ?>
 								<td>
-									<a href="javascript:;" onclick="showTeams(<?php echo $season->id ?>);"><img src="<?=APPLICATION_URL?>images/fleche.png" alt="[edit]" /> voir/modifier les équipes</a>
+									<a href="<?=APPLICATION_URL?>ajax/show_teams.php?id=<?php echo $season->id ?>" class="nyroModal"><img src="<?=APPLICATION_URL?>images/fleche.png" alt="[edit]" /> voir/modifier les équipes</a>
 								</td>
 								<td>
-									<a href="javascript:;" onclick="showRankings(<?php echo $season->id ?>, -1);"><img src="<?=APPLICATION_URL?>images/fleche.png" alt="[view]" /> classement des équipes</a>
+									<a href="<?=APPLICATION_URL?>ajax/show_rankings.php?id=<?php echo $season->id ?>" class="nyroModal"><img src="<?=APPLICATION_URL?>images/fleche.png" alt="[view]" /> classement des équipes</a>
 								</td>
 								<td>
 									<p><a href="<?=APPLICATION_URL?>scores/season-<?php echo $season->id ?>"><img src="<?=APPLICATION_URL?>images/fleche.png" alt="[view]" /> classement détaillé</a></p>
 									<p><a href="javascript:;" onclick="previewRankings(<?php echo $season->id ?>, -1);"><img src="<?=APPLICATION_URL?>images/fleche.png" alt="[view]" /> aperçu du classement</a></p>
-									<p><a href="javascript:;" onclick="viewEvolution(<?php echo $season->id ?>, -1);"><img src="<?=APPLICATION_URL?>images/fleche.png" alt="[view]" /> évolution du classement</a></p>
+									<p><a href="<?=APPLICATION_URL?>ajax/view_evolution.php?id=<?php echo $season->id ?>" class="nyroModal"><img src="<?=APPLICATION_URL?>images/fleche.png" alt="[view]" /> évolution du classement</a></p>
 								</td>
 							</tr>
 						<?php } ?>
@@ -68,47 +69,52 @@
 		</table>
 	</div>
 
-	<div id="popup"><div id="popup_message"></div><div id="popup_content"></div></div>
 	<div id="popupImage" style="display:none"></div></div>
 	<div id="popup_large"><div id="popup_content"></div></div>
 
 	<script type="text/javascript">
-		function openPopup(id)
+		function saveLeague()
 		{
-			$('#loading').modal({close: false});
 			$.ajax({
-				url: '<?=APPLICATION_URL?>ajax/add_league.php',
-				data: {id: id},
+				url: '<?=APPLICATION_URL?>ajax/save_league.php',
+				data: $('#ajaxForm').serialize(),
+				dataType: 'json',
 				success: function (response) {
-					$.modal.close();
-					$('#popup_content').html(response);
-					$('#popup').modal({close: false});
-					$('#popup input[type=text]').focus();
-					$('#popup form').ajaxForm({
-						url: '<?=APPLICATION_URL?>ajax/save_league.php',
-						dataType: 'json',
-						success: function (response) {
-							if (response.success == 1)
-								window.location.reload();
-							else
-								$('#popup_message').html(response.message);
-						}
-					});
+					if (response.success == 1)
+						window.location.reload();
+					else
+						$('#popup_message').html(response.message);
+					resizeModal();
+				}
+			});
+		}
+
+		function saveSeasonTeams()
+		{
+			$.ajax({
+				url: '<?=APPLICATION_URL?>ajax/save_season_teams.php',
+				data: $('#ajaxForm').serialize(),
+				dataType: 'json',
+				type: 'post',
+				success: function (response) {
+					if (response.success == 1)
+						window.location.reload();
+					else
+						$('#popup_message').html(response.message);
+					resizeModal();
 				}
 			});
 		}
 
 		function finishPreviewRankings()
 		{
-			if (!$('#classement')[0].complete)
+			if (!$('#classement')[0].complete || !$('.spinner')[0].complete)
 			{
 				setTimeout('finishPreviewRankings()', 500);
 			}
 			else
 			{
-				$.modal.close();
-
-				$('#popupImage').modal({close: true});
+				$.fn.nyroModalManual({content: $('#popupImage').html()});
 			}
 		}
 
@@ -116,81 +122,61 @@
 		{
 			$('#popupImage').html('<img src="<?=APPLICATION_URL?>classement/season-' + id + '.png" id="classement" />');
 
-			$('#loading').modal({close: false});
-
-			setTimeout('finishPreviewRankings()', 500);
-		}
-
-		function showRankings(league, max)
-		{
-			$('#loading').modal({close: false});
-			$.ajax({
-				url: '<?=APPLICATION_URL?>ajax/show_rankings.php',
-				data: {id: league, max: max},
-				success: function (response) {
-					$.modal.close();
-					$('#popup_content').html(response);
-					$('#popup').modal({close: false});
-				}
-			});
+			$.fn.nyroModalManual({content: '<?=SPINNER_TAG?>', endShowContent: finishPreviewRankings});
 		}
 
 		function addUser()
 		{
-			var li = $('<li class="li_box">' + $('#user_select option:selected').text() + ' <a href="closeBox();" class="closeBox"></a></li>');
+			var selected = $('#user_select option:selected');
+
+			// check if user was already added
+			var oldLi = $('#li_box' + selected.val());
+
+			if (oldLi.length != 0)
+				return;
+
+			var li = $('<li class="li_box" id="li_box' + selected.val() + '"><span>' + selected.text() + '</span> <input type="hidden" name="users[]" value="' + selected.val() + '" /><a href="javascript:;" onclick="closeBox(' + selected.val() + ');" class="closeBox"></a></li>');
 
 			$('#users_holder').append(li);
 			li.corner();
 			$('#simplemodal-container').css('height', 'auto');
 		}
 
-		function viewEvolution(league)
+		function closeBox(id)
 		{
-			$('#loading').modal({close: false});
-			$.ajax({
-				url: '<?=APPLICATION_URL?>ajax/view_evolution.php',
-				data: {id: league},
-				success: function (response) {
-					$.modal.close();
-					$('#popup_content').html(response);
-					$('#popup').modal({close: true, minWidth: 600});
-					$('.li_box').corner();
-				}
-			});
+			$('#li_box' + id).remove();
 		}
 
-		function showTeams(league)
+		function finishReloadGraph()
 		{
-			$('#loading').modal({close: false});
-			$.ajax({
-				url: '<?=APPLICATION_URL?>ajax/show_teams.php',
-				data: {id: league},
-				success: function (response) {
-					$.modal.close();
-					$('#popup_content').html(response);
-					$('#popup').modal({close: false});
-					$('#popup form').ajaxForm({
-						url: '<?=APPLICATION_URL?>ajax/save_season_teams.php',
-						dataType: 'json',
-						type: 'post',
-						success: function (response) {
-							if (response.success == 1)
-								window.location.reload();
-							else
-								$('#popup_message').html(response.message);
-						}
-					});
-				}
-			});
+			if ($('#evolutionImg').length == 0 || !$('#evolutionImg')[0].complete)
+			{
+				setTimeout('finishReloadGraph()', 500);
+			}
+			else
+			{
+				$('#evolutionGraph .spinner').remove();
+				resizeModal($('#evolutionImg').width() + 20, null);
+			}
+		}
+
+		function reloadGraph(seasonId)
+		{
+			var ids = '';
+			var inputs = $('#users_holder input[type=hidden]');
+			for (var i=0; i<inputs.length; i++)
+				ids += $(inputs[i]).val() + '|';
+
+			$('#evolutionGraph').html('<?=SPINNER_TAG?><img src="<?=APPLICATION_URL?>evolution/season-' + seasonId + '-users-' + ids + '.png" id="evolutionImg" />');
+
+			setTimeout('finishReloadGraph()', 500);
 		}
 
 		$(document).ready(function(){
-
+			
 		});
 	</script>
 
-	<div id="loading">
-		<div id="subloading">Chargement</div>
-	</div>
+	<?php echoHTMLFooter();?>
 </body>
 </html>

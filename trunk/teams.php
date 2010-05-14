@@ -12,7 +12,7 @@
 		<h1>Liste des équipes</h1>
 
 		<?php if (!empty($_SESSION['user'])) { ?>
-			<div class="add"><a href="javascript:;" onclick="openPopup(-1)">Ajouter une équipe</a></div>
+			<div class="add"><a href="<?=APPLICATION_URL?>ajax/add_team.php" class="nyroModal">Ajouter une équipe</a></div>
 		<?php } ?>
 		<table>
 			<thead>
@@ -38,7 +38,7 @@
 							</td>
 							<td class="center">
 								<?php if (!empty($_SESSION['user'])) { ?>
-									<a href="javascript:;" onclick="openPopup(<?php echo $team->id ?>)"><img src="<?=APPLICATION_URL?>images/edit.png" alt="[edit]" /></a>
+									<a href="<?=APPLICATION_URL?>ajax/add_team.php?id=<?php echo $team->id ?>" class="nyroModal"><img src="<?=APPLICATION_URL?>images/edit.png" alt="[edit]" /></a>
 								<?php } ?>
 							</td>
 						</tr>
@@ -49,40 +49,6 @@
 			</tbody>
 		</table>
 	</div>
-
-	<div id="popup"><div id="popup_message"></div><div id="popup_content"></div></div>
-
-	<?php if (!empty($_SESSION['user'])) { ?>
-
-		<script type="text/javascript">
-			function openPopup(id)
-			{
-				$('#loading').modal({close: false});
-				$.ajax({
-					url: '<?=APPLICATION_URL?>ajax/add_team.php',
-					data: {id: id},
-					success: function (response) {
-						$.modal.close();
-						$('#popup_content').html(response);
-						$('#popup').modal({close: false});
-						$('#popup input[type=text]').focus();
-
-						$('#popup form').ajaxForm({
-							url: '<?=APPLICATION_URL?>ajax/save_team.php',
-							dataType: 'json',
-							method: 'post',
-							success: function (response) {
-								if (response.success == 1)
-									window.location.reload();
-								else
-									$('#popup_message').html(response.message);
-							}
-						});
-					}
-				});
-			}
-		</script>
-	<?php } ?>
 
 	<?php echoHTMLFooter(); ?>
 </body>

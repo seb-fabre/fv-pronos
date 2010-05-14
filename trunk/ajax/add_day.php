@@ -5,7 +5,9 @@
 
 	$seasons = Season::getAll();
 
-	$day = Day::find(GETorPOST('id'));
+	$id = GETorPOST('id');
+	$day = Day::find($id);
+	
 	if (!$day)
 	{
 		$day = new Day();
@@ -31,9 +33,9 @@
 		$limitTime = '';
 	}
 ?>
-<form action="/ajax/save_team.php" method="post">
+<form action="/ajax/save_team.php" method="post"id="ajaxForm">
 	<fieldset>
-		<?php if (GETorPOST('id') != -1): ?>
+		<?php if ($id != -1): ?>
 			<legend>Edition d'une journée</legend>
 		<?php else: ?>
 			<legend>Création d'une journée</legend>
@@ -49,15 +51,31 @@
 		<p><label>Heure limite</label><input type="text" name="limit_time" id="limit_date" value="<?php echo $limitTime ?>" /></p>
 		<p class="infos">Format acceptés pour l'heure : "9:15", ou "9"</p>
 		<p class="submit">
-			<input type="hidden" name="id" value="<?php echo GETorPOST('id') ?>" />
+			<input type="hidden" name="id" value="<?php echo $id ?>" />
 			<?php if ($isEditable) { ?>
 				<input type="submit" value="enregistrer" <?=(count($seasons)==0 ? ' disabled="disabled"' : '')?>/>
 			<?php } ?>
-			<input type="button" value="annuler" onclick="$.modal.close()" />
+			<input type="button" value="annuler" class="nyroModalClose" />
 		</p>
 	</fieldset>
 </form>
 
 <script type="text/javascript">
 $("#limit_date").datepicker();
+
+<?php if (!empty($_SESSION['user'])) { ?>
+
+		$('#ajaxForm').ajaxForm({
+			url: '<?=APPLICATION_URL?>ajax/save_day.php',
+			dataType: 'json',
+			success: function (response) {
+				if (response.success == 1)
+					window.location.reload();
+				else
+					$('#popup_message').html(response.message);
+				resizeModal();
+			}
+		});
+
+	<?php } ?>
 </script>

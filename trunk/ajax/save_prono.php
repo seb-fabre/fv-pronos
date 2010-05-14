@@ -70,6 +70,13 @@
 		$tmp[$match->pr_home_team_id][$match->pr_away_team_id] = $match->id;
 	$matches = $tmp;
 
+	echo '<p id="popup_message" style="margin: 0; padding: 0;"></p>
+<form method="post" id="ajaxForm" class="nyroModal" action="' . APPLICATION_URL . 'ajax/save_prono.php">
+	<fieldset>
+		<legend>Parser les pronos</legend>
+		<p class="center bold">' . $league->name . ' - ' . $season->label . ', ' . $day->number . '<sup>e</sup> journée</p>
+		<p class="center">';
+
 	echo '<table class="noborder" style="width: 100%">';
 	
 	foreach ($parsedData as $user => $scores)
@@ -103,3 +110,35 @@
 	}
 	echo '</table>';
 ?>
+		<p class="submit">
+			<input type="hidden" name="id" value="<?=$id?>" />
+			<input type="submit" value="parser" />
+			<input type="button" value="annuler" class="nyroModalClose" />
+		</p>
+	</fieldset>
+</form>
+
+<?php if (!empty($_SESSION['user'])) { ?>
+
+	<script type="text/javascript">
+		$('#ajaxForm').ajaxForm({
+			url: '<?=APPLICATION_URL?>ajax/save_parsed_pronos.php',
+			dataType: 'json',
+			beforeSubmit: function(){
+				showSpinner();
+			},
+			method: 'post',
+			success: function (response) {
+				if (response.success == 1)
+					window.location.reload();
+				else
+				{
+					$('#popup_message').html(response.message);
+					hideSpinner();
+				}
+				resizeModal();
+			}
+		});
+	</script>
+
+<?php } ?>

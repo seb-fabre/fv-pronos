@@ -91,5 +91,5 @@
 		
 		echo "\n\n" . '***************************************************' . "\n\n";
 	}
-	echo '[/center]</textarea></div><div style="text-align: right"><input type="button" onclick="$.modal.close()" value="fermer" />';
+	echo '[/center]</textarea></div><div style="text-align: right"><input type="button" class="nyroModalClose" value="fermer" />';
 ?>

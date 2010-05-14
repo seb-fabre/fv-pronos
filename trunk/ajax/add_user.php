@@ -5,9 +5,10 @@
 	if (!$user)
 		$user = new User();
 		
-	$teams = Team::getAll();
+	$teams = Team::getAll('name ASC');
 ?>
-<form action="/ajax/save_user.php" method="get">
+<p id="popup_message" style="margin: 0; padding: 0;"></p>
+<form action="/ajax/save_user.php" method="get" id="ajaxForm">
 	<fieldset>
 		<?php if (GETorPOST('id') != -1): ?>
 			<legend>Edition d'un utilisateur</legend>
@@ -34,7 +35,25 @@
 		<p class="submit">
 			<input type="hidden" name="id" value="<?php echo GETorPOST('id') ?>" />
 			<input type="submit" value="enregistrer" />
-			<input type="button" value="annuler" onclick="$.modal.close()" />
+			<input type="button" value="annuler" class="nyroModalClose" />
 		</p>
 	</fieldset>
 </form>
+
+<?php if (!empty($_SESSION['user'])) { ?>
+
+	<script type="text/javascript">
+		$('#ajaxForm').ajaxForm({
+			url: '<?=APPLICATION_URL?>ajax/save_user.php',
+			dataType: 'json',
+			success: function (response) {
+				if (response.success == 1)
+					window.location.reload();
+				else
+					$('#popup_message').html(response.message);
+				resizeModal();
+			}
+		});
+	</script>
+
+<?php } ?>

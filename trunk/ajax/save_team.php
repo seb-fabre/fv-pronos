@@ -1,7 +1,7 @@
 <?php
 	require_once('../includes/init.php');
 
-	$id = GETorPOST('id');
+	$id = GETorPOST('id', -1);
 	$name = GETorPOST('name');
 
 	if ($id == -1)

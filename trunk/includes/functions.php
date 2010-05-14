@@ -38,6 +38,7 @@ function echoHTMLHead($title='')
 	<link rel="stylesheet" href="$url/css/screen.css" type="text/css" media="screen" />
 	<link rel="stylesheet" href="$url/css/pronos.css" type="text/css" media="screen" />
 	<link rel="stylesheet" href="$url/css/redmond/jquery-ui-1.8.custom.css" type="text/css" media="screen" />
+	<link rel="stylesheet" href="$url/js/nyroModal-1.6.2/styles/nyroModal.full.css" type="text/css" media="screen" />
 	<script type="text/javascript" src="$url/js/jquery-1.4.2.min.js"></script>
 	<script type="text/javascript" src="$url/js/jquery-ui-1.8.custom.min.js"></script>
 	<script type="text/javascript" src="$url/js/jquery.ui.datepicker-fr.js"></script>
@@ -45,6 +46,8 @@ function echoHTMLHead($title='')
 	<script type="text/javascript" src="$url/js/jquery.form.js"></script>
 	<script type="text/javascript" src="$url/js/jquery.qtip-1.0.min.js"></script>
 	<script type="text/javascript" src="$url/js/jquery.curvycorners.packed.js"></script>
+	<script type="text/javascript" src="$url/js/nyroModal-1.6.2/js/jquery.nyroModal-1.6.2.min.js"></script>
+	<script type="text/javascript" src="$url/js/common.js"></script>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 HTML;
@@ -57,12 +60,6 @@ function echoMenu()
 
 function echoHTMLFooter()
 {
-	echo <<<HTML
-	<div id="loading">
-		<div id="subloading">Chargement</div>
-	</div>
-HTML;
-
 	Notification::clearAll();
 
 	echo '<script type="text/javascript">';
@@ -184,7 +181,7 @@ if(!function_exists('get_called_class'))
 	}
 }
 
-function GETorPOST($name)
+function GETorPOST($name, $defaultValue = null)
 {
 	if (!empty($_POST[$name]))
 		return $_POST[$name];
@@ -192,7 +189,7 @@ function GETorPOST($name)
 	if (!empty($_GET[$name]))
 		return $_GET[$name];
 
-	return null;
+	return $defaultValue;
 }
 
 function camelCaseToUnderscores($str)
