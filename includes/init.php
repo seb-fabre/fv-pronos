@@ -33,4 +33,7 @@
 	}
 
 	$GLOBALS['FooterJS'] = '';
-	
+
+	define('SPINNER_URL', APPLICATION_URL . 'js/nyroModal-1.6.2/img/ajaxLoader.gif');
+	define('SPINNER_TAG', '<img src="' . SPINNER_URL . '" style="position: absolute; top: 50%; left: 50%; margin-top: -21px; margin-left: -21px;" class="spinner" />');
+	$GLOBALS['FooterJS'] .= 'var spinnerUrl = "' . SPINNER_URL . '";';

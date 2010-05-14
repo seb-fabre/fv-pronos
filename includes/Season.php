@@ -33,6 +33,20 @@ class Season extends _Season
 		return $results;
 	}
 
+	/**
+	 * Returns only the users that have played in this season
+	 */
+	public function getUsers()
+	{
+		$results = array();
+
+		$req = mysql_query('SELECT DISTINCT pr_user.* FROM pr_user INNER JOIN pr_prono ON pr_user_id=pr_user.id INNER JOIN pr_match ON pr_match_id=pr_match.id INNER JOIN pr_day ON pr_day_id=pr_day.id WHERE pr_season_id=' . $this->id);
+		while ($res = mysql_fetch_array($req))
+			$results [$res['id']] = new User($res);
+
+		return $results;
+	}
+
 	public function getMatches()
 	{
 		return $this->getMatchs();

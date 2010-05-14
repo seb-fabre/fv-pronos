@@ -27,7 +27,7 @@
 		return $select;
 	}
 
-	$day = Day::find(GETorPOST('pr_day_id'));
+	$day = Day::find(GETorPOST('pr_day_id', -1));
 
 	$season = Season::find($day->pr_season_id);;
 
@@ -45,8 +45,9 @@
 		$select .= getMatchRow($teams, $m, $isEditable);
 	}
 ?>
+<p id="popup_message" style="margin: 0; padding: 0;"></p>
 <div class="hidden" id="selectTeams"><?php echo getMatchRow($teams) ?></div>
-<form action="/ajax/save_match.php" method="post">
+<form action="/ajax/save_match.php" method="post" id="ajaxForm">
 	<fieldset>
 		<legend>Modifier les matches</legend>
 		<p class="center bold"><?php echo $league->name ?>, <?php echo $day->number ?><sup>e</sup> journée</p>
@@ -59,10 +60,29 @@
 				<input type="hidden" name="id" value="<?php echo GETorPOST('id') ?>" />
 				<input type="hidden" name="pr_day_id" value="<?php echo GETorPOST('pr_day_id') ?>" />
 				<input type="submit" value="enregistrer" />
-				<input type="button" value="annuler" onclick="$.modal.close()" />
+				<input type="button" value="annuler" class="nyroModalClose" />
 			<?php } else { ?>
-				<input type="button" value="fermer" onclick="$.modal.close()" />
+				<input type="button" value="fermer" class="nyroModalClose" />
 			<?php } ?>
 		</p>
 	</fieldset>
 </form>
+
+<?php if (!empty($_SESSION['user'])) { ?>
+
+	<script type="text/javascript">
+		$('#ajaxForm').ajaxForm({
+			url: '<?=APPLICATION_URL?>ajax/save_match.php',
+			dataType: 'json',
+			method: 'post',
+			success: function (response) {
+				if (response.success == 1)
+					window.location.reload();
+				else
+					$('#popup_message').html(response.message);
+				resizeModal();
+			}
+		});
+	</script>
+
+<?php } ?>

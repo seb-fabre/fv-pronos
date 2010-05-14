@@ -17,7 +17,7 @@
 		<p class="submit">
 			<input type="hidden" name="id" value="<?php echo GETorPOST('id') ?>" />
 			<input type="submit" value="parser" id="parser" />
-			<input type="button" value="annuler" onclick="$.modal.close()" />
+			<input type="button" value="annuler" class="nyroModalClose" />
 		</p>
 	</fieldset>
 </form>

@@ -1,7 +1,7 @@
 <?php
 	require_once('../includes/init.php');
 
-	$id = GETorPOST('id');
+	$id = GETorPOST('id', -1);
 
 	$season = Season::find($id);
 
@@ -16,7 +16,8 @@
 	}
 
 ?>
-<form action="/ajax/save_league.php" method="get">
+<p id="popup_message" style="margin: 0; padding: 0;"></p>
+<form action="/ajax/save_league.php" method="get" id="ajaxForm">
 	<fieldset>
 		<?php if ($id != -1): ?>
 			<legend>Edition d'un championnat</legend>
@@ -28,8 +29,8 @@
 		<p><label>Nombre d'équipes</label><input type="text" name="teams" value="<?php echo $season->teams ?>" /></p>
 		<p class="submit">
 			<input type="hidden" name="id" value="<?php echo $id ?>" />
-			<input type="submit" value="enregistrer" />
-			<input type="button" value="annuler" onclick="$.modal.close()" />
+			<input type="button" onclick="saveLeague()" value="enregistrer" />
+			<input type="button" value="annuler" class="nyroModalClose"/>
 		</p>
 	</fieldset>
 </form>

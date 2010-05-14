@@ -9,6 +9,13 @@
 		$user = new User();
 	else
 		$user = User::find($id);
+
+	// check if username is available
+	if (!User::isUnique('name', $name, $user->id))
+	{
+		echo json_encode(array('sucess' => 0, 'message' => 'Le nom ' . $name . ' est déjà utilisé'));
+		exit;
+	}
 	
 	$user->name = $name;
 	$user->pr_team_id = $team;

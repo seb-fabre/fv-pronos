@@ -23,13 +23,14 @@
 		<fieldset>
 			<p class="center bold"><?php echo $league->name ?> - <?php echo $season->label ?>, <?php echo $day->number ?><sup>e</sup> journée</p>
 			<p>Aucun match n'a été trouvé.</p>
-			<p class="submit"><input type="button" value="fermer" onclick="$.modal.close()" /></p>
+			<p class="submit"><input type="button" value="fermer" class="nyroModalClose" /></p>
 		</fieldset>
 <?php
 		exit;
 	}
 ?>
-<form action="/ajax/save_scores.php" method="get">
+<p id="popup_message" style="margin: 0; padding: 0;"></p>
+<form action="/ajax/save_scores.php" method="get" id="ajaxForm">
 	<fieldset>
 		<legend>Saisie des scores</legend>
 		<p class="center bold"><?php echo $league->name ?> - <?php echo $season->label ?>, <?php echo $day->number ?><sup>e</sup> journée</p>
@@ -49,7 +50,26 @@
 				<input type="hidden" name="id" value="<?php echo GETorPOST('id') ?>" />
 				<input type="submit" value="enregistrer" />
 			<?php } ?>
-			<input type="button" value="annuler" onclick="$.modal.close()" />
+			<input type="button" value="annuler" class="nyroModalClose" />
 		</p>
 	</fieldset>
 </form>
+
+<?php if (!empty($_SESSION['user'])) { ?>
+
+	<script type="text/javascript">
+		$('#ajaxForm').ajaxForm({
+			url: '<?=APPLICATION_URL?>ajax/save_scores.php',
+			dataType: 'json',
+			method: 'post',
+			success: function (response) {
+				if (response.success == 1)
+					window.location.reload();
+				else
+					$('#popup_message').html(response.message);
+				resizeModal();
+			}
+		});
+	</script>
+
+<?php } ?>

@@ -7,11 +7,12 @@
 
 	$seasonTeams = array_values($season->getTeams());
 	
-	$teams = Team::getAll();
+	$teams = Team::getAll('name ASC');
 
 	$isEditable = !$season->hasMatches();
 ?>
-<form action="/ajax/save_season_teams.php" method="get">
+<p id="popup_message" style="margin: 0; padding: 0;"></p>
+<form action="/ajax/save_season_teams.php" method="get" id="ajaxForm">
 	<fieldset>
 		<legend><?php echo $league->name . ', ' . $season->label ?> : Equipes</legend>
 		<table>
@@ -55,10 +56,10 @@
 		<p class="submit">
 			<?php if ($isEditable && isset($_SESSION['user'])) { ?>
 				<input type="hidden" name="id" value="<?php echo GETorPOST('id') ?>" />
-				<input type="submit" value="enregistrer" />
-				<input type="button" value="annuler" onclick="$.modal.close()" />
+				<input type="button" value="enregistrer" onclick="saveSeasonTeams()" />
+				<input type="button" value="annuler" class="nyroModalClose" />
 			<?php } else { ?>
-				<input type="button" value="fermer" onclick="$.modal.close()" />
+				<input type="button" value="fermer" class="nyroModalClose" />
 			<?php } ?>
 		</p>
 

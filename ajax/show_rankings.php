@@ -29,14 +29,14 @@
 
 	$max = GETorPOST('max');
 
-	if ($max == -1)
+	if (empty($max) || $max == -1)
 	{
 		foreach ($days as $day)
 			if ($max < $day->number)
 				$max = $day->number;
 	}
 
-	$req = mysql_query('SELECT pr_match.* FROM pr_match INNER JOIN pr_day ON pr_day_id=pr_day.id WHERE pr_season_id=' . $season->id . ' AND number <= ' . $max);
+	$req = mysql_query('SELECT pr_match.* FROM pr_match INNER JOIN pr_day ON pr_day_id=pr_day.id WHERE pr_season_id=' . $season->id . ' AND number <= ' . $max) or die (mysql_error());
 
 	$rankings = array();
 
@@ -131,7 +131,3 @@
 		$i++;
 	}
 	echo '</table>';
-?>
-<p class="center">
-<input type="button" value="fermer" onclick="$.modal.close()" />
-</p>
