@@ -6,6 +6,14 @@
 	$team = Team::find($id);
 	if (!$team)
 		$team = new Team();
+
+	$categories = TeamCategory::getAll('name ASC');
+	$options = array(
+		'value' => $team->pr_team_category_id,
+		'name' => 'pr_team_category_id',
+		'empty' => '&nbsp;',
+	);
+	$categoriesSelect = Tools::objectsToSelect($categories, 'name', $options);
 ?>
 <p id="popup_message" style="margin: 0; padding: 0;"></p>
 <form action="<?=APPLICATION_URL?>ajax/save_team.php" method="post" id="ajaxForm">
@@ -16,6 +24,7 @@
 			<legend>Création d'une équipe</legend>
 		<?php endif; ?>
 		<p><label>Nom</label><input type="text" name="name" value="<?php echo $team->name ?>" /></p>
+		<p><label>Catégorie</label><?=$categoriesSelect?></p>
 		<p>
 			<label>Logo</label>
 			<?php if (!$team->has_logo) { ?>

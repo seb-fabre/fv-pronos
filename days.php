@@ -26,9 +26,9 @@
 		$seasons = Season::getAll();
 
 	if (empty($season))
-		$days = Day::getAll('pr_season_id DESC, number DESC');
+		$days = Day::getAll('pr_season_id DESC, number DESC, label DESC');
 	else
-		$days = Day::search(array(array('pr_season_id', $season->id)), 'pr_season_id DESC, number DESC');
+		$days = Day::search(array(array('pr_season_id', $season->id)), 'pr_season_id DESC, number DESC, label DESC');
 	
 	$daysBySeason = array();
 	foreach ($days as $day)
@@ -61,7 +61,7 @@
 			<thead>
 				<tr>
 					<th>Championnat</th>
-					<th>Numéro</th>
+					<th>Numéro/Label</th>
 					<?php if (!empty($_SESSION['user'])) { ?>
 						<th>Modifier</th>
 						<th>Matches</th>
@@ -79,7 +79,7 @@
 							<?php $isEditable = !$day->hasPronos() && !$day->hasCompletedMatches() && !empty($_SESSION['user']); ?>
 							<tr>
 								<?php if (++$i == 1) echo '<td rowspan="' . count($days) . '">' . $league->name . '<br/>' . $seasons[$day->pr_season_id]->label . '</td>'; ?>
-								<td><?php echo $day->number ?></td>
+								<td><?php echo $day->number ? $day->number : $day->label ?></td>
 								<?php if (!empty($_SESSION['user'])) { ?>
 									<?php if ($isEditable) { ?>
 										<td class="center"><a href="<?=APPLICATION_URL?>ajax/add_day.php?id=<?php echo $day->id ?>" class="nyroModal"><img src="<?=APPLICATION_URL?>images/edit.png" alt="[edit]" /></a></td>
@@ -125,6 +125,8 @@
 		{
 			var select = $('#selectTeams').html();
 			$('#matches').append(select);
+
+			resizeModal($('#nyroModalWrapper').width()-10);
 		}
 
 <?php } ?>

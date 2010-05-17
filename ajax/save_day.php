@@ -1,11 +1,13 @@
 <?php
 	require_once('../includes/init.php');
 
-	$id = GETorPOST('id');
+	$id = GETorPOST('id', -1);
 	$season = GETorPOST('pr_season_id');
 	$number = GETorPOST('number');
+	$label = GETorPOST('label');
 	$limitDate = GETorPOST('limit_date');
 	$limitTime = GETorPOST('limit_time');
+	$countMatches = GETorPOST('count_matches');
 
 	if (!$season)
 	{
@@ -24,7 +26,7 @@
 		exit;
 	}
 
-	$isEditable = !$day->hasPronos() && !$day->hasCompletedMatches() && !empty($_SESSION['user']);
+	$isEditable = $id == -1 || (!$day->hasPronos() && !$day->hasCompletedMatches() && !empty($_SESSION['user']));
 	if (!$isEditable)
 	{
 		echo json_encode(array('sucess' => 0, 'message' => "Cette journée n'est pas éditable"));
@@ -33,9 +35,9 @@
 
 	$errors = array();
 
-	if (!$number)
+	if (!$number && !$label)
 	{
-		$errors []= 'Numéro de journée invalide';
+		$errors []= 'La journée doit avoir soit un numéro, soit un label';
 	}
 
 	// FIXME : change this format when add localisations
@@ -48,6 +50,11 @@
 	if (!empty($limitTime) && !preg_match('@^[0-2]?[0-9](:[0-5][0-9])?$@', $limitTime))
 	{
 		$errors []= "Format d'heure invalide";
+	}
+
+	if (empty($countMatches))
+	{
+		$errors []= "Le nombre de matches est obligatoire";
 	}
 
 	if (!empty($errors))
@@ -71,7 +78,9 @@
 
 	$day->pr_season_id = $season;
 	$day->number = $number;
+	$day->label = $label;
 	$day->limit_date = $limit_date;
+	$day->count_matches = $countMatches;
 	$day->save();
 
 	if ($id == -1)

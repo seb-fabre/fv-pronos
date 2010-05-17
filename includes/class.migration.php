@@ -18,12 +18,18 @@ class Migration {
 	public static function initMigrations()
 	{
 		self::$migrations = array(
-			1 => array('sql' => 'ALTER TABLE `pr_team` ADD `has_logo` TINYINT NOT NULL DEFAULT "0";', 'generate_classes' => true),
-			2 => array('sql' => 'ALTER TABLE `pr_season` ADD `teams` TINYINT UNSIGNED;', 'generate_classes' => true),
-			3 => array('sql' => 'UPDATE pr_season SET pr_season.teams = (SELECT pr_league.teams FROM pr_league WHERE pr_league.id=pr_season.pr_league_id LIMIT 1)'),
-			4 => array('sql' => 'ALTER TABLE `pr_league` DROP teams;', 'generate_classes' => true),
-			5 => array('sql' => 'ALTER TABLE `pr_day` ADD limit_date DATETIME;', 'generate_classes' => true),
-			6 => array('sql' => 'ALTER TABLE `pr_match` ADD limit_date DATETIME;', 'generate_classes' => true),
+			 1 => array('sql' => 'ALTER TABLE `pr_team` ADD `has_logo` TINYINT NOT NULL DEFAULT "0";', 'generate_classes' => true),
+			 2 => array('sql' => 'ALTER TABLE `pr_season` ADD `teams` TINYINT UNSIGNED;', 'generate_classes' => true),
+			 3 => array('sql' => 'UPDATE pr_season SET pr_season.teams = (SELECT pr_league.teams FROM pr_league WHERE pr_league.id=pr_season.pr_league_id LIMIT 1)'),
+			 4 => array('sql' => 'ALTER TABLE `pr_league` DROP teams;', 'generate_classes' => true),
+			 5 => array('sql' => 'ALTER TABLE `pr_day` ADD limit_date DATETIME;', 'generate_classes' => true),
+			 6 => array('sql' => 'ALTER TABLE `pr_match` ADD limit_date DATETIME;', 'generate_classes' => true),
+			 7 => array('sql' => 'ALTER TABLE `pr_day` ADD count_matches TINYINT UNSIGNED DEFAULT 10;', 'generate_classes' => true),
+			 8 => array('sql' => 'CREATE TABLE `pr_team_category` (id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255) NOT NULL)', 'generate_classes' => true),
+			 9 => array('sql' => 'ALTER TABLE `pr_team` ADD pr_team_category_id INT UNSIGNED DEFAULT NULL;', 'generate_classes' => true),
+			10 => array('sql' => 'ALTER TABLE `pr_league` ADD pr_team_category_id INT UNSIGNED DEFAULT NULL;', 'generate_classes' => true),
+			11 => array('sql' => 'ALTER TABLE `pr_league` ADD b_in_progress TINYINT UNSIGNED DEFAULT 1;', 'generate_classes' => true),
+			12 => array('sql' => 'ALTER TABLE `pr_day` ADD label VARCHAR(255) DEFAULT NULL AFTER number;', 'generate_classes' => true),
 		);
 	}
 

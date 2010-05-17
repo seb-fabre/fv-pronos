@@ -9,7 +9,7 @@ $GLOBALS["classes"]["League"] = array("classname" => "_League", "tablename" => "
 
 class _League extends ArtObject
 {
-	protected $_data = array('id' => null, 'name' => null);
+	protected $_data = array('id' => null, 'name' => null, 'pr_team_category_id' => null, 'b_in_progress' => null);
 
 	protected $_editedFields = array();
 

@@ -13,11 +13,13 @@
 
 		<?php if (!empty($_SESSION['user'])) { ?>
 			<div class="add"><a href="<?=APPLICATION_URL?>ajax/add_team.php" class="nyroModal">Ajouter une équipe</a></div>
+			<div class="add"><a href="<?=APPLICATION_URL?>ajax/add_team_category.php" class="nyroModal">Ajouter une catégorie</a></div>
 		<?php } ?>
 		<table>
 			<thead>
 				<tr>
 					<th>Nom</th>
+					<th>Catégorie</th>
 					<th>Logo</th>
 					<th>Actions</th>
 				</tr>
@@ -26,8 +28,10 @@
 				<?php if (count($teams) != 0): ?>
 					<?php $i=0 ?>
 					<?php foreach ($teams as $team): ?>
+						<?php $cat = $team->getTeamCategory(); ?>
 						<tr>
 							<td><?php echo $team->name ?></td>
+							<td><?php echo ($cat ? $cat->name : '') ?></td>
 							<td>
 								<?php
 									if ($team->has_logo)
