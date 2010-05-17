@@ -32,6 +32,8 @@
 		$limitDate = '';
 		$limitTime = '';
 	}
+
+	$countMatches = $day->count_matches;
 ?>
 <form action="/ajax/save_team.php" method="post"id="ajaxForm">
 	<fieldset>
@@ -46,6 +48,8 @@
 			</select>
 		</p>
 		<p><label>Numéro</label><input type="text" name="number" value="<?php echo $day->number ?>" tabindex="1"/></p>
+		<p><label>Label</label><input type="text" name="label" value="<?php echo $day->label ?>" tabindex="1"/></p>
+		<p><label>Nombre de matches</label><input type="text" name="count_matches" id="count_matches" value="<?php echo $countMatches ?>" /></p>
 		<p><label>Date limite</label><input type="text" name="limit_date" id="limit_date" value="<?php echo $limitDate ?>" /></p>
 		<p class="infos">Seul l'administrateur pourra saisir des pronostics après la limite. Cette date peut être surchargée au niveau de chaque match.</p>
 		<p><label>Heure limite</label><input type="text" name="limit_time" id="limit_date" value="<?php echo $limitTime ?>" /></p>

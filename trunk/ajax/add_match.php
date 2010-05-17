@@ -50,7 +50,7 @@
 <form action="/ajax/save_match.php" method="post" id="ajaxForm">
 	<fieldset>
 		<legend>Modifier les matches</legend>
-		<p class="center bold"><?php echo $league->name ?>, <?php echo $day->number ?><sup>e</sup> journée</p>
+		<p class="center bold"><?php echo $league->name ?>, <?php echo $day->number ? $day->number . '<sup>e</sup> journée' : $day->label ?></p>
 		<div id="matches"><?php echo $select ?></div>
 		<?php if ($isEditable && isset($_SESSION['user'])) { ?>
 			<p class="center"><input type="button" onclick="addMatch()" value="ajouter un match" /></p>

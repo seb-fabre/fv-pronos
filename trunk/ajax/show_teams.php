@@ -7,7 +7,7 @@
 
 	$seasonTeams = array_values($season->getTeams());
 	
-	$teams = Team::getAll('name ASC');
+	$teams = $league->getAvailableTeams();
 
 	$isEditable = !$season->hasMatches();
 ?>
@@ -15,7 +15,7 @@
 <form action="/ajax/save_season_teams.php" method="get" id="ajaxForm">
 	<fieldset>
 		<legend><?php echo $league->name . ', ' . $season->label ?> : Equipes</legend>
-		<table>
+		<table style="width: 100%">
 		<?php
 			for ($i=0; $i<$season->teams; $i++)
 			{
