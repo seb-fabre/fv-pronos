@@ -71,7 +71,7 @@
 								<?php
 								if (array_key_exists($user->id, $pronosByUser))
 								{
-									echo '<i>' . (count($pronosByUser[$user->id]) != 10 ? '<img src="' . APPLICATION_URL . 'images/warning.png" style="vertical-align:middle" /> ' : '') . count($pronosByUser[$user->id]) . ' pronos</i>';
+									echo '<i>' . (count($pronosByUser[$user->id]) != $day->count_matches ? '<img src="' . APPLICATION_URL . 'images/warning.png" style="vertical-align:middle" /> ' : '') . count($pronosByUser[$user->id]) . ' pronos</i>';
 									echo '<div class="hidden">';
 									echo '<table class="noborder scoreTable" style="width: 100%">';
 									foreach ($pronosByUser[$user->id] as $match => $prono)
