@@ -115,12 +115,6 @@
 	$maxDay = -1;
 	foreach ($days as $i => $day)
 	{
-		if (!$day->hasCompletedMatches())
-		{
-			unset($days[$i]);
-			continue;
-		}
-	
 		if ($maxDay < $day->number)
 			$maxDay = $day->number;
 	}
@@ -143,6 +137,11 @@
 		$match = $matches[$prono->pr_match_id];
 
 		if (!isset($days[$match->pr_day_id]))
+			continue;
+
+		$scores[$prono->pr_user_id]['showed'] = true;
+
+		if (!$days[$match->pr_day_id]->hasCompletedMatches())
 			continue;
 
 		$scores[$prono->pr_user_id][$match->pr_day_id]['played'] = 1;
@@ -181,7 +180,7 @@
 		$scores[$user]['played'] = count($scores[$user]['played']);
 		$scores[$user]['avg'] = $scores[$user]['played'] != 0 ? round($scores[$user]['total']['total'] / $scores[$user]['played'], 2) : 0;
 		
-		if ($scores[$user]['total']['total'] == 0)
+		if (empty($scores[$user]['showed']))
 		{
 			unset($scores[$user]);
 			unset($users[$user]);
