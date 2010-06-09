@@ -181,13 +181,76 @@ if(!function_exists('get_called_class'))
 	}
 }
 
+function array_map_recursive()
+{
+	$args = func_get_args();
+	$callback = array_shift($args);
+	$fn = __FUNCTION__;
+
+	$out = array();
+	$max = count(max($args));
+	for($i=0; $i<$max; $i++) {
+		if(count($args)==1) {
+			foreach($args[0] as $key=>$value) {
+				if(is_array($value))
+					$out[$key] = $fn($callback, $value);
+				else
+					$out[$key] = call_user_func($callback, $value);
+			}
+		} else {
+			$is_array = false;
+			$callbacks_args = array();
+			foreach($args as $array) {
+				$values = array_values($array);
+				if(isset($values[$i]))
+					$value = $values[$i];
+				else
+					$value = '';
+
+				if(is_array($value)) {
+					$is_array = true;
+					$callbacks_args[] = $value;
+				} else {
+					$callbacks_args[] = $value;
+				}
+			}
+
+			if($is_array) {
+				$m = count(max($callbacks_args));
+				$new_callback_args = array($callback);
+				foreach($callbacks_args as $arg) {
+					if(!is_array($arg))
+						$new_callback_args[] = array_fill(0, $m, $arg);
+					else
+						$new_callback_args[] = $arg;
+				}
+				$out[] = call_user_func_array($fn, $new_callback_args);
+			} else {
+				$out[] = call_user_func_array($callback, $callbacks_args);
+			}
+		}
+	}
+
+	return $out;
+}
+
 function GETorPOST($name, $defaultValue = null)
 {
 	if (!empty($_POST[$name]))
-		return $_POST[$name];
+	{
+		if (!is_array($_POST[$name]))
+			return stripslashes($_POST[$name]);
+		else
+			return array_map_recursive('stripslashes', $_POST[$name]);
+	}
 
 	if (!empty($_GET[$name]))
-		return $_GET[$name];
+	{
+		if (!is_array($_GET[$name]))
+			return stripslashes($_GET[$name]);
+		else
+			return array_map_recursive('stripslashes', $_GET[$name]);
+	}
 
 	return $defaultValue;
 }

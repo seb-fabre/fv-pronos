@@ -152,9 +152,9 @@ class ArtObject {
 		{
 			$j = @json_decode($this->_data[$key], true);
 			if ($j !== false && is_array($j) && isset($j[$_SESSION["l"]]))
-				return $j[$_SESSION["l"]];
+				return stripslashes($j[$_SESSION["l"]]);
 			else
-				return $this->_data[$key];
+				return stripslashes($this->_data[$key]);
 		}
 		return false;
 	}
