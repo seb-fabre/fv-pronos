@@ -47,7 +47,7 @@
 
 	function sign($x)
 	{
-		if (is_null($x->home_goals) || is_null($x->away_goals))
+		if (strlen($x->home_goals) == 0 || strlen($x->away_goals) == 0)
 			return -5;
 		if ($x->home_goals == $x->away_goals)
 			return 0;
@@ -296,7 +296,7 @@
 		}
 		
 		$u = $users[$user];
-		if ($u->pr_team_id)
+		if ($u->pr_team_id && file_exists("./logos/" . strtolower($teams[$u->pr_team_id]->id) . ".gif"))
 		{
 			$logo = imagecreatefromgif("./logos/" . strtolower($teams[$u->pr_team_id]->id) . ".gif");
 			imagecopyresized($image, $logo, $left + 4, $top + 1 - 5, 0, 0, 30, 30, 60, 60) ? 'Y' : 'N';

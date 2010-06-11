@@ -60,7 +60,7 @@
 
 	function sign($x)
 	{
-		if (is_null($x->home_goals) || is_null($x->away_goals))
+		if (strlen($x->home_goals) == 0 || strlen($x->away_goals) == 0)
 			return -5;
 		if ($x->home_goals == $x->away_goals)
 			return 0;
