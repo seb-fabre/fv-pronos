@@ -22,7 +22,7 @@
 		$sort = 'total';
 
 	$days = $season->getDays();
-	
+
 	$teams = Team::getAll();
 
 	$users = User::getAll();
@@ -115,7 +115,7 @@
 	$maxDay = -1;
 	foreach ($days as $i => $day)
 	{
-		if ($maxDay < $day->number)
+		if ($maxDay < $day->number && $day->hasCompletedMatches())
 			$maxDay = $day->number;
 	}
 
@@ -179,18 +179,18 @@
 	{
 		$scores[$user]['played'] = count($scores[$user]['played']);
 		$scores[$user]['avg'] = $scores[$user]['played'] != 0 ? round($scores[$user]['total']['total'] / $scores[$user]['played'], 2) : 0;
-		
+
 		if (empty($scores[$user]['showed']))
 		{
 			unset($scores[$user]);
 			unset($users[$user]);
 		}
 	}
-	
+
 	$previous = $scores;
 	uasort($scores, 'sortUsers');
 	uasort($previous, 'sortPrevious');
-	
+
 	// compute the previous
 	$tmp = array();
 	$i = 1;
@@ -200,10 +200,10 @@
 		$i++;
 	}
 	$previous = $tmp;
-	
+
 	$height = ceil(count($users) / 2) * 30 + 21;
 	$image = imagecreate(860, $height);
-	
+
 	$white = imagecolorallocate($image, 255, 255, 255);
 	$red = imagecolorallocate($image, 255, 50, 50);
 	$blood = imagecolorallocate($image, 255, 0, 0);
@@ -217,19 +217,19 @@
 	$green8 = imagecolorallocate($image, 111, 255, 250);
 	$green9 = imagecolorallocate($image, 0, 255, 0);
 	$green10 = imagecolorallocate($image, 173, 255, 47);
-	
+
 	imagefilledrectangle($image, 0, 0, 429, 20, $black);
 	imagefilledrectangle($image, 0, 0, 20, $height, $black);
 	imagefilledrectangle($image, 145, 21, 194, $height, $yellow);
 	imagefilledrectangle($image, 230, 21, 269, $height, $blue);
 	imagefilledrectangle($image, 270, 21, 309, $height, $orange);
-	
+
 	imagefilledrectangle($image, 441, 0, 859, 20, $black);
 	imagefilledrectangle($image, 431, 0, 450, $height, $black);
 	imagefilledrectangle($image, 576, 21, 624, $height, $yellow);
 	imagefilledrectangle($image, 661, 21, 699, $height, $blue);
 	imagefilledrectangle($image, 701, 21, 739, $height, $orange);
-	
+
 	imagestring($image, 3, 3, 2, utf8_decode("Classement"), $white);
 	imagestring($image, 3, 150, 2, utf8_decode("Total"), $white);
 	imagestring($image, 3, 200 + 2, 2, utf8_decode("+/-"), $white);
@@ -238,7 +238,7 @@
 	imagestring($image, 3, 319, 2, utf8_decode("Part"), $white);
 	imagestring($image, 3, 364, 2, utf8_decode("AVG"), $white);
 	imagestring($image, 3, 399, 2, utf8_decode("Top"), $white);
-	
+
 	imagestring($image, 3, 443, 2, utf8_decode("Classement"), $white);
 	imagestring($image, 3, 580, 2, utf8_decode("Total"), $white);
 	imagestring($image, 3, 630 + 2, 2, utf8_decode("+/-"), $white);
@@ -247,7 +247,7 @@
 	imagestring($image, 3, 749, 2, utf8_decode("Part"), $white);
 	imagestring($image, 3, 794, 2, utf8_decode("AVG"), $white);
 	imagestring($image, 3, 829, 2, utf8_decode("Top"), $white);
-	
+
 	imageline($image, 55, 21, 55, $height, $grey);
 	imageline($image, 145, 21, 145, $height, $grey);
 	imageline($image, 195, 21, 195, $height, $grey);
@@ -257,7 +257,7 @@
 	imageline($image, 350, 21, 350, $height, $grey);
 	imageline($image, 395, 21, 395, $height, $grey);
 	imageline($image, 429, 21, 429, $height, $grey);
-	
+
 	imageline($image, 485, 21, 485, $height, $grey);
 	imageline($image, 575, 21, 575, $height, $grey);
 	imageline($image, 625, 21, 625, $height, $grey);
@@ -294,14 +294,14 @@
 				$half = true;
 			}
 		}
-		
+
 		$u = $users[$user];
 		if ($u->pr_team_id && file_exists("./logos/" . strtolower($teams[$u->pr_team_id]->id) . ".gif"))
 		{
 			$logo = imagecreatefromgif("./logos/" . strtolower($teams[$u->pr_team_id]->id) . ".gif");
 			imagecopyresized($image, $logo, $left + 4, $top + 1 - 5, 0, 0, 30, 30, 60, 60) ? 'Y' : 'N';
 		}
-		
+
 		if ($previous[$user] == $i)
 			$diff = '=';
 		else if ($previous[$user] > $i)
@@ -314,7 +314,7 @@
 			$diff = '-' . ($i - $previous[$user]);
 			imagefilledrectangle($image, 176 + $left, $top + 1 - 5, 209 + $left, $top + 30 - 5, $red);
 		}
-		
+
 		if ($scores['avg'] < 5)
 			imagefilledrectangle($image, 331 + $left, $top + 1 - 5, 374 + $left, $top + 30 - 6, $blood);
 		else if ($scores['avg'] < 6)
@@ -327,7 +327,7 @@
 			imagefilledrectangle($image, 331 + $left, $top + 1 - 5, 374 + $left, $top + 30 - 6, $green9);
 		else
 			imagefilledrectangle($image, 331 + $left, $top + 1 - 5, 374 + $left, $top + 30 - 6, $green10);
-		
+
 		imagestring($image, 3, $left + 4 - 20, $top + 3, $i, $white);
 		imagestring($image, 3, $left + 40, $top + 3, stripslashes(utf8_decode($users[$user]->name)), $black);
 		imagestring($image, 3, $left + 138, $top + 3, str_pad($scores['total']['total'], 3, ' ', STR_PAD_LEFT), $black);
@@ -337,9 +337,9 @@
 		imagestring($image, 3, $left + 304, $top + 3, str_pad($scores['played'], 2, ' ', STR_PAD_LEFT), $black);
 		imagestring($image, 3, $left + 341, $top + 3, str_pad($scores['avg'], 3, ' ', STR_PAD_LEFT), $black);
 		imagestring($image, 3, $left + 384, $top + 3, str_pad($high[$user], 2, ' ', STR_PAD_LEFT), $black);
-		
+
 		imageline($image, $left + 1, $top + 30 - 5, $left + 409, $top + 30 - 5, $grey);
 		$i++;
 	}
-	
+
 	imagepng($image);
