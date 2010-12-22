@@ -196,7 +196,7 @@
 		{
 			if ($scores['total']['total'] == 0)
 				continue;
-			echo '<tr>';
+			echo '<tr onclick="toggleSelectRow(this)">';
 			echo '<td class="bold">' . $i . '</td>';
 			echo '<td class="bold">' . $users[$user]->name . '</td>';
 			foreach ($days as $day)
@@ -216,5 +216,12 @@
 		}
 		echo '</table>';
 	?>
+<script type="text/javascript">
+	function toggleSelectRow(theTr)
+	{
+		$('#rankings tr').removeClass('selectedRow');
+		$(theTr).addClass('selectedRow');
+	}
+</script>
 </body>
 </html>

@@ -422,3 +422,7 @@ select[disabled] {
 .closeBox:hover { 
 	background-position: 7px;
 }
+
+.selectedRow {
+	background-color: lightBlue;
+}
