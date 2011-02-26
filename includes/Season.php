@@ -167,7 +167,7 @@ class Season extends _Season
 									SIGN(CONVERT(pr_prono.home_goals, SIGNED) -
 									CONVERT(pr_prono.away_goals, SIGNED)) THEN 1 ELSE 0 END points
 							FROM `pr_prono`
-							INNER JOIN pr_match ON pr_prono.pr_match_id=pr_match.id
+							INNER JOIN pr_match ON pr_prono.pr_match_id=pr_match.id AND pr_match.home_goals IS NOT NULL
 							INNER JOIN pr_day ON pr_day.id=pr_day_id AND pr_season_id={$this->id}
 							INNER JOIN pr_user ON pr_user.id=pr_user_id
 							WHERE 1=1
