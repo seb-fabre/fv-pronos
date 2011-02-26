@@ -16,11 +16,6 @@
 	$season = Season::find($season);
 	$league = $season->getLeague();
 
-	if (GETorPOST('sort'))
-		$sort = GETorPOST('sort');
-	else
-		$sort = 'total';
-
 	$days = $season->getDays();
 
 	$teams = Team::getAll();
@@ -31,177 +26,16 @@
 
 	$matches = $season->getMatchs();
 
-	if (preg_match('/^[0-9]+$/', $sort))
-	{
-		$found = false;
-		foreach ($days as $day)
-			if ($day->number == $sort)
-			{
-				$sort = $day->id;
-				$found = true;
-				break;
-			}
-		if (!$found)
-			$sort = 'total';
-	}
+	$maxDay = $season->getLastDayWithCompletedMatches()->number;
 
-	function sign($x)
-	{
-		if (strlen($x->home_goals) == 0 || strlen($x->away_goals) == 0)
-			return -5;
-		if ($x->home_goals == $x->away_goals)
-			return 0;
-		if ($x->home_goals > $x->away_goals)
-			return 1;
-		return -1;
-	}
+	$userScores = $season->getClassementDetails();
+	$classementDetails = array_flip(array_keys($userScores));
 
-	function sortUsers($x, $y)
-	{
-		global $users, $sort;
+	$classementPrevious =  array_flip(array_keys($season->getClassementDetails($maxDay - 1)));
 
-		if ($x['total'][$sort] != $y['total'][$sort])
-			return $x['total'][$sort] < $y['total'][$sort];
+	$higScores = $season->getMaxPointsForADayForAUser();
 
-		if ($x['total']['3pts'] != $y['total']['3pts'])
-			return $x['total']['3pts'] < $y['total']['3pts'];
-
-		if ($x['played'] != $y['played'])
-			return $x['played'] > $y['played'];
-
-		return strcmp(strtolower($users[$x['total']['id']]->name), strtolower($users[$y['total']['id']]->name));
-	}
-
-	function sortPrevious($x, $y)
-	{
-		global $users, $sort;
-		$sort = 'previous';
-
-		if ($x['total'][$sort] != $y['total'][$sort])
-			return $x['total'][$sort] < $y['total'][$sort];
-
-		if ($x['total']['3pts'] != $y['total']['3pts'])
-			return $x['total']['3pts'] < $y['total']['3pts'];
-
-		if ($x['played'] != $y['played'])
-			return $x['played'] > $y['played'];
-
-		return strcmp(strtolower($users[$x['total']['id']]->name), strtolower($users[$y['total']['id']]->name));
-	}
-
-	function sortAvg($x, $y)
-	{
-		global $users;
-
-		if ($x['avg'] != $y['avg'])
-			return $x['avg'] < $y['avg'];
-
-		if ($x['played'] != $y['played'])
-			return $x['played'] > $y['played'];
-
-		return strcmp(strtolower($users[$x['total']['id']]->name), strtolower($users[$y['total']['id']]->name));
-	}
-
-	function sortDay($x, $y)
-	{
-		global $users, $sort;
-
-		if ($x[$sort]['total'] != $y[$sort]['total'])
-			return $x[$sort]['total'] < $y[$sort]['total'];
-
-		return strcmp(strtolower($users[$x['total']['id']]->name), strtolower($users[$y['total']['id']]->name));
-	}
-
-	$maxDay = -1;
-	foreach ($days as $i => $day)
-	{
-		if ($maxDay < $day->number && $day->hasCompletedMatches())
-			$maxDay = $day->number;
-	}
-
-	$scores = array();
-	$high = array();
-	foreach ($users as $user)
-	{
-		$scores[$user->id] = array();
-		foreach ($days as $day)
-			$scores[$user->id][$day->id] = array('id' => $user->id, '3pts' => 0, '1pt' => 0, 'total' => 0);
-		$scores[$user->id]['total'] = array('id' => $user->id, '3pts' => 0, '1pt' => 0, 'total' => 0, 'previous' => 0);
-		$scores[$user->id]['high'] = 0;
-		$scores[$user->id]['played'] = array();
-		$high[$user->id] = 0;
-	}
-
-	foreach ($pronos as $prono)
-	{
-		$match = $matches[$prono->pr_match_id];
-
-		if (!isset($days[$match->pr_day_id]))
-			continue;
-
-		$scores[$prono->pr_user_id]['showed'] = true;
-
-		if (!$days[$match->pr_day_id]->hasCompletedMatches())
-			continue;
-
-		$scores[$prono->pr_user_id][$match->pr_day_id]['played'] = 1;
-		$scores[$prono->pr_user_id]['total']['played'] = 1;
-		$scores[$prono->pr_user_id]['played'][$match->pr_day_id] = 1;
-
-		if (sign($match) == sign($prono))
-		{
-			if ($match->home_goals == $prono->home_goals && $match->away_goals == $prono->away_goals)
-			{
-				$scores[$prono->pr_user_id][$match->pr_day_id]['3pts'] ++;
-				$scores[$prono->pr_user_id][$match->pr_day_id]['total'] += 3;
-				$scores[$prono->pr_user_id]['total']['3pts'] ++;
-				$scores[$prono->pr_user_id]['total']['total'] += 3;
-				if ($maxDay > $days[$match->pr_day_id]->number)
-					$scores[$prono->pr_user_id]['total']['previous'] += 3;
-			}
-			else
-			{
-				$scores[$prono->pr_user_id][$match->pr_day_id]['1pt'] ++;
-				$scores[$prono->pr_user_id][$match->pr_day_id]['total'] ++;
-				$scores[$prono->pr_user_id]['total']['1pt'] ++;
-				$scores[$prono->pr_user_id]['total']['total'] ++;
-				if ($maxDay > $days[$match->pr_day_id]->number)
-					$scores[$prono->pr_user_id]['total']['previous'] ++;
-			}
-		}
-		if ($scores[$prono->pr_user_id][$match->pr_day_id]['total'] > $high[$prono->pr_user_id])
-			$high[$prono->pr_user_id] = $scores[$prono->pr_user_id][$match->pr_day_id]['total'];
-
-	}
-
-	// post traitement
-	foreach ($scores as $user => $score)
-	{
-		$scores[$user]['played'] = count($scores[$user]['played']);
-		$scores[$user]['avg'] = $scores[$user]['played'] != 0 ? round($scores[$user]['total']['total'] / $scores[$user]['played'], 2) : 0;
-
-		if (empty($scores[$user]['showed']))
-		{
-			unset($scores[$user]);
-			unset($users[$user]);
-		}
-	}
-
-	$previous = $scores;
-	uasort($scores, 'sortUsers');
-	uasort($previous, 'sortPrevious');
-
-	// compute the previous
-	$tmp = array();
-	$i = 1;
-	foreach ($previous as $u => $p)
-	{
-		$tmp[$u] = $i;
-		$i++;
-	}
-	$previous = $tmp;
-
-	$height = ceil(count($users) / 2) * 30 + 21;
+	$height = ceil(count($userScores) / 2) * 30 + 21;
 	$image = imagecreate(860, $height);
 
 	$white = imagecolorallocate($image, 255, 255, 255);
@@ -279,13 +113,12 @@
 	$i = 1;
 	$top = -5;
 	$half = false;
-	foreach ($scores as $user => $scores)
+
+	foreach ($userScores as $userId => $userTotal)
 	{
-		if (!$scores)
-			continue;
 		$top += 30;
 		$left = 20;
-		if ($i > ceil(count($users)/2))
+		if ($i > ceil(count($userScores)/2))
 		{
 			$left = 450;
 			if (!$half)
@@ -295,48 +128,50 @@
 			}
 		}
 
-		$u = $users[$user];
-		if ($u->pr_team_id && file_exists("./logos/" . strtolower($teams[$u->pr_team_id]->id) . ".gif"))
+		$user = $users[$userId];
+		if ($user->pr_team_id && file_exists("./logos/" . strtolower($teams[$user->pr_team_id]->id) . ".gif"))
 		{
-			$logo = imagecreatefromgif("./logos/" . strtolower($teams[$u->pr_team_id]->id) . ".gif");
+			$logo = imagecreatefromgif("./logos/" . strtolower($teams[$user->pr_team_id]->id) . ".gif");
 			imagecopyresized($image, $logo, $left + 4, $top + 1 - 5, 0, 0, 30, 30, 60, 60) ? 'Y' : 'N';
 		}
 
-		if ($previous[$user] == $i)
+		$classementPrevious[$userId]++;
+
+		if ($classementPrevious[$userId] == $i)
 			$diff = '=';
-		else if ($previous[$user] > $i)
+		else if ($classementPrevious[$userId] > $i)
 		{
-			$diff = '+' . ($previous[$user] - $i);
+			$diff = '+' . ($classementPrevious[$userId] - $i);
 			imagefilledrectangle($image, 176 + $left, $top + 1 - 5, 209 + $left, $top + 30 - 5, $green);
 		}
 		else
 		{
-			$diff = '-' . ($i - $previous[$user]);
+			$diff = '-' . ($i - $classementPrevious[$userId]);
 			imagefilledrectangle($image, 176 + $left, $top + 1 - 5, 209 + $left, $top + 30 - 5, $red);
 		}
 
-		if ($scores['avg'] < 5)
+		if ($userTotal['average'] < 5)
 			imagefilledrectangle($image, 331 + $left, $top + 1 - 5, 374 + $left, $top + 30 - 6, $blood);
-		else if ($scores['avg'] < 6)
+		else if ($userTotal['average'] < 6)
 			imagefilledrectangle($image, 331 + $left, $top + 1 - 5, 374 + $left, $top + 30 - 6, $orange);
-		else if ($scores['avg'] < 7)
+		else if ($userTotal['average'] < 7)
 			imagefilledrectangle($image, 331 + $left, $top + 1 - 5, 374 + $left, $top + 30 - 6, $khaki);
-		else if ($scores['avg'] < 8)
+		else if ($userTotal['average'] < 8)
 			imagefilledrectangle($image, 331 + $left, $top + 1 - 5, 374 + $left, $top + 30 - 6, $green8);
-		else if ($scores['avg'] < 9)
+		else if ($userTotal['average'] < 9)
 			imagefilledrectangle($image, 331 + $left, $top + 1 - 5, 374 + $left, $top + 30 - 6, $green9);
 		else
 			imagefilledrectangle($image, 331 + $left, $top + 1 - 5, 374 + $left, $top + 30 - 6, $green10);
 
 		imagestring($image, 3, $left + 4 - 20, $top + 3, $i, $white);
-		imagestring($image, 3, $left + 40, $top + 3, stripslashes(utf8_decode($users[$user]->name)), $black);
-		imagestring($image, 3, $left + 138, $top + 3, str_pad($scores['total']['total'], 3, ' ', STR_PAD_LEFT), $black);
+		imagestring($image, 3, $left + 40, $top + 3, stripslashes(utf8_decode($users[$userId]->name)), $black);
+		imagestring($image, 3, $left + 138, $top + 3, str_pad($userTotal['points'], 3, ' ', STR_PAD_LEFT), $black);
 		imagestring($image, 3, $left + 195 - 4 * strlen($diff), $top + 3, $diff, $black);
-		imagestring($image, 3, $left + 225, $top + 3, str_pad($scores['total']['3pts'], 2, ' ', STR_PAD_LEFT), $black);
-		imagestring($image, 3, $left + 264, $top + 3, str_pad($scores['total']['1pt'], 3, ' ', STR_PAD_LEFT), $black);
-		imagestring($image, 3, $left + 304, $top + 3, str_pad($scores['played'], 2, ' ', STR_PAD_LEFT), $black);
-		imagestring($image, 3, $left + 341, $top + 3, str_pad($scores['avg'], 3, ' ', STR_PAD_LEFT), $black);
-		imagestring($image, 3, $left + 384, $top + 3, str_pad($high[$user], 2, ' ', STR_PAD_LEFT), $black);
+		imagestring($image, 3, $left + 225, $top + 3, str_pad($userTotal['three_points'], 2, ' ', STR_PAD_LEFT), $black);
+		imagestring($image, 3, $left + 264, $top + 3, str_pad($userTotal['one_point'], 3, ' ', STR_PAD_LEFT), $black);
+		imagestring($image, 3, $left + 304, $top + 3, str_pad($userTotal['played'], 2, ' ', STR_PAD_LEFT), $black);
+		imagestring($image, 3, $left + 341, $top + 3, str_pad(round($userTotal['average'], 2), 4, ' ', STR_PAD_LEFT), $black);
+		imagestring($image, 3, $left + 384, $top + 3, str_pad($higScores[$userId], 2, ' ', STR_PAD_LEFT), $black);
 
 		imageline($image, $left + 1, $top + 30 - 5, $left + 409, $top + 30 - 5, $grey);
 		$i++;
