@@ -57,7 +57,7 @@
 								<td>
 									<p><a href="<?=APPLICATION_URL?>scores/season-<?php echo $season->id ?>"><img src="<?=APPLICATION_URL?>images/fleche.png" alt="[view]" /> classement détaillé</a></p>
 									<p><a href="javascript:;" onclick="previewRankings(<?php echo $season->id ?>, -1);"><img src="<?=APPLICATION_URL?>images/fleche.png" alt="[view]" /> aperçu du classement</a></p>
-									<p><a href="<?=APPLICATION_URL?>ajax/view_evolution.php?id=<?php echo $season->id ?>" class="nyroModal"><img src="<?=APPLICATION_URL?>images/fleche.png" alt="[view]" /> évolution du classement</a></p>
+									<p><a href="<?=APPLICATION_URL?>evolution_classement/season-<?php echo $season->id ?>"><img src="<?=APPLICATION_URL?>images/fleche.png" alt="[view]" /> évolution du classement</a></p>
 									<p><a href="<?=APPLICATION_URL?>ajax/view_stats.php?id=<?php echo $season->id ?>" class="nyroModal"><img src="<?=APPLICATION_URL?>images/fleche.png" alt="[view]" /> statistiques</a></p>
 								</td>
 							</tr>

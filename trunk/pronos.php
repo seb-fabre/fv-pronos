@@ -46,6 +46,9 @@
 		<h2><?php echo $league->name ?> - <?php echo $season->label ?>, Journée n°<?php echo $day->number ?></h2>
 		<?php if ($isEditable) { ?>
 			<div class="add"><a href="<?=APPLICATION_URL?>ajax/parse_pronos.php?id=<?php echo $day->id ?>" class="nyroModal">Saisir l'ensemble des pronos</a></div>
+			<?php if ($_SESSION['user']->role == 'admin') { ?>
+				<div class="add"><a href="<?=APPLICATION_URL?>ajax/advice_pronos.php?id=<?php echo $day->id ?>" class="nyroModal">Voir les pronos conseillés</a></div>
+			<?php } ?>
 		<?php } ?>
 		<p><?php echo count($pronosByUser) ?> joueurs ont pronostiqué cette journée</p>
 		<table>

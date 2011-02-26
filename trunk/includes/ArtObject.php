@@ -237,6 +237,13 @@ class ArtObject {
 		return $id;
 	}
 
+	public function refresh($class)
+	{
+		$new = self::find($class, $this->id);
+		$data = $new->toArray();
+		$this->_data = $data;
+	}
+
 	/**
 	 * Retrieve the number of rows for a search criteria
 	 *
