@@ -44,6 +44,8 @@
 		$scoresWeights[$prono->pr_match_id][$displayed] += $classement[$prono->pr_user_id];
 	}
 
+	$bbcode = '';
+
 	echo '<fieldset>';
 	echo "	<legend>Pronos conseillés</legend>";
 
@@ -58,6 +60,7 @@
 		$awayTeam = $teams[$match->pr_away_team_id];
 
 		$bestWeight = reset($weights);
+		$bestScore = key($weights);
 
 		$sum = array_sum($weights);
 
@@ -78,7 +81,12 @@
 
 		echo '	<td style="width: 40%">' . $awayTeam->name . '</td>';
 		echo '</tr>';
+
+		$bbcode .= $homeTeam->name . ' - ' . $awayTeam->name . ' : ' . $bestScore . PHP_EOL;
 	}
 
 	echo '</table>';
 	echo '</fieldset>';
+
+?>
+<textarea><?=$bbcode?></textarea>
