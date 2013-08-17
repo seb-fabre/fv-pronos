@@ -20,6 +20,7 @@
 				<tr>
 					<th>Nom</th>
 					<th>Catégorie</th>
+					<th>Noms alternatifs</th>
 					<th>Logo</th>
 					<th>Actions</th>
 				</tr>
@@ -32,6 +33,7 @@
 						<tr>
 							<td><?php echo $team->name ?></td>
 							<td><?php echo ($cat ? $cat->name : '') ?></td>
+							<td><?php echo $team->aliases ?></td>
 							<td>
 								<?php
 									if ($team->has_logo)

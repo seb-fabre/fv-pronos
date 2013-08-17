@@ -18,5 +18,9 @@ class Team extends _Team
 	{
 		return '<img src="' . $this->getLogoUrl() . '" ' . $options . ' />';
 	}
+
+	public function getAliases()
+	{
+		return array_filter(array_map('trim', explode(',', $this->_data['aliases'])));
+	}
 }
-	
