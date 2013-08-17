@@ -2,7 +2,7 @@
 	require_once('../includes/init.php');
 
 	$id = GETorPOST('id');
-	$matches = GETorPOST('matches');
+	$lines = GETorPOST('matches');
 
 	$day = Day::find($id);
 
@@ -19,48 +19,69 @@
 	$teams = $season->getTeams();
 	$tmpTeams = array();
 	foreach ($teams as $team)
-		$tmpTeams [strtolower($team->name)] = $team;
+	{
+		$tmpTeams[strtolower($team->name)] = $team;
+		foreach ($team->getAliases() as $alias)
+			$tmpTeams[strtolower($alias)] = $team;
+	}
 	$titims = $teams;
 	$teams = $tmpTeams;
 
-	$matches = explode("\n", $matches);
+	$lines = explode("\n", $lines);
 	$parsedData = array();
 	$currentUser = false;
-	foreach ($matches as $match)
+	foreach ($lines as $oneLine)
 	{
-		$line = array();
-		$match = strtolower($match);
-		if (preg_match('/(.*) - (.*) *(arrow.gif|:) ([0-9]) ?- ?([0-9]).*/', $match, $line) == 0)
-			preg_match('/(.*) - (.*)( )([0-9]) ?- ?([0-9]).*/', $match, $line);
-
-		// line containing scores
-		if (count($line) == 6)
+		// FC Sochaux-Olympique Lyonnais 1-2
+		$matches = array();
+		$oneLine = strtolower($oneLine);
+		if (preg_match('/(.*) ?- ?(.*) *(arrow.gif|:) ([0-9]) ?- ?([0-9]).*/', $oneLine, $matches) ||
+			preg_match('/(.*) ?- ?(.*)( )([0-9]) ?- ?([0-9]).*/', $oneLine, $matches))
 		{
 			$data = array();
 
-			if (array_key_exists(trim($line[1]), $tmpTeams))
-				$data['home_team'] = $tmpTeams[trim($line[1])]->id;
+			if (array_key_exists(trim($matches[1]), $tmpTeams))
+				$data['home_team'] = $tmpTeams[trim($matches[1])]->id;
 			else
 				$data['home_team'] = null;
 
-			if (array_key_exists(trim($line[2]), $tmpTeams))
-				$data['away_team'] = $tmpTeams[trim($line[2])]->id;
+			if (array_key_exists(trim($matches[2]), $tmpTeams))
+				$data['away_team'] = $tmpTeams[trim($matches[2])]->id;
 			else
 				$data['away_team'] = null;
 
-			$data['home_goals'] = $line[4];
-			$data['away_goals'] = $line[5];
+			$data['home_goals'] = $matches[4];
+			$data['away_goals'] = $matches[5];
 
 			$parsedData[$currentUser] []= $data;
 		}
-		else if (preg_match('/[Pp]ronos? +(.*)/', $match, $line))
+		else if (preg_match('/[Pp]ronos? +(.*)/', $oneLine, $matches))
 		{
-			if (array_key_exists(strtolower($line[1]), $namedUsers))
-				$currentUser = $namedUsers[strtolower($line[1])];
+			if (array_key_exists(strtolower($matches[1]), $namedUsers))
+				$currentUser = $namedUsers[strtolower($matches[1])];
 			else
-				$currentUser = strtolower($line[1]);
+				$currentUser = strtolower($matches[1]);
 
 			$parsedData[$currentUser] = array();
+		}
+		else if (preg_match('/(.*)\s+([0-9]) ?- ?([0-9])\s+(.*)/', $oneLine, $matches))
+		{
+			$data = array();
+
+			if (array_key_exists(trim($matches[1]), $tmpTeams))
+				$data['home_team'] = $tmpTeams[trim($matches[1])]->id;
+			else
+				$data['home_team'] = null;
+
+			if (array_key_exists(trim($matches[4]), $tmpTeams))
+				$data['away_team'] = $tmpTeams[trim($matches[4])]->id;
+			else
+				$data['away_team'] = null;
+
+			$data['home_goals'] = $matches[2];
+			$data['away_goals'] = $matches[3];
+
+			$parsedData[$currentUser] []= $data;
 		}
 	}
 
@@ -78,7 +99,7 @@
 		<p class="center">';
 
 	echo '<table class="noborder" style="width: 100%">';
-	
+
 	foreach ($parsedData as $user => $scores)
 	{
 		echo '<tr><td colspan="3" align="center" style="text-align: center">';
@@ -87,6 +108,7 @@
 		foreach ($users as $u)
 			echo '<option value="' . $u->id . '"' . ($u->id == $user ? ' selected="selected"' : '') . '>' . $u->name . '</option>';
 		echo '</select>';
+
 		if (!array_key_exists($user, $users))
 			echo ' (' . $user . ')';
 		echo '</p>';
@@ -96,6 +118,7 @@
 		{
 			if (!isset($matches[$score['home_team']][$score['away_team']]))
 				continue;
+
 			$match = $matches[$score['home_team']][$score['away_team']];
 			echo '<tr>';
 			echo '<td class="right">' . $titims[$score['home_team']]->name . '</td>';

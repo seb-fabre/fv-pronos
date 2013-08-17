@@ -4,6 +4,7 @@
 	$id = GETorPOST('id', -1);
 	$name = GETorPOST('name');
 	$category = GETorPOST('pr_team_category_id');
+	$aliases = GETorPOST('aliases');
 
 	if ($id == -1)
 		$team = new Team();
@@ -24,6 +25,7 @@
 
 	$team->name = $name;
 	$team->pr_team_category_id = $category;
+	$team->aliases = $aliases;
 	$team->save();
 
 	if (!empty($_FILES['logo']))

@@ -24,6 +24,7 @@
 			<legend>Création d'une équipe</legend>
 		<?php endif; ?>
 		<p><label>Nom</label><input type="text" name="name" value="<?php echo $team->name ?>" /></p>
+		<p><label>Aliases</label><input type="text" name="aliases" value="<?php echo $team->aliases ?>" /></p>
 		<p><label>Catégorie</label><?=$categoriesSelect?></p>
 		<p>
 			<label>Logo</label>
