@@ -26,36 +26,19 @@
 	}
 	$titims = $teams;
 	$teams = $tmpTeams;
-
+	
+	$teamsRegex = implode('|', array_keys($teams));
+	
 	$lines = explode("\n", $lines);
 	$parsedData = array();
 	$currentUser = false;
+	
 	foreach ($lines as $oneLine)
 	{
-		// FC Sochaux-Olympique Lyonnais 1-2
 		$matches = array();
 		$oneLine = strtolower($oneLine);
-		if (preg_match('/(.*) ?- ?(.*) *(arrow.gif|:) ([0-9]) ?- ?([0-9]).*/', $oneLine, $matches) ||
-			preg_match('/(.*) ?- ?(.*)( )([0-9]) ?- ?([0-9]).*/', $oneLine, $matches))
-		{
-			$data = array();
-
-			if (array_key_exists(trim($matches[1]), $tmpTeams))
-				$data['home_team'] = $tmpTeams[trim($matches[1])]->id;
-			else
-				$data['home_team'] = null;
-
-			if (array_key_exists(trim($matches[2]), $tmpTeams))
-				$data['away_team'] = $tmpTeams[trim($matches[2])]->id;
-			else
-				$data['away_team'] = null;
-
-			$data['home_goals'] = $matches[4];
-			$data['away_goals'] = $matches[5];
-
-			$parsedData[$currentUser] []= $data;
-		}
-		else if (preg_match('/[Pp]ronos? +(.*)/', $oneLine, $matches))
+		
+		if (preg_match('/[Pp]ronos? +(.*)/', $oneLine, $matches))
 		{
 			if (array_key_exists(strtolower($matches[1]), $namedUsers))
 				$currentUser = $namedUsers[strtolower($matches[1])];
@@ -63,24 +46,25 @@
 				$currentUser = strtolower($matches[1]);
 
 			$parsedData[$currentUser] = array();
+			continue;
 		}
-		else if (preg_match('/(.*)\s+([0-9]) ?- ?([0-9])\s+(.*)/', $oneLine, $matches))
+		
+		if (preg_match('/(.*) *[^ ]*[^a-z]+[^ ]* *([0-9]) ?- ?([0-9]).*/', $oneLine, $matches))
 		{
-			$data = array();
-
-			if (array_key_exists(trim($matches[1]), $tmpTeams))
-				$data['home_team'] = $tmpTeams[trim($matches[1])]->id;
-			else
-				$data['home_team'] = null;
-
-			if (array_key_exists(trim($matches[4]), $tmpTeams))
-				$data['away_team'] = $tmpTeams[trim($matches[4])]->id;
-			else
-				$data['away_team'] = null;
-
+			if (count($matches) !== 4)
+				continue;
+			
 			$data['home_goals'] = $matches[2];
 			$data['away_goals'] = $matches[3];
-
+			
+			$strTeams = $matches[1];
+			
+			if (!preg_match("/($teamsRegex).+($teamsRegex)/", $strTeams, $submatches))
+				continue;
+			
+			$data['home_team'] = $tmpTeams[trim($submatches[1])]->id;
+			$data['away_team'] = $tmpTeams[trim($submatches[2])]->id;
+			
 			$parsedData[$currentUser] []= $data;
 		}
 	}

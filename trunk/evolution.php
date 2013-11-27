@@ -18,7 +18,7 @@
   $season = Season::find($season);
 	$league = $season->getLeague();
 	
-	$users = explode('|', trim($userz, '|'));
+	$users = explode('-', $userz);
 	$userz = array();
 	foreach ($users as $u)
 		$userz[$u] = User::find($u);

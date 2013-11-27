@@ -21,6 +21,15 @@
 		if ($season)
 			$seasons = array($seasonId => $season);
 	}
+	// If no season given in $_GET, select the
+	else if (!isset($_GET['season']))
+	{
+		$season = reset(Season::search(array(), 'id DESC', 1));
+
+		$seasonId = $season->id;
+
+		$seasons = array($seasonId => $season);
+	}
 
 	if (empty($season))
 		$seasons = Season::getAll();
@@ -29,13 +38,13 @@
 		$days = Day::getAll('pr_season_id DESC, number DESC, label DESC');
 	else
 		$days = Day::search(array(array('pr_season_id', $season->id)), 'pr_season_id DESC, number DESC, label DESC');
-	
+
 	$daysBySeason = array();
 	foreach ($days as $day)
 	{
 		if (!array_key_exists($day->pr_season_id, $daysBySeason))
 			$daysBySeason[$day->pr_season_id] = array();
-		
+
 		$daysBySeason[$day->pr_season_id] []= $day;
 	}
 
@@ -93,6 +102,7 @@
 								<?php if (!empty($_SESSION['user'])) { ?>
 									<td class="center">
 										<p><a href="<?=APPLICATION_URL?>ajax/add_match.php?pr_day_id=<?php echo $day->id ?>" class="nyroModal"><img src="<?=APPLICATION_URL?>images/fleche.png" alt="[add]" /> voir/modifier </a></p>
+										<p><a href="<?=APPLICATION_URL?>ajax/parse_matches.php?pr_day_id=<?php echo $day->id ?>" class="nyroModal"><img src="<?=APPLICATION_URL?>images/fleche.png" alt="[add]" /> saisir tous </a></p>
 									</td>
 								<?php } ?>
 								<td class="center">
@@ -120,7 +130,7 @@
 
 	<script type="text/javascript">
 <?php if (!empty($_SESSION['user'])) { ?>
-	
+
 		function addMatch()
 		{
 			var select = $('#selectTeams').html();

@@ -3,11 +3,17 @@
 
 	function getMatchRow(&$teams, $match = false, $isEditable = true)
 	{
-		if (!empty($match))
+		if (!empty($match) && $match->id)
 		{
 			$homeId = $match->pr_home_team_id;
 			$awayId = $match->pr_away_team_id;
 			$name = '[exist][' . $match->id . ']';
+		}
+		else if (!empty($match) && ($match->pr_home_team_id || $match->pr_away_team_id))
+		{
+			$homeId = $match->pr_home_team_id;
+			$awayId = $match->pr_away_team_id;
+			$name = '[new][]';
 		}
 		else
 		{
@@ -34,6 +40,40 @@
 	$league = $season->getLeague();
 
 	$teams = $season->getTeams();
+	$tmpTeams = array();
+	foreach ($teams as $team)
+		$tmpTeams [$team->name] = $team;
+	$teams = $tmpTeams;
+
+	$matches = GETorPOST('matches');
+	$parsedData = array();
+
+	if (!empty($matches))
+	{
+		$matches = explode("\n", $matches);
+		foreach ($matches as $match)
+		{
+			$parts = explode(' ', $match);
+			$parts = array_filter($parts);
+
+			$found = array();
+
+			foreach ($parts as $p)
+			{
+				$p = trim($p);
+
+				if (isset($teams[$p]))
+					$found []= $teams[$p]->id;
+			}
+
+			if (count($found) != 2)
+				continue;
+
+			$match = new Match(array('pr_home_team_id' => $found[0], 'pr_away_team_id' => $found[1]));
+
+			$parsedData []= $match;
+		}
+	}
 
 	$matches = $day->getMatches();
 
@@ -41,9 +81,11 @@
 
 	$select = '';
 	foreach ($matches as $m)
-	{
 		$select .= getMatchRow($teams, $m, $isEditable);
-	}
+
+	foreach ($parsedData as $p)
+		$select .= getMatchRow($teams, $p, $isEditable);
+
 ?>
 <p id="popup_message" style="margin: 0; padding: 0;"></p>
 <div class="hidden" id="selectTeams"><?php echo getMatchRow($teams) ?></div>
