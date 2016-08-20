@@ -4,9 +4,8 @@
 	echoHTMLHead("Page d'accueil");
 ?>
 <body>
-	<?php echoMenu(); ?>
-	<div class="container-fluid">
-
+	<div class="container">
+		<?php echoMenu(); ?>
 	</div>
 </body>
 </html>

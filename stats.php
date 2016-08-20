@@ -19,9 +19,10 @@
 ?>
 
 <body>
-	<?php echoMenu(); ?>
-	<div id="content">
+	<div class="container">
+		<?php echoMenu(); ?>
 		<h1>Statistiques</h1>
+		
 		<?php
 			
 			$req = mysql_query($sql);
@@ -52,12 +53,6 @@
 			}
 			
 		?>
-	</div>
-
-	<div id="popup"><div id="popup_message"></div><div id="popup_content"></div></div>
-
-	<div id="loading">
-		<div id="subloading">Chargement</div>
 	</div>
 </body>
 </html>
