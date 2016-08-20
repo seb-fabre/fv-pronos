@@ -149,14 +149,14 @@
 				continue;
 
 			$match = $matches[$score['home_team']][$score['away_team']];
-			echo '<div class="row form-group">';
+			echo '<div class="row form-group-sm">';
 			echo '<div class="col-sm-3">' . $titims[$score['home_team']]->name . '</div>';
 			echo '<div class="col-sm-2">';
 			echo '	<input type="text" name="home_goals[' . $user . '][' . $match . ']" value="' . $score['home_goals'] . '" size="2" maxlength="1" class="form-control" />';
 			echo '</div>';
 			echo '<div class="col-sm-1">&nbsp;-&nbsp;</div>';
 			echo '<div class="col-sm-2">';
-			echo '	<input type="text" name="away_goals[' . $user . '][' . $match . ']" value="' . $score['away_goals'] . '" size="2" maxlength="1" class="form-control" />&nbsp';
+			echo '	<input type="text" name="away_goals[' . $user . '][' . $match . ']" value="' . $score['away_goals'] . '" size="2" maxlength="1" class="form-control" />';
 			echo '</div>';
 			echo '<div class="col-sm-3">' . $titims[$score['away_team']]->name . '</div>';
 			echo '<div class="col-sm-1"></div>';

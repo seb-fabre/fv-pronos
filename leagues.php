@@ -3,7 +3,7 @@
 
 	$leagues = League::getAll();
 
-	$seasons = Season::getAll();
+	$seasons = Season::getAll('label DESC');
 	$tmp = array();
 	foreach ($seasons as $season)
 		$tmp[$season->pr_league_id] []= $season;
