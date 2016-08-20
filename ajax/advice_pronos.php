@@ -45,12 +45,12 @@
 	}
 
 	$bbcode = '';
+?>
 
-	echo '<fieldset>';
-	echo "	<legend>Pronos conseillés</legend>";
+		<h4 class="well">Pronos conseillés</h4>
+		<table class="table">
 
-	echo '<table style="width: 100%;">';
-
+<?php
 	foreach ($scoresWeights as $matchId => $weights)
 	{
 		arsort($weights);
@@ -70,7 +70,7 @@
 		echo '	<td style="width: 30%"><b>';
 		foreach ($weights as $d => $w)
 		{
-			if ($w < $bestWeight / 2)
+			if ($w < $bestWeight / 2 || $sum === 0)
 				break;
 
 			$percent = round($w * 100 / $sum);
@@ -85,8 +85,6 @@
 		$bbcode .= $homeTeam->name . ' - ' . $awayTeam->name . ' : ' . $bestScore . PHP_EOL;
 	}
 
-	echo '</table>';
-	echo '</fieldset>';
-
 ?>
-<textarea><?=$bbcode?></textarea>
+			</table>
+			<textarea class="form-control"><?=$bbcode?></textarea>

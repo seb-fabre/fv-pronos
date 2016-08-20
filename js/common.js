@@ -1,9 +1,9 @@
-function resizeModal(width, height)
+function resizeModal()
 {
 	var initSettingsSize = {
-		width: width,
-		height: height,
-		windowResizing: true
+		width: false,
+		height: false,
+		windowResizing: false
 	};
 	$.nyroModalSettings(initSettingsSize);
 }
@@ -23,3 +23,17 @@ function hideSpinner()
 $().ready(function(){
 	$.fn.nyroModal.settings.minHeight = 100;
 });
+
+function showError(message)
+{
+	if (!$('form .panel-body'))
+	{
+		alert(message);
+		return;
+	}
+	
+	if ($('#popup_message'))
+		$('#popup_message').remove();
+	
+	$('form .panel-body').prepend($('<p id="popup_message" class="alert alert-danger">' + message + '</p>'));
+}

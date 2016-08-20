@@ -14,15 +14,15 @@
     echo 'paramètres invalides .... ';
     die;
   }
-
+	
   $season = Season::find($season);
 	$league = $season->getLeague();
 	
-	$users = explode('-', $userz);
+	$users = explode('|', $userz);
 	$userz = array();
 	foreach ($users as $u)
 		$userz[$u] = User::find($u);
-
+	
 	if (!$league || !$season || count($userz) == 0)
   {
     echo 'paramètres invalides ... ';

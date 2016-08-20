@@ -30,7 +30,7 @@ class Match extends _Match
 	 */
 	public function getDay()
 	{
-		return ArtObject::find('Team', $this->pr_away_team_id);
+		return ArtObject::find('Day', $this->pr_day_id);
 	}
 }
 	

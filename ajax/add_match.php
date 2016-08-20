@@ -22,18 +22,21 @@
 			$name = '[new][]';
 		}
 
-		$select = '<p class="center"><select name="pr_home_team_id' . $name . '"' . (!$isEditable ? ' disabled="disabled"' : '') . '>';
+		$select = '<div class="col-md-6 text-center"><div class="col-xs-5"><select name="pr_home_team_id' . $name . '"' . (!$isEditable ? ' disabled="disabled"' : '') . ' class="form-control">';
 		foreach ($teams as $team)
 			$select .= '<option value="' . $team->id . '"' . ($team->id == $homeId ? ' selected="selected"' : '') . '>' . $team->name . '</option>';
-		$select .= '</select>&nbsp;-&nbsp;<select name="pr_away_team_id' . $name . '"' . (!$isEditable ? ' disabled="disabled"' : '') . '>';
+		$select .= '</select></div>'
+						. '<div class="col-xs-1 text-center">-</div>'
+						. '<div class="col-xs-5"><select name="pr_away_team_id' . $name . '"' . (!$isEditable ? ' disabled="disabled"' : '') . ' class="form-control">';
 		foreach ($teams as $team)
 			$select .= '<option value="' . $team->id . '"' . ($team->id == $awayId ? ' selected="selected"' : '') . '>' . $team->name . '</option>';
-		$select .= '</select></p>';
+		$select .= '</select></div><div class="col-xs-1"> </div></div>';
 
 		return $select;
 	}
 
 	$day = Day::find(GETorPOST('pr_day_id', -1));
+	$matches = GETorPOST('matches');
 
 	$season = Season::find($day->pr_season_id);;
 
@@ -42,72 +45,75 @@
 	$teams = $season->getTeams();
 	$tmpTeams = array();
 	foreach ($teams as $team)
-		$tmpTeams [$team->name] = $team;
+	{
+		$tmpTeams[strtolower($team->name)] = $team;
+		foreach ($team->getAliases() as $alias)
+			$tmpTeams[strtolower($alias)] = $team;
+	}
+	$titims = $teams;
 	$teams = $tmpTeams;
-
-	$matches = GETorPOST('matches');
+	
+	$teamsRegex = implode('|', array_keys($teams));
+	
+	$lines = explode("\n", $matches);
 	$parsedData = array();
 
-	if (!empty($matches))
+	foreach ($lines as $oneLine)
 	{
-		$matches = explode("\n", $matches);
-		foreach ($matches as $match)
+		$oneLine = strtolower($oneLine);
+		
+		if (preg_match("/.*($teamsRegex).+($teamsRegex).*/", $oneLine, $matches))
 		{
-			$parts = explode(' ', $match);
-			$parts = array_filter($parts);
-
-			$found = array();
-
-			foreach ($parts as $p)
-			{
-				$p = trim($p);
-
-				if (isset($teams[$p]))
-					$found []= $teams[$p]->id;
-			}
-
-			if (count($found) != 2)
-				continue;
-
-			$match = new Match(array('pr_home_team_id' => $found[0], 'pr_away_team_id' => $found[1]));
+			$v = array();
+			$v []= $tmpTeams[trim($matches[1])]->id;
+			$v []= $tmpTeams[trim($matches[2])]->id;
+			
+			$match = new Match(array('pr_home_team_id' => $v[0], 'pr_away_team_id' => $v[1]));
 
 			$parsedData []= $match;
 		}
 	}
-
+	
 	$matches = $day->getMatches();
 
 	$isEditable = !$day->hasPronos() && !$day->hasCompletedMatches();
 
 	$select = '';
 	foreach ($matches as $m)
-		$select .= getMatchRow($teams, $m, $isEditable);
+		$select .= getMatchRow($titims, $m, $isEditable);
 
 	foreach ($parsedData as $p)
-		$select .= getMatchRow($teams, $p, $isEditable);
+		$select .= getMatchRow($titims, $p, $isEditable);
 
 ?>
-<p id="popup_message" style="margin: 0; padding: 0;"></p>
-<div class="hidden" id="selectTeams"><?php echo getMatchRow($teams) ?></div>
-<form action="/ajax/save_match.php" method="post" id="ajaxForm">
-	<fieldset>
-		<legend>Modifier les matches</legend>
-		<p class="center bold"><?php echo $league->name ?>, <?php echo $day->number ? $day->number . '<sup>e</sup> journée' : $day->label ?></p>
-		<div id="matches"><?php echo $select ?></div>
-		<?php if ($isEditable && isset($_SESSION['user'])) { ?>
-			<p class="center"><input type="button" onclick="addMatch()" value="ajouter un match" /></p>
-		<?php } ?>
+<div class="hidden" id="selectTeams"><?php echo getMatchRow($titims) ?></div>
+<form action="/ajax/save_match.php" method="post" id="ajaxForm" class="form-horizontal" style="width:800px">
+
+	<h4 class="well">
+		Modifier les matches
+		<br/>
+		<small><?php echo $league->name ?>, <?php echo $day->number ? $day->number . '<sup>e</sup> journée' : $day->label ?></small>
+	</h4>
+
+	<div class="panel-body">
+
+		<div id="matches" class="container-fluid"><div class="row"><?php echo $select ?></div></div>
+
+		<br/><br/>
+
 		<p class="submit">
 			<?php if ($isEditable && isset($_SESSION['user'])) { ?>
+				<button type="button" class="btn btn-default btn-sm" onclick="addMatch()">Ajouter un match</button>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				<input type="hidden" name="id" value="<?php echo GETorPOST('id') ?>" />
 				<input type="hidden" name="pr_day_id" value="<?php echo GETorPOST('pr_day_id') ?>" />
-				<input type="submit" value="enregistrer" />
-				<input type="button" value="annuler" class="nyroModalClose" />
+				<button type="submit" class="btn btn-default btn-sm">Enregistrer</button>
+				<button type="button" class="btn btn-default btn-sm nyroModalClose">Annuler</button>
 			<?php } else { ?>
-				<input type="button" value="fermer" class="nyroModalClose" />
+				<button type="button" class="btn btn-default btn-sm nyroModalClose">Fermer</button>
 			<?php } ?>
 		</p>
-	</fieldset>
+	</div>
 </form>
 
 <?php if (!empty($_SESSION['user'])) { ?>
@@ -119,9 +125,12 @@
 			method: 'post',
 			success: function (response) {
 				if (response.success == 1)
+				{
 					window.location.reload();
-				else
-					$('#popup_message').html(response.message);
+					return;
+				}
+				
+				showError(response.message);
 				resizeModal();
 			}
 		});

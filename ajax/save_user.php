@@ -25,4 +25,4 @@
 		echo json_encode(array('success' => 1, 'message' => 'Utilisateur enregistré', 'create' => 1));
 	else
 		echo json_encode(array('success' => 1, 'message' => 'Utilisateur enregistré'));
-?>
+

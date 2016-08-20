@@ -35,33 +35,75 @@
 
 	$countMatches = $day->count_matches;
 ?>
-<form action="/ajax/save_team.php" method="post"id="ajaxForm">
-	<fieldset>
-		<?php if ($id != -1): ?>
-			<legend>Edition d'une journée</legend>
-		<?php else: ?>
-			<legend>Création d'une journée</legend>
-		<?php endif; ?>
-		<p><label>Championnat</label>
-			<select name="pr_season_id">
-				<?php foreach ($seasons as $season) echo '<option value="' . $season->id . '"' . ($season->id == $day->pr_season_id ? ' selected="selected"' : '') . '>' . $leagues[$season->pr_league_id]->name . ' - ' . $season->label . '</option>'; ?>
-			</select>
-		</p>
-		<p><label>Numéro</label><input type="text" name="number" value="<?php echo $day->number ?>" tabindex="1"/></p>
-		<p><label>Label</label><input type="text" name="label" value="<?php echo $day->label ?>" tabindex="1"/></p>
-		<p><label>Nombre de matches</label><input type="text" name="count_matches" id="count_matches" value="<?php echo $countMatches ?>" /></p>
-		<p><label>Date limite</label><input type="text" name="limit_date" id="limit_date" value="<?php echo $limitDate ?>" /></p>
-		<p class="infos">Seul l'administrateur pourra saisir des pronostics après la limite. Cette date peut être surchargée au niveau de chaque match.</p>
-		<p><label>Heure limite</label><input type="text" name="limit_time" id="limit_date" value="<?php echo $limitTime ?>" /></p>
-		<p class="infos">Format acceptés pour l'heure : "9:15", ou "9"</p>
-		<p class="submit">
+<form action="/ajax/save_team.php" method="get" id="ajaxForm" class="form-horizontal">
+		
+	<h4 class="well">
+	<?php 
+		if (GETorPOST('id') != -1) 
+			echo "Edition d'une journée";
+		else
+			echo "Ajout d'une journée";
+	?>
+	</h4>
+
+	<div class="panel-body">
+
+		<div class="form-group">
+			<label class="col-sm-2 control-label">Championnat</label>
+			<div class="col-sm-10">
+				<select name="pr_season_id" class="form-control">
+					<?php foreach ($seasons as $season) echo '<option value="' . $season->id . '"' . ($season->id == $day->pr_season_id ? ' selected="selected"' : '') . '>' . $leagues[$season->pr_league_id]->name . ' - ' . $season->label . '</option>'; ?>
+				</select>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-sm-2 control-label">Numéro</label>
+			<div class="col-sm-10">
+				<input type="text" class="form-control" name="number" value="<?php echo $day->number ?>" />
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-sm-2 control-label">Label</label>
+			<div class="col-sm-10">
+				<input type="text" class="form-control" name="label" value="<?php echo $day->label ?>" />
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-sm-2 control-label">Nombre de matches</label>
+			<div class="col-sm-10">
+				<input type="text" class="form-control" name="count_matches" id="count_matches" value="<?php echo $countMatches ?>" />
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-sm-2 control-label">Date limite</label>
+			<div class="col-sm-10">
+				<input type="text" class="form-control" name="limit_date" value="<?php echo $limitDate ?>" />
+			</div>
+		</div>
+
+		<div class="alert alert-info">Seul l'administrateur pourra saisir des pronostics après la limite. Cette date peut être surchargée au niveau de chaque match.</div>
+
+		<div class="form-group">
+			<label class="col-sm-2 control-label">Heure limite</label>
+			<div class="col-sm-10">
+				<input type="text" class="form-control" name="limit_time" value="<?php echo $limitTime ?>" />
+			</div>
+		</div>
+
+		<div class="alert alert-info">Format acceptés pour l'heure : "9:15", ou "9"</div>
+
+		<div class="submit">
 			<input type="hidden" name="id" value="<?php echo $id ?>" />
 			<?php if ($isEditable) { ?>
-				<input type="submit" value="enregistrer" <?=(count($seasons)==0 ? ' disabled="disabled"' : '')?>/>
+				<button type="subbmit" class="btn btn-default btn-sm"<?=(count($seasons)==0 ? ' disabled="disabled"' : '')?>>Enregistrer</button>
 			<?php } ?>
-			<input type="button" value="annuler" class="nyroModalClose" />
-		</p>
-	</fieldset>
+			<button type="button" class="btn btn-default btn-sm nyroModalClose">Annuler</button>
+		</div>
+	</div>
 </form>
 
 <script type="text/javascript">

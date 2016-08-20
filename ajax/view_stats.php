@@ -45,12 +45,11 @@
 
 ?>
 
-<fieldset>
-	<legend>Equipes les plus généreuses</legend>
+<h4 class="well">Equipes les plus généreuses</h4>
 
-	<p><i>(Equipes ayant rapporté le plus de points aux pronostiqueurs sur l'ensemble de la saison)</i></p>
+	<div class="alert alert-info">(Equipes ayant rapporté le plus de points aux pronostiqueurs sur l'ensemble de la saison)</div>
 
-	<table style="width: 100%;">
+	<table class="table table-bordered table-condensed">
 
 		<?php foreach ($teamsScores as $team => $s) { ?>
 			<tr>
@@ -60,5 +59,3 @@
 		<?php } ?>
 
 	</table>
-
-</fieldset>

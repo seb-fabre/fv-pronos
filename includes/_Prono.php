@@ -47,7 +47,10 @@ class _Prono extends ArtObject
 
 	public function save()
 	{
-		return parent::save("Prono");
+		if (!parent::save("Prono"))
+			return false;
+		
+		return $this->getMatch()->getDay()->getSeason()->save();
 	}
 
 	/**

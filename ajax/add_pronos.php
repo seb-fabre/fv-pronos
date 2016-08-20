@@ -19,23 +19,35 @@
 		$tmp[$prono->pr_match_id] = $prono;
 	$pronos = $tmp;
 ?>
-<form method="get" id="ajaxForm">
-	<fieldset>
-		<legend>Saisie des pronos</legend>
-		<p class="center bold"><?php echo $league->name ?>, <?php echo $day->number ?><sup>e</sup> journée</p>
-		<?php foreach ($matches as $match): ?>
-			<p class="clear">
-				<span class="scoreLeft"><?php echo $teams[$match->pr_home_team_id]->name ?> <input name="home_goals[<?php echo $match->id ?>]" value="<?php echo (array_key_exists($match->id, $pronos) ? $pronos[$match->id]->home_goals : '') ?>" size="2" maxlength="1" /></span>
-				<span class="scoreCenter"> - </span>
-				<span class="scoreRight"><input name="away_goals[<?php echo $match->id ?>]" size="2" maxlength="1" value="<?php echo (array_key_exists($match->id, $pronos) ? $pronos[$match->id]->away_goals : '') ?>" /> <?php echo $teams[$match->pr_away_team_id]->name ?></span>
-		<?php endforeach; ?>
-		<p class="submit">
+<form method="get" id="ajaxForm" class="form-horizontal">
+		<h4 class="well">
+			Saisie des pronos
+			<br/>
+			<small><?php echo $league->name ?>, <?php echo $day->number ?><sup>e</sup> journée</small>
+		</h4>
+	
+	<div class="panel-body">
+
+		<?php foreach ($matches as $match) { ?>
+			<div class="row form-group-sm">
+				<div class="col-sm-3"><?php echo $teams[$match->pr_home_team_id]->name ?></div>
+				<div class="col-sm-2"><input name="home_goals[<?php echo $match->id ?>]" value="<?php echo (array_key_exists($match->id, $pronos) ? $pronos[$match->id]->home_goals : '') ?>" size="2" maxlength="1" class="form-control" /></div>
+				<div class="col-sm-1"> - </div>
+				<div class="col-sm-2"><input name="away_goals[<?php echo $match->id ?>]" size="2" maxlength="1" value="<?php echo (array_key_exists($match->id, $pronos) ? $pronos[$match->id]->away_goals : '') ?>" class="form-control" /></div>
+				<div class="col-sm-3"><?php echo $teams[$match->pr_away_team_id]->name ?></div>
+				<div class="col-sm-1"> </div>
+			</div>
+		<?php } ?>
+		
+		<br/>
+		
+		<div class="form-group">
 			<input type="hidden" name="id" value="<?php echo GETorPOST('id') ?>" />
 			<input type="hidden" name="user" value="<?php echo GETorPOST('user') ?>" />
-			<input type="submit" value="enregistrer" />
-			<input type="button" value="annuler" class="nyroModalClose" />
-		</p>
-	</fieldset>
+			<button type="submit" class="btn btn-default btn-sm">Enregistrer</button>
+			<button type="button" class="btn btn-default btn-sm nyroModalClose">Annuler</button>
+		</div>
+	</div>
 </form>
 
 <?php if (!empty($_SESSION['user'])) { ?>
@@ -47,9 +59,12 @@
 			method: 'post',
 			success: function (response) {
 				if (response.success == 1)
+				{
 					window.location.reload();
-				else
-					$('#popup_message').html(response.message);
+					return;
+				}
+				
+				showError(response.message);
 				resizeModal();
 			}
 		});

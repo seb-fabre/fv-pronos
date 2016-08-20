@@ -31,14 +31,11 @@ function echoHTMLHead($title='')
 	$url = APPLICATION_URL;
 
 	echo <<<HTML
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
 	<title>$title</title>
-	<link rel="stylesheet" href="$url/css/screen.css" type="text/css" media="screen" />
-	<link rel="stylesheet" href="$url/css/pronos.css" type="text/css" media="screen" />
-	<link rel="stylesheet" href="$url/css/redmond/jquery-ui-1.8.custom.css" type="text/css" media="screen" />
-	<link rel="stylesheet" href="$url/js/nyroModal-1.6.2/styles/nyroModal.full.css" type="text/css" media="screen" />
+	
 	<script type="text/javascript" src="$url/js/jquery-1.4.2.min.js"></script>
 	<script type="text/javascript" src="$url/js/jquery-ui-1.8.custom.min.js"></script>
 	<script type="text/javascript" src="$url/js/jquery.ui.datepicker-fr.js"></script>
@@ -49,6 +46,21 @@ function echoHTMLHead($title='')
 	<script type="text/javascript" src="$url/js/nyroModal-1.6.2/js/jquery.nyroModal-1.6.2.min.js"></script>
 	<script type="text/javascript" src="$url/js/common.js"></script>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+					
+	<link rel="stylesheet" href="$url/css/pronos.css" type="text/css" media="screen" />
+	<link rel="stylesheet" href="$url/js/nyroModal-1.6.2/styles/nyroModal.full.css" type="text/css" media="screen" />
+					
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+	<!-- Latest compiled and minified JavaScript -->
+	<!--script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script-->
+
+	<link rel="stylesheet" href="$url/css/pronos.css" type="text/css" media="screen" />
+	
 </head>
 HTML;
 }

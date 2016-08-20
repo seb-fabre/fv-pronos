@@ -11,11 +11,13 @@
 
 	$isEditable = !$season->hasMatches();
 ?>
-<p id="popup_message" style="margin: 0; padding: 0;"></p>
-<form action="/ajax/save_season_teams.php" method="get" id="ajaxForm">
-	<fieldset>
-		<legend><?php echo $league->name . ', ' . $season->label ?> : Equipes</legend>
-		<table style="width: 100%">
+<form action="<?=APPLICATION_URL?>ajax/save_season_teams.php" method="get" id="ajaxForm" class="form-horizontal">
+	
+	<h4 class="well"><?php echo $league->name . ', ' . $season->label ?> : Equipes</h4>
+	
+	<div class="panel-body">
+	
+		<table class="table table-condensed">
 		<?php
 			for ($i=0; $i<$season->teams; $i++)
 			{
@@ -29,13 +31,14 @@
 				else
 					$team = new Team();
 				if ($i%2 == 0)
-					echo '<tr class="noborder">';
-				echo '<td class="center">';
+					echo '<div class="row form-group-sm">';
+				
+				echo '<div class="col-sm-6">';
 
 				if ($isEditable)
-					echo '<select name="team[]">';
+					echo '<select name="team[]" class="form-control">';
 				else
-					echo '<select name="team[]" disabled="disabled">';
+					echo '<select name="team[]" disabled="disabled" class="form-control">';
 
 				foreach ($teams as $t)
 				{
@@ -44,24 +47,29 @@
 					else
 						echo '<option value="' . $t->id . '">' . $t->name . '</option>';
 				}
+				
 				echo '</select>';
-				echo '</td>';
+				echo '</div>';
+				
 				if ($i%2 == 1)
-					echo '</tr>';
+					echo '</div>';
 			}
 			if ($i%2 == 1)
 				echo '</tr>';
 		?>
 		</table>
-		<p class="submit">
-			<?php if ($isEditable && isset($_SESSION['user'])) { ?>
-				<input type="hidden" name="id" value="<?php echo GETorPOST('id') ?>" />
-				<input type="button" value="enregistrer" onclick="saveSeasonTeams()" />
-				<input type="button" value="annuler" class="nyroModalClose" />
-			<?php } else { ?>
-				<input type="button" value="fermer" class="nyroModalClose" />
-			<?php } ?>
-		</p>
+		
+		<div class="form-group">
+			<div class="col-sm-offset-3 col-sm-8">
+				<?php if ($isEditable && isset($_SESSION['user'])) { ?>
+					<input type="hidden" name="id" value="<?php echo GETorPOST('id') ?>" />
+				<button type="submit" class="btn btn-default btn-sm" onclick="saveSeasonTeams()">Enregistrer</button>
+					<button type="button" class="btn btn-default btn-sm nyroModalClose">Annuler</button>
+				<?php } else { ?>
+					<button type="button" class="btn btn-default btn-sm nyroModalClose">Fermer</button>
+				<?php } ?>
+			</div>
+		</div>
 
-</fieldset>
+	</div>
 </form>

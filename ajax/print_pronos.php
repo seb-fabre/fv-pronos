@@ -15,6 +15,7 @@
 	$day = Day::find(GETorPOST('pr_day_id'));
 
 	$season = $day->getSeason();
+	$league = $season->getLeague();
 
 	$teams = Team::getAll();//$season->getTeams();
 
@@ -28,7 +29,10 @@
 		$tmp [$prono->pr_user_id][$prono->pr_match_id] = $prono;
 	$pronos = $tmp;
 
-	echo '<div id="pronos"><textarea>[center]';
+	echo '
+			<h4 class="well">' . $league->name . ' - ' . $season->label . ', ' . ($day->number ? $day->number . '<sup>e</sup> journée' : $day->label) . '</h4>
+		<div class="panel-body">
+		<textarea class="form-control" rows="10">[center]';
 
 	foreach ($matches as $match)
 	{
@@ -94,5 +98,7 @@
 
 		echo "\n\n" . '***************************************************' . "\n\n";
 	}
-	echo '[/center]</textarea></div><div style="text-align: right"><input type="button" class="nyroModalClose" value="fermer" />';
-?>
+	
+	echo '[/center]</textarea>'
+		. '<button type="button" class="btn btn-default btn-sm nyroModalClose">Fermer</button>'
+		. '</div>';

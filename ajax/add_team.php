@@ -13,38 +13,59 @@
 		'name' => 'pr_team_category_id',
 		'empty' => '&nbsp;',
 	);
-	$categoriesSelect = Tools::objectsToSelect($categories, 'name', $options);
+	$categoriesSelect = Tools::objectsToSelect($categories, 'name', $options, true);
 ?>
-<p id="popup_message" style="margin: 0; padding: 0;"></p>
-<form action="<?=APPLICATION_URL?>ajax/save_team.php" method="post" id="ajaxForm">
-	<fieldset>
-		<?php if ($id != -1): ?>
-			<legend>Edition d'une équipe</legend>
-		<?php else: ?>
-			<legend>Création d'une équipe</legend>
-		<?php endif; ?>
-		<p><label>Nom</label><input type="text" name="name" value="<?php echo $team->name ?>" /></p>
-		<p><label>Aliases</label><input type="text" name="aliases" value="<?php echo $team->aliases ?>" /></p>
-		<p><label>Catégorie</label><?=$categoriesSelect?></p>
-		<p>
-			<label>Logo</label>
-			<?php if (!$team->has_logo) { ?>
-				<input type="file" name="logo" id="logoInput<?=$team->id?>" />
-			<?php } else { ?>
-				<input type="file" name="logo" id="logoInput<?=$team->id?>" style="display:none;" disabled="disabled"/>
-				<span id="logoTeam<?=$team->id?>">
-					<?php echo $team->getLogo('style="float:left;" id=logoTeam' . $team->id) ?>
-					<a href="javascript:void(0);" onclick="$('#logoInput<?=$team->id?>').show().enable();$('#logoTeam<?=$team->id?>').hide();$('#remove_logo').val(1);">Supprimer ce logo</a>
-				</span>
-			<?php } ?>
-		</p>
-		<p class="submit">
-			<input type="hidden" name="id" value="<?php echo $id ?>" />
-			<input type="hidden" name="remove_logo" id="remove_logo" value="0" />
-			<input type="submit" value="enregistrer" />
-			<input type="button" value="annuler" class="nyroModalClose" />
-		</p>
-	</fieldset>
+<form action="<?=APPLICATION_URL?>ajax/save_team.php" method="post" id="ajaxForm" class="form-horizontal">
+	
+	<h4 class="well"><?php if ($id != -1) echo "Edition d'une équipe"; else echo "Création d'une équipe"; ?></h4>
+		
+	<div class="panel-body">
+
+		<div class="form-group">
+			<label class="col-sm-3 control-label">Nom</label>
+			<div class="col-sm-8">
+				<input type="text" class="form-control" name="name" value="<?php echo $team->name ?>" />
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-sm-3 control-label">Aliases</label>
+			<div class="col-sm-8">
+				<input type="text" class="form-control" name="aliases" value="<?php echo $team->aliases ?>" />
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-sm-3 control-label">Catégorie</label>
+			<div class="col-sm-8">
+				<?=$categoriesSelect?>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-sm-3 control-label">Logo</label>
+			<div class="col-sm-8">
+				<?php if (!$team->has_logo) { ?>
+					<input type="file" name="logo" id="logoInput<?=$team->id?>" />
+				<?php } else { ?>
+					<input type="file" name="logo" id="logoInput<?=$team->id?>" style="display:none;" disabled="disabled" />
+					<span id="logoTeam<?=$team->id?>">
+						<?php echo $team->getLogo('style="float:left;"') ?>
+						<button type="button" class="btn btn-link" onclick="$('#logoInput<?=$team->id?>').show().enable();$('#logoTeam<?=$team->id?>').hide();$('#remove_logo').val(1);">Supprimer ce logo</button>
+					</span>
+				<?php } ?>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<div class="col-sm-offset-3 col-sm-8">
+				<input type="hidden" name="id" value="<?php echo $id ?>" />
+				<input type="hidden" name="remove_logo" id="remove_logo" value="0" />
+				<button type="submit" class="btn btn-default btn-sm">Enregistrer</button>
+				<button type="button" class="btn btn-default btn-sm nyroModalClose">Annuler</button>
+			</div>
+		</div>
+	</div>
 </form>
 
 <?php if (!empty($_SESSION['user'])) { ?>
@@ -56,9 +77,12 @@
 			method: 'post',
 			success: function (response) {
 				if (response.success == 1)
+				{
 					window.location.reload();
-				else
-					$('#popup_message').html(response.message);
+					return;
+				}
+				
+				showError(response.message);
 				resizeModal();
 			}
 		});

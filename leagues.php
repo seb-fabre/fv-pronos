@@ -14,13 +14,15 @@
 ?>
 
 <body>
-	<?php echoMenu(); ?>
-	<div id="content">
+	<div class="container">
+		<?php echoMenu(); ?>
 		<h1>Liste des championnats</h1>
+		
 		<?php if (!empty($_SESSION['user'])) { ?>
-			<div class="add"><a href="<?=APPLICATION_URL?>ajax/add_league.php" class="nyroModal">Ajouter un championnat</a></div>
+			<button type="button" class="btn btn-primary nyroModal" href="<?=APPLICATION_URL?>ajax/add_league.php" rev="modal">Ajouter un championnat</button>
 		<?php } ?>
-		<table>
+			
+		<table class="table table-bordered">
 			<thead>
 				<tr>
 					<th>Nom</th>
@@ -49,16 +51,16 @@
 									</td>
 								<?php } ?>
 								<td>
-									<a href="<?=APPLICATION_URL?>ajax/show_teams.php?id=<?php echo $season->id ?>" class="nyroModal"><img src="<?=APPLICATION_URL?>images/fleche.png" alt="[edit]" /> voir/modifier les équipes</a>
+									<a href="<?=APPLICATION_URL?>ajax/show_teams.php?id=<?php echo $season->id ?>" class="nyroModal"><img src="<?=APPLICATION_URL?>images/link-external.png" alt="[edit]" /> voir/modifier les équipes</a>
 								</td>
 								<td>
-									<a href="<?=APPLICATION_URL?>ajax/show_rankings.php?id=<?php echo $season->id ?>" class="nyroModal"><img src="<?=APPLICATION_URL?>images/fleche.png" alt="[view]" /> classement des équipes</a>
+									<a href="<?=APPLICATION_URL?>ajax/show_rankings.php?id=<?php echo $season->id ?>" class="nyroModal"><img src="<?=APPLICATION_URL?>images/link-external.png" alt="[view]" /> classement des équipes</a>
 								</td>
 								<td>
-									<p><a href="<?=APPLICATION_URL?>scores/season-<?php echo $season->id ?>"><img src="<?=APPLICATION_URL?>images/fleche.png" alt="[view]" /> classement détaillé</a></p>
-									<p><a href="javascript:;" onclick="previewRankings(<?php echo $season->id ?>, -1);"><img src="<?=APPLICATION_URL?>images/fleche.png" alt="[view]" /> aperçu du classement</a></p>
-									<p><a href="<?=APPLICATION_URL?>evolution_classement/season-<?php echo $season->id ?>"><img src="<?=APPLICATION_URL?>images/fleche.png" alt="[view]" /> évolution du classement</a></p>
-									<p><a href="<?=APPLICATION_URL?>ajax/view_stats.php?id=<?php echo $season->id ?>" class="nyroModal"><img src="<?=APPLICATION_URL?>images/fleche.png" alt="[view]" /> statistiques</a></p>
+									<p><a href="<?=APPLICATION_URL?>scores/season-<?php echo $season->id ?>"><img src="<?=APPLICATION_URL?>images/link-external.png" alt="[view]" /> classement détaillé</a></p>
+									<p><a href="javascript:;" onclick="previewRankings(<?php echo $season->id ?>, -1);"><img src="<?=APPLICATION_URL?>images/link-external.png" alt="[view]" /> aperçu du classement</a></p>
+									<p><a href="<?=APPLICATION_URL?>evolution_classement/season-<?php echo $season->id ?>"><img src="<?=APPLICATION_URL?>images/link-external.png" alt="[view]" /> évolution du classement</a></p>
+									<p><a href="<?=APPLICATION_URL?>ajax/view_stats.php?id=<?php echo $season->id ?>" class="nyroModal"><img src="<?=APPLICATION_URL?>images/link-external.png" alt="[view]" /> statistiques</a></p>
 								</td>
 							</tr>
 						<?php } ?>

@@ -9,7 +9,7 @@ $GLOBALS["classes"]["Season"] = array("classname" => "_Season", "tablename" => "
 
 class _Season extends ArtObject
 {
-	protected $_data = array('id' => null, 'pr_league_id' => null, 'label' => null, 'teams' => null);
+	protected $_data = array('id' => null, 'pr_league_id' => null, 'label' => null, 'teams' => null, 'modification_date' => NULL);
 
 	protected $_editedFields = array();
 
@@ -47,6 +47,7 @@ class _Season extends ArtObject
 
 	public function save()
 	{
+		$this->modification_date = date('Y-m-d H:i:s');
 		return parent::save("Season");
 	}
 

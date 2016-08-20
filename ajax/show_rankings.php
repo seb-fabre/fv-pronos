@@ -106,13 +106,7 @@
 
 	uasort($rankings, 'sortByPoints');
 
-	echo 'choisir une journée : ';
-	echo '<select onchange="showRankings(' . $league->id . ', $(this).val());">';
-	foreach ($days as $day)
-		echo '<option value="' . $day->number . '"' . ($day->number == $max ? ' selected="selected"' : '') . '>' . $day->number . '</option>';
-	echo '</select>';
-
-	echo '<table id="rankings">';
+	echo '<table id="rankings" class="table table-condensed table-bordered">';
 	echo '<tr><th>&nbsp;</th><th>Equipe</th><th>Joués</th><th>Points</th><th>Victoires</th><th>Nuls</th><th>Buts pour</th><th>Buts contre</th><th>Diff</th></tr>';
 	$i = 1;
 	foreach ($rankings as $team => $rank)

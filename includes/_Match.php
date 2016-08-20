@@ -47,7 +47,10 @@ class _Match extends ArtObject
 
 	public function save()
 	{
-		return parent::save("Match");
+		if (!parent::save("Match"))
+			return false;
+		
+		return $this->getDay()->getSeason()->save();
 	}
 
 	/**

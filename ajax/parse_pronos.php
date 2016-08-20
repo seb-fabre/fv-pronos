@@ -9,16 +9,21 @@
 
 	$league = $season->getLeague();
 ?>
-<p id="popup_message" style="margin: 0; padding: 0;"></p>
 <form method="post" id="ajaxForm" class="nyroModal" action="<?=APPLICATION_URL?>ajax/save_prono.php">
-	<fieldset>
-		<legend>Parser les pronos</legend>
-		<p class="center bold"><?php echo $league->name ?> - <?php echo $season->label ?>, <?php echo $day->number ?><sup>e</sup> journée</p>
-		<p class="center"><textarea id="matches" name="matches"></textarea>
-		<p class="submit">
+		<h4 class="well">
+			Parser les pronos
+			<br/>
+			<small><?php echo $league->name ?> - <?php echo $season->label ?>, <?php echo $day->number ?><sup>e</sup> journée</small>
+		</h4>
+		
+		<div class="form-group">
+			<textarea id="matches" name="matches" class="form-control" rows="10"></textarea>
+		</div>
+		
+		<div class="form-group">
 			<input type="hidden" name="id" value="<?php echo $id ?>" />
-			<input type="submit" value="parser" />
-			<input type="button" value="annuler" class="nyroModalClose" />
-		</p>
+			<button type="subbmit" class="btn btn-default btn-sm">Parser</button>
+			<button type="button" class="btn btn-default btn-sm nyroModalClose">Annuler</button>
+		</div>
 	</fieldset>
 </form>

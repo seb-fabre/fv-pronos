@@ -39,40 +39,41 @@
 		#spinner { display: none; position: absolute; top: 50%; left: 50%; }
 		#evolutionSpinner, #evolutionGraph { position: absolute; width: 600px; }
 		td { vertical-align: top; }
-		.evolutionCheckboxes { width: 130px; }
 	</style>
 
-	<?php echoMenu(); ?>
-	<div id="content">
+	<div class="container">
+		<?php echoMenu(); ?>
 		<h1>Evolution du classement</h1>
 
-		<table style="width: 100%" border="0">
-			<tr>
-				<td class="evolutionCheckboxes">
-					<?php
-						$i=0;
-						$count = count($users);
-						foreach ($users as $aUser)
-						{
-							echo '<label id="spanUser' . $aUser->id . '" for="checkboxUser' . $aUser->id . '">';
-							echo '	<input type="checkbox" id="checkboxUser' . $aUser->id . '" value="' . $aUser->id . '" onclick="reloadImage();" /> ';
-							echo		$aUser->name;
-							echo '</label>';
-							echo '<br />';
+		<div class="row">
+			<div class="col-md-3 evolutionCheckboxes">
+				<div class="col-md-6">
+					<div class="checkbox">
+						<?php
+							$i=0;
+							$count = count($users);
+							foreach ($users as $aUser)
+							{
+								echo '<label id="spanUser' . $aUser->id . '" for="checkboxUser' . $aUser->id . '">';
+								echo '	<input type="checkbox" id="checkboxUser' . $aUser->id . '" value="' . $aUser->id . '" onclick="reloadImage();" /> ';
+								echo		$aUser->name;
+								echo '</label>';
+								echo '<br />';
 
-							if (($count%2 == 0 && $i == $count / 2) || ($count%2 == 1 && $i == floor($count / 2)))
-								echo '</td><td class="evolutionCheckboxes"';
+								if (($count%2 == 0 && $i == $count / 2) || ($count%2 == 1 && $i == floor($count / 2)))
+									echo '</div></div><div class="col-sm-6"><div class="checkbox">';
 
-							$i++;
-						}
-					?>
-				</td>
-				<td style="text-align: center">
-					<div id="evolutionSpinner"><img src="<?=SPINNER_URL?>" id="spinner" /></div>
-					<div id="evolutionGraph"></div>
-				</td>
-			</tr>
-		</table>
+								$i++;
+							}
+						?>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-9 text-center">
+				<div id="evolutionSpinner"><img src="<?=SPINNER_URL?>" id="spinner" /></div>
+				<div id="evolutionGraph"></div>
+			</div>
+		</div>
 	</div>
 
 	<script type="text/javascript">

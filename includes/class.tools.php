@@ -481,7 +481,7 @@ HTML;
 		$name = (!empty($options['name']) ? ' name="' . $options['name'] . '"' : '');
 		$value = (!empty($options['value']) ? $options['value'] : false);
 
-		$html = '<select' . $id . $name . '>';
+		$html = '<select' . $id . $name . ' class="form-control">';
 		if (!empty($options['empty']))
 			$html .= '<option value="">' . $options['empty'] . '</option>';
 

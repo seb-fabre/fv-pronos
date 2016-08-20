@@ -7,22 +7,22 @@
 ?>
 
 <body>
+	<div class="container">
 	<?php echoMenu(); ?>
-	<div id="content">
 		<h1>Liste des équipes</h1>
 
 		<?php if (!empty($_SESSION['user'])) { ?>
-			<div class="add"><a href="<?=APPLICATION_URL?>ajax/add_team.php" class="nyroModal">Ajouter une équipe</a></div>
-			<div class="add"><a href="<?=APPLICATION_URL?>ajax/add_team_category.php" class="nyroModal">Ajouter une catégorie</a></div>
+			<button type="button" class="btn btn-primary nyroModal" href="<?=APPLICATION_URL?>ajax/add_team.php">Ajouter une équipe</button>
+			<button type="button" class="btn btn-primary nyroModal" href="<?=APPLICATION_URL?>ajax/add_team_category.php">Ajouter une catégorie</button>
 		<?php } ?>
-		<table>
+		<table class="table table-bordered table-striped">
 			<thead>
 				<tr>
-					<th>Nom</th>
-					<th>Catégorie</th>
-					<th>Noms alternatifs</th>
-					<th>Logo</th>
-					<th>Actions</th>
+					<th class="col-sm-3">Nom</th>
+					<th class="col-sm-3">Catégorie</th>
+					<th class="col-sm-3">Noms alternatifs</th>
+					<th class="col-sm-2">Logo</th>
+					<th class="col-sm-1">Actions</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -44,7 +44,7 @@
 							</td>
 							<td class="center">
 								<?php if (!empty($_SESSION['user'])) { ?>
-									<a href="<?=APPLICATION_URL?>ajax/add_team.php?id=<?php echo $team->id ?>" class="nyroModal"><img src="<?=APPLICATION_URL?>images/edit.png" alt="[edit]" /></a>
+									<a href="<?=APPLICATION_URL?>ajax/add_team.php?id=<?php echo $team->id ?>" class="nyroModal" rev="modal"><img src="<?=APPLICATION_URL?>images/edit.png" alt="[edit]" /></a>
 								<?php } ?>
 							</td>
 						</tr>

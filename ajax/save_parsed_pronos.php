@@ -14,10 +14,16 @@
 	
 	foreach ($homes as $user => $home_matches)
 	{
-		if (!isset($users[$user]))
+		if (isset($users[$user]))
+			$userId = $users[$user]->id;
+		else if (isset($pr_users[$user]))
 			$userId = $pr_users[$user];
-		else
-			$userId = $user;
+		
+		if ($userId <= 0)
+		{
+			echo json_encode(array('success' => 0, 'message' => 'Au moins un utilisateur est vide'));
+			exit;
+		}
 		
 		$away_matches = $aways[$user];
 		
@@ -43,4 +49,3 @@
 	}
 	
 	echo json_encode(array('success' => 1));
-?>

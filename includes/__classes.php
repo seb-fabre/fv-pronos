@@ -24,3 +24,5 @@ require_once($relativePath . "_TeamCategory.php");
 require_once($relativePath . "TeamCategory.php");
 require_once($relativePath . "_User.php");
 require_once($relativePath . "User.php");
+require_once($relativePath . "_ScoresCache.php");
+require_once($relativePath . "ScoresCache.php");

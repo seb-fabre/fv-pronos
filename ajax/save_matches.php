@@ -4,7 +4,7 @@
 	$id = GETorPOST('id');
 	$day = GETorPOST('pr_day_id');
 	$matches = GETorPOST('matches');
-
+	
 	$season = Season::find($id);
 
 	$league = $season->getLeague();
@@ -12,33 +12,33 @@
 	$teams = $season->getTeams();
 	$tmpTeams = array();
 	foreach ($teams as $team)
-		$tmpTeams [$team->name] = $team;
+	{
+		$tmpTeams[strtolower($team->name)] = $team;
+		foreach ($team->getAliases() as $alias)
+			$tmpTeams[strtolower($alias)] = $team;
+	}
+	$titims = $teams;
 	$teams = $tmpTeams;
+	
+	$teamsRegex = implode('|', array_keys($teams));
+	
 
 	$day = Day::find($day);
 
-	$matches = explode("\n", $matches);
+	$lines = explode("\n", $matches);
 	$parsedData = array();
-	foreach ($matches as $match)
+	foreach ($lines as $oneLine)
 	{
-		$tab = split(' +- +', $match);
-		if (count($tab) != 2)
-			continue;
-		$home = trim($tab[0]);
-		$away = trim($tab[1]);
-
-		$v = array();
-		if (array_key_exists($home, $tmpTeams))
-			$v []= $tmpTeams[$home]->id;
-		else
-			$v []= null;
-
-		if (array_key_exists($away, $tmpTeams))
-			$v []= $tmpTeams[$away]->id;
-		else
-			$v []= null;
-
-		$parsedData []= $v;
+		$oneLine = strtolower($oneLine);
+		
+		if (preg_match("/.*($teamsRegex).+($teamsRegex).*/", $oneLine, $matches))
+		{
+			$v = array();
+			$v []= $tmpTeams[trim($matches[1])]->id;
+			$v []= $tmpTeams[trim($matches[2])]->id;
+			
+			$parsedData []= $v;
+		}
 	}
 
 	foreach ($parsedData as $match)

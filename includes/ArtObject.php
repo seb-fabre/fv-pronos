@@ -151,7 +151,7 @@ class ArtObject {
 		if (array_key_exists($key, $this->_data))
 		{
 			$j = @json_decode($this->_data[$key], true);
-			if ($j !== false && is_array($j) && isset($j[$_SESSION["l"]]))
+			if ($j !== false && is_array($j) && isset($_SESSION["l"]) && isset($j[$_SESSION["l"]]))
 				return stripslashes($j[$_SESSION["l"]]);
 			else
 				return stripslashes($this->_data[$key]);
@@ -228,7 +228,7 @@ class ArtObject {
 
 			$id = mysql_insert_id();
 		}
-
+		
 		$this->_editedFields = array();
 		$new = self::find($class, $id);
 		$data = $new->toArray();

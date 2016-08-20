@@ -87,4 +87,4 @@
 		echo json_encode(array('success' => 1, 'message' => 'Journée enregistrée', 'create' => 1));
 	else
 		echo json_encode(array('success' => 1, 'message' => 'Journée enregistrée'));
-?>
+

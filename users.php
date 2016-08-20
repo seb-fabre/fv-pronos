@@ -9,13 +9,13 @@
 ?>
 
 <body>
-	<?php echoMenu(); ?>
-	<div id="content">
+	<div class="container">
+		<?php echoMenu(); ?>
 		<h1>Liste des utilisateurs</h1>
 		<?php if (!empty($_SESSION['user'])) { ?>
-			<div class="add"><a href="<?=APPLICATION_URL?>ajax/add_user.php" class="nyroModal">Ajouter un utilisateur</a></div>
+			<button type="button" class="btn btn-primary nyroModal" href="<?=APPLICATION_URL?>ajax/add_user.php" rev="modal">Ajouter un utilisateur</button>
 		<?php } ?>
-		<table>
+		<table class="table table-bordered table-striped">
 			<thead>
 				<tr>
 					<th>Nom</th>
@@ -38,7 +38,7 @@
 							</td>
 							<td class="center">
 								<?php if (!empty($_SESSION['user'])) { ?>
-									<a href="<?=APPLICATION_URL?>ajax/add_user.php?id=<?php echo $user->id ?>" class="nyroModal"><img src="<?=APPLICATION_URL?>images/edit.png" alt="[edit]" /></a>
+									<a href="<?=APPLICATION_URL?>ajax/add_user.php?id=<?php echo $user->id ?>" class="nyroModal" rev="modal"><img src="<?=APPLICATION_URL?>images/edit.png" alt="[edit]" /></a>
 								<?php } ?>
 							</td>
 						</tr>
@@ -48,10 +48,6 @@
 				<?php endif; ?>
 			</tbody>
 		</table>
-	</div>
-	
-	<div id="loading">
-		<div id="subloading">Chargement</div>
 	</div>
 </body>
 </html>

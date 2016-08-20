@@ -52,21 +52,21 @@
 ?>
 
 <body>
+	<div class="container">
 	<?php echoMenu(); ?>
-	<div id="content">
 		<h1>Liste des journées</h1>
 		<form method="get" action="">
-			<p style="margin-bottom: 10px">
+			<p style="margin-bottom: 10px" class="form-inline">
 				Afficher :
 				<?=Tools::objectsToSelect($leagues, 'name', array('value' => $leagueId, 'name' => 'league', 'empty' => 'Tous les championnats')) ?>
 				<?=Season::objectsToSelect($seasons, array('value' => $seasonId, 'name' => 'season', 'empty' => 'Toutes les saisons')) ?>
-				<input type="submit" value="OK" />
+				<button type="submit" class="btn btn-default">OK</button>
 			</p>
 		</form>
 		<?php if (!empty($_SESSION['user'])) { ?>
-			<div class="add"><a href="<?=APPLICATION_URL?>ajax/add_day.php" class="nyroModal">Ajouter une journée</a></div>
+			<button type="button" class="btn btn-primary nyroModal" href="<?=APPLICATION_URL?>ajax/add_day.php" rev="modal">Ajouter une journée</button>
 		<?php } ?>
-		<table>
+		<table class="table table-bordered table-condensed">
 			<thead>
 				<tr>
 					<th>Championnat</th>
@@ -87,34 +87,40 @@
 						<?php foreach ($days as $day): ?>
 							<?php $isEditable = !$day->hasPronos() && !$day->hasCompletedMatches() && !empty($_SESSION['user']); ?>
 							<tr>
-								<?php if (++$i == 1) echo '<td rowspan="' . count($days) . '">' . $league->name . '<br/>' . $seasons[$day->pr_season_id]->label . '</td>'; ?>
-								<td><?php echo $day->number ? $day->number : $day->label ?></td>
+								<?php if (++$i == 1) echo '<td rowspan="' . count($days) . '" class="col-md-2">' . $league->name . '<br/>' . $seasons[$day->pr_season_id]->label . '</td>'; ?>
+								
+								<td class="col-md-2"><?php echo $day->label ? $day->label : $day->number ?></td>
+								
 								<?php if (!empty($_SESSION['user'])) { ?>
 									<?php if ($isEditable) { ?>
-										<td class="center"><a href="<?=APPLICATION_URL?>ajax/add_day.php?id=<?php echo $day->id ?>" class="nyroModal"><img src="<?=APPLICATION_URL?>images/edit.png" alt="[edit]" /></a></td>
+										<td class="text-center col-md-2"><a href="<?=APPLICATION_URL?>ajax/add_day.php?id=<?php echo $day->id ?>" class="nyroModal" rev="modal"><img src="<?=APPLICATION_URL?>images/edit.png" alt="[edit]" /></a></td>
 									<?php } else { ?>
-										<td class="center tooltipped">
+										<td class="text-center tooltipped col-md-2">
 											<img src="<?=APPLICATION_URL?>images/edit_disabled.png" alt="[edit]" />
 											<div class="hidden">Des scores et/ou des pronostics ont été saisis, cette journée n'est pas modifiable.</div>
 										</td>
 									<?php } ?>
 								<?php } ?>
+										
 								<?php if (!empty($_SESSION['user'])) { ?>
-									<td class="center">
-										<p><a href="<?=APPLICATION_URL?>ajax/add_match.php?pr_day_id=<?php echo $day->id ?>" class="nyroModal"><img src="<?=APPLICATION_URL?>images/fleche.png" alt="[add]" /> voir/modifier </a></p>
-										<p><a href="<?=APPLICATION_URL?>ajax/parse_matches.php?pr_day_id=<?php echo $day->id ?>" class="nyroModal"><img src="<?=APPLICATION_URL?>images/fleche.png" alt="[add]" /> saisir tous </a></p>
+									<td class="text-center col-md-2">
+										<button href="<?=APPLICATION_URL?>ajax/add_match.php?pr_day_id=<?php echo $day->id ?>" type="button" class="btn btn-link nyroModal" rev="modal">voir/modifier</button>
+										<br/>
+										<button href="<?=APPLICATION_URL?>ajax/parse_matches.php?pr_day_id=<?php echo $day->id ?>" type="button" class="btn btn-link nyroModal" rev="modal">saisir tous</button>
 									</td>
 								<?php } ?>
-								<td class="center">
+									
+								<td class="text-center col-md-2">
 									<?php if (!empty($_SESSION['user'])) { ?>
-										<p><a href="<?=APPLICATION_URL?>ajax/add_scores.php?id=<?php echo $day->id ?>" class="nyroModal"><img src="<?=APPLICATION_URL?>images/fleche.png" alt="[add]" /> saisir</a></p>
+										<button href="<?=APPLICATION_URL?>ajax/add_scores.php?id=<?php echo $day->id ?>" type="button" class="btn btn-link nyroModal" rev="modal">saisir</button>
 									<?php } else { ?>
-										<p><a href="<?=APPLICATION_URL?>ajax/add_scores.php?id=<?php echo $day->id ?>" class="nyroModal"><img src="<?=APPLICATION_URL?>images/fleche.png" alt="[add]" /> voir</a></p>
+										<button href="<?=APPLICATION_URL?>ajax/add_scores.php?id=<?php echo $day->id ?>" type="button" class="btn btn-link nyroModal" rev="modal">voir</button>
 									<?php } ?>
 								</td>
-								<td class="center">
-									<p><a href="<?=APPLICATION_URL?>pronos/day-<?php echo $day->id ?>"><img src="<?=APPLICATION_URL?>images/fleche.png" alt="[add]" /> voir</a></p>
-									<p><a href="<?=APPLICATION_URL?>ajax/print_pronos.php?pr_day_id=<?php echo $day->id ?>" class="nyroModal"><img src="<?=APPLICATION_URL?>images/fleche.png" alt="[add]" /> imprimer (BBCode)</a></p>
+								
+								<td class="text-center col-md-2">
+									<a href="<?=APPLICATION_URL?>pronos/day-<?php echo $day->id ?>" type="button" class="btn btn-link">tout afficher</a>
+									<button href="<?=APPLICATION_URL?>ajax/print_pronos.php?pr_day_id=<?php echo $day->id ?>" type="button" class="btn btn-link nyroModal">exporter (BBCode)</button>
 								</td>
 							</tr>
 						<?php endforeach; ?>
@@ -126,17 +132,15 @@
 		</table>
 	</div>
 
-	<div id="popup"><div id="popup_message"></div><div id="popup_content"></div></div>
-
 	<script type="text/javascript">
 <?php if (!empty($_SESSION['user'])) { ?>
 
 		function addMatch()
 		{
 			var select = $('#selectTeams').html();
-			$('#matches').append(select);
+			$('#matches .row').append(select);
 
-			resizeModal($('#nyroModalWrapper').width()-10);
+			resizeModal();
 		}
 
 <?php } ?>
