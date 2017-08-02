@@ -140,10 +140,17 @@
 				continue;
 		
 			$user = $users[$userId];
-			if ($user->pr_team_id && file_exists("./logos/" . strtolower($teams[$user->pr_team_id]->id) . ".gif"))
+			if ($user->pr_team_id && file_exists("./logos/" . strtolower($teams[$user->pr_team_id]->id) . ".png"))
+			{
+				$logo = imagecreatefrompng("./logos/" . strtolower($teams[$user->pr_team_id]->id) . ".png");
+				$size = getimagesize("./logos/" . strtolower($teams[$user->pr_team_id]->id) . ".png");
+				imagecopyresized($image, $logo, $left + 4, $top + 1 - 5, 0, 0, 30, 30, $size[0], $size[1]);
+			}
+			else if ($user->pr_team_id && file_exists("./logos/" . strtolower($teams[$user->pr_team_id]->id) . ".gif"))
 			{
 				$logo = imagecreatefromgif("./logos/" . strtolower($teams[$user->pr_team_id]->id) . ".gif");
-				imagecopyresized($image, $logo, $left + 4, $top + 1 - 5, 0, 0, 30, 30, 60, 60) ? 'Y' : 'N';
+				$size = getimagesize("./logos/" . strtolower($teams[$user->pr_team_id]->id) . ".gif");
+				imagecopyresized($image, $logo, $left + 4, $top + 1 - 5, 0, 0, 30, 30, $size[0], $size[1]);
 			}
 
 			@$classementPrevious[$userId]++;

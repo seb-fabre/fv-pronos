@@ -11,12 +11,18 @@ class Team extends _Team
 {
 	public function getLogoUrl()
 	{
-		return APPLICATION_URL . 'logos/' . $this->id . '.gif';
+		if (file_exists($GLOBALS['ROOTPATH'] . 'logos/' . $this->id . '.png'))
+			return APPLICATION_URL . 'logos/' . $this->id . '.png';
+
+		if (file_exists($GLOBALS['ROOTPATH'] . 'logos/' . $this->id . '.gif'))
+			return APPLICATION_URL . 'logos/' . $this->id . '.gif';
+
+		return '';
 	}
 
 	public function getLogo($options="")
 	{
-		return '<img src="' . $this->getLogoUrl() . '" ' . $options . ' />';
+		return '<img src="' . $this->getLogoUrl() . '" ' . $options . ' width=60 height=60/>';
 	}
 
 	public function getAliases()

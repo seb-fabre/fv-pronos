@@ -28,10 +28,10 @@
 	$team->aliases = $aliases;
 	$team->save();
 
+	$target_path = $GLOBALS['ROOTPATH'] . "logos/" . $team->id . '.gif';
+
 	if (!empty($_FILES['logo']))
 	{
-		$target_path = $GLOBALS['ROOTPATH'] . "logos/" . $team->id . '.gif';
-
 		if (file_exists($target_path))
 			unlink($target_path);
 
@@ -47,6 +47,7 @@
 	else if (GETorPOST('remove_logo') == '1')
 	{
 		$team->has_logo = 0;
+		@unlink($target_path);
 	}
 
 	$team->save();

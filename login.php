@@ -8,7 +8,7 @@
 
 	if (!empty($_SESSION['user']))
 	{
-		header('location: ' . APPLICATION_URL . 'members/');
+		header('location: ' . APPLICATION_URL);
 	}
 
 	echoHTMLHead('Connexion');
